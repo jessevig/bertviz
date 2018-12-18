@@ -4,7 +4,7 @@ Tool for visualizing BERT's attention layers
 
 ## Authors
 
-* **Jesse Vig**  [jessevig](https://github.com/jessevig)
+* [Jesse Vig](https://github.com/jessevig)
 
 ## License
 
