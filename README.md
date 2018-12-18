@@ -2,20 +2,9 @@
 
 Tool for visualizing BERT's attention layers
 
-# Running the notebook
-
-```
-git clone https://github.com/jessevig/bertviz
-cd bertviz
-python setup.py install
-cd bertiz
-jupyter notebook
-```
-
-
 ## Authors
 
-* **Jesse Vig** - *Initial work* - [jessevig](https://github.com/jessevig)
+* **Jesse Vig**  [jessevig](https://github.com/jessevig)
 
 ## License
 
