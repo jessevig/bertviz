@@ -13,8 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Changes made by Jesse Vig on 12/12/18
-# - Adapted to BERT model
+# Change log
+# 12/12/18  Jesse Vig   Adapted to BERT model
+# 12/19/18  Jesse Vig   Assorted cleanup. Changed orientation of attention matrices. Updated comments.
 
 
 """Module for postprocessing and displaying transformer attentions.
@@ -27,7 +28,6 @@ import os
 
 import IPython.display as display
 
-import numpy as np
 
 vis_html = """
   <span style="user-select:none">
@@ -62,50 +62,46 @@ def _show_attention(att_json):
 
 
 def _get_attentions(tokens_a, tokens_b, attn):
-    """Compute representation of the attention ready for the d3 visualization.
+    """Compute representation of the attention to pass to the d3 visualization
 
     Args:
-      tokens_a: list of strings, words to be displayed on the left of the vis
-      tokens_b: list of strings, words to be displayed on the right of the vis
+      tokens_a: tokens in sentence A
+      tokens_b: tokens in sentence B
       attn: numpy array, attention
           [num_layers, batch_size, num_heads, seq_len, seq_len]
-
 
     Returns:
       Dictionary of attention representations with the structure:
       {
-        'all': Representations for showing all attentions at the same time.
-        'a': Sentence A self-attention
-        'b': Sentence B self-attention
-        'ab': Sentence A -> Sentence B attention
-        'ba': Sentence B -> Sentence A attention
+        'all': Representations for showing all attentions at the same time. (source = AB, target = AB)
+        'a': Sentence A self-attention (source = A, target = A)
+        'b': Sentence B self-attention (source = B, target = B)
+        'ab': Sentence A -> Sentence B attention (source = A, target = B)
+        'ba': Sentence B -> Sentence A attention (source = B, target = A)
       }
       and each sub-dictionary has structure:
       {
-        'att': list of inter attentions matrices, one for each attention head
-        'top_text': list of strings, words to be displayed on the left of the vis
-        'bot_text5': list of strings, words to be displayed on the right of the vis
+        'att': list of inter attentions matrices, one for each layer. Each is of shape [num_heads, source_seq_len, target_seq_len]
+        'top_text': list of source tokens, to be displayed on the left of the vis
+        'bot_text': list of target tokens, to be displayed on the right of the vis
       }
     """
-    def format_mat(mat):
-        return mat.transpose(0, 2, 1).tolist()
-
 
     all_attns = []
     a_attns = []
     b_attns = []
     ab_attns = []
     ba_attns = []
-    slice_a = slice(0, len(tokens_a))
-    slice_b = slice(len(tokens_a), len(tokens_a) + len(tokens_b))
+    slice_a = slice(0, len(tokens_a)) # Positions corresponding to sentence A in input
+    slice_b = slice(len(tokens_a), len(tokens_a) + len(tokens_b)) # Position corresponding to sentence B in input
     num_layers = len(attn)
     for layer in range(num_layers):
-        layer_attn = attn[layer][0]
-        all_attns.append(format_mat(layer_attn))
-        a_attns.append(format_mat(layer_attn[:, slice_a, slice_a]))
-        b_attns.append(format_mat(layer_attn[:, slice_b, slice_b]))
-        ab_attns.append(format_mat(layer_attn[:, slice_a, slice_b]))
-        ba_attns.append(format_mat(layer_attn[:, slice_b, slice_a]))
+        layer_attn = attn[layer][0] # Get layer attention (assume batch size = 1), shape = [num_heads, seq_len, seq_len]
+        all_attns.append(layer_attn.tolist()) # Append AB->AB attention for layer, across all heads
+        a_attns.append(layer_attn[:, slice_a, slice_a].tolist()) # Append A->A attention for layer, across all heads
+        b_attns.append(layer_attn[:, slice_b, slice_b].tolist()) # Append B->B attention for layer, across all heads
+        ab_attns.append(layer_attn[:, slice_a, slice_b].tolist()) # Append A->B attention for layer, across all heads
+        ba_attns.append(layer_attn[:, slice_b, slice_a].tolist()) # Append B->A attention for layer, across all heads
 
     attentions =  {
         'all': {

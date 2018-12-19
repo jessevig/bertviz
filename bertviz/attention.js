@@ -1,5 +1,9 @@
 /**
  * @fileoverview Transformer Visualization D3 javascript code.
+ *
+ * Change log:
+ *
+ * 12/19/18  Jesse Vig   Assorted cleanup. Changed orientation of attention matrices.
  */
 
 requirejs(['jquery', 'd3'],
@@ -47,9 +51,11 @@ function renderVis(id, top_text, bot_text, attention_heads, config) {
             .attr("height", HEIGHT);
 
   var att_data = [];
-  for (var i=0; i < attention_heads.length; i++) {
-    var att_trans = transpose(attention_heads[i]);
-    att_data.push(zip(attention_heads[i], att_trans));
+  var num_heads = attention_heads.length;
+  for (var i=0; i < num_heads; i++) {
+    var att = attention_heads[i];
+    var att_trans = transpose(att);
+    att_data.push(zip(att_trans, att));
   }
 
   renderText(svg, top_text, true, att_data, 0);
@@ -66,6 +72,8 @@ function renderVis(id, top_text, bot_text, attention_heads, config) {
 
 
 function renderText(svg, text, is_top, att_data, left_pos) {
+  // att_data: list of tuples (att, att_trans), one for each layer. att and att_trans are attention matrics for each layer.
+  //           att is of shape [num_heads, source_len, target_len)
   var id = is_top ? "top" : "bottom";
   var textContainer = svg.append("svg:g")
                          .attr("id", id);
@@ -234,8 +242,8 @@ function renderAttention(svg, attention_heads) {
   var line_container = svg.selectAll(".attention_heads");
   line_container.html(null);
   for(var h=0; h<attention_heads.length; h++) {
-    for(var a=0; a<attention_heads[h].length; a++) {
-      for(var s=0; s<attention_heads[h][a].length; s++) {
+    for(var s=0; s<attention_heads[h].length; s++) {
+      for(var a=0; a<attention_heads[h][s].length; a++) {
         line_container.append("line")
         .attr("y1", (s+1) * BOXHEIGHT + (BOXHEIGHT/2))
         .attr("x1", BOXWIDTH)
@@ -245,7 +253,7 @@ function renderAttention(svg, attention_heads) {
         .attr("stroke", head_colours(h))
         .attr("stroke-opacity", function() {
           if (config.head_vis[h]) {
-            return attention_heads[h][a][s]/active_heads();
+            return attention_heads[h][s][a]/active_heads();
           } else {
             return 0.0;
           }
