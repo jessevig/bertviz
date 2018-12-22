@@ -1,6 +1,5 @@
 from bertviz.attention_details import AttentionDetailsData
 from bertviz.pytorch_pretrained_bert import BertTokenizer, BertModel, BertConfig
-import numpy as np
 import unittest
 
 
