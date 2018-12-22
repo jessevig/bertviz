@@ -43,9 +43,9 @@ class AttentionVisualizer:
         return tokens_tensor, token_type_tensor, tokens_a_delim, tokens_b_delim
 
     def _get_attention(self, tokens_tensor, token_type_tensor):
-        _, _, attention_tensor = self.model(tokens_tensor, token_type_ids=token_type_tensor)
-        return attention_tensor.data.numpy()
-
+        _, _, attn_data_list = self.model(tokens_tensor, token_type_ids=token_type_tensor)
+        attn_tensor = torch.stack([attn_data['attn_probs'] for attn_data in attn_data_list])
+        return attn_tensor.data.numpy()
 
 
 
