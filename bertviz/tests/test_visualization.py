@@ -1,5 +1,6 @@
 from bertviz.visualization import AttentionVisualizer
 from bertviz.pytorch_pretrained_bert import BertTokenizer, BertModel, BertConfig
+import numpy as np
 import unittest
 
 
@@ -34,6 +35,8 @@ class TestVisualization(unittest.TestCase):
         self.assertEqual(tokens_b, tokens2 + ['[SEP]'])
         expected_attn_shape = (self.config.num_hidden_layers, 1, self.config.num_attention_heads, len(tokens_a) + len(tokens_b), len(tokens_a) + len(tokens_b))
         self.assertEqual(attn.shape, expected_attn_shape)
+        sum_probs = attn.sum(axis=-1)
+        self.assertTrue(np.allclose(sum_probs, 1))
 
 if __name__ == "__main__":
     unittest.main()
