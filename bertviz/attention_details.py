@@ -1,5 +1,8 @@
 import torch
-
+import json
+import os
+import IPython.display as display
+from collections import defaultdict
 
 class AttentionDetailsData:
     """Represents data needed for attention details visualization"""
@@ -25,3 +28,109 @@ class AttentionDetailsData:
         tokens_tensor = torch.tensor([token_ids])
         token_type_tensor = torch.LongTensor([[0] * len(tokens_a_delim) + [1] * len(tokens_b_delim)])
         return tokens_tensor, token_type_tensor, tokens_a_delim, tokens_b_delim
+
+
+vis_html = """
+  <span style="user-select:none">
+    Layer: <select id="layer"></select>
+    Attention: <select id="att_type">
+      <option value="all">All</option>
+      <option value="a">Sentence A self-attention</option>
+      <option value="b">Sentence B self-attention</option>
+      <option value="ab">Sentence A -> Sentence B</option>
+      <option value="ba">Sentence B -> Sentence A</option>
+    </select>
+  </span>
+  <div id='vis'></div>
+"""
+
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+vis_js = open(os.path.join(__location__, 'attention.js')).read()
+
+
+def show(tokens_a, tokens_b, query_vectors, key_vectors):
+    """Displays attention visualization"""
+    attention_details = _get_attention_details(tokens_a, tokens_b, query_vectors, key_vectors)
+    att_json = json.dumps(attention_details)
+    display.display(display.HTML(vis_html))
+    display.display(display.Javascript('window.attention = %s' % att_json))
+    display.display(display.Javascript(vis_js))
+
+
+def _get_attention_details(tokens_a, tokens_b, query_vectors, key_vectors):
+    """Compute representation of the attention to pass to the d3 visualization
+
+    Args:
+      tokens_a: tokens in sentence A
+      tokens_b: tokens in sentence B
+      query_vectors: numpy array, [num_layers, batch_size, num_heads, seq_len, vector_size]
+      key_vectors: numpy array, [num_layers, batch_size, num_heads, seq_len, vector_size]
+
+    Returns:
+      Dictionary of query/key representations with the structure:
+      {
+        'all': All attention (source = AB, target = AB)
+        'aa': Sentence A self-attention (source = A, target = A)
+        'bb': Sentence B self-attention (source = B, target = B)
+        'ab': Sentence A -> Sentence B attention (source = A, target = B)
+        'ba': Sentence B -> Sentence A attention (source = B, target = A)
+      }
+      and each sub-dictionary has structure:
+      {
+        'left_text': list of source tokens, to be displayed on the left of the vis
+        'right_text': list of target tokens, to be displayed on the right of the vis
+        'queries': list of query vector arrays, one for each layer. Each is of shape [num_heads, source_seq_len, vector_size]
+        'keys': list of key vector arrays, one for each layer. Each is of shape [num_heads, target_seq_len, vector_size]
+      }
+    """
+
+    key_vectors_dict = defaultdict(list)
+    query_vectors_dict = defaultdict(list)
+
+    slice_a = slice(0, len(tokens_a))  # Positions corresponding to sentence A in input
+    slice_b = slice(len(tokens_a), len(tokens_a) + len(tokens_b))  # Position corresponding to sentence B in input
+    num_layers = len(query_vectors)
+    for layer in range(num_layers):
+        query_vector = query_vectors[layer][0] # assume batch_size=1; shape = [num_heads, seq_len, vector_size]
+        key_vector = key_vectors[layer][0] # assume batch_size=1; shape = [num_heads, seq_len, vector_size]
+        query_vectors_dict['all'].append(query_vector.tolist())
+        key_vectors_dict['all'].append(key_vector.tolist())
+        query_vectors_dict['a'].append(query_vector[:, slice_a, :].tolist())
+        key_vectors_dict['a'].append(key_vector[:, slice_a, :].tolist())
+        query_vectors_dict['b'].append(query_vector[:, slice_b, :].tolist())
+        key_vectors_dict['b'].append(key_vector[:, slice_b, :].tolist())
+
+    attentions =  {
+        'all': {
+            'queries': query_vectors_dict['all'],
+            'keys': key_vectors_dict['all'],
+            'left_text': tokens_a + tokens_b,
+            'right_text': tokens_a + tokens_b
+        },
+        'aa': {
+            'queries': query_vectors_dict['a'],
+            'keys': key_vectors_dict['a'],
+            'left_text': tokens_a,
+            'right_text': tokens_a
+        },
+        'bb': {
+            'queries': query_vectors_dict['b'],
+            'keys': key_vectors_dict['b'],
+            'left_text': tokens_b,
+            'right_text': tokens_b
+        },
+        'ab': {
+            'queries': query_vectors_dict['a'],
+            'keys': key_vectors_dict['b'],
+            'left_text': tokens_a,
+            'right_text': tokens_b
+        },
+        'ba': {
+            'queries': query_vectors_dict['b'],
+            'keys': key_vectors_dict['a'],
+            'left_text': tokens_b,
+            'right_text': tokens_a
+        }
+    }
+    return attentions

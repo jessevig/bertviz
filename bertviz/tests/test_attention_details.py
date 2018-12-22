@@ -1,5 +1,6 @@
-from bertviz.attention_details import AttentionDetailsData
+from bertviz.attention_details import AttentionDetailsData, _get_attention_details
 from bertviz.pytorch_pretrained_bert import BertTokenizer, BertModel, BertConfig
+import numpy as np
 import unittest
 
 
@@ -38,6 +39,38 @@ class TestAttentionDetails(unittest.TestCase):
         expected_shape = (self.config.num_hidden_layers, batch_size, self.config.num_attention_heads, seq_len, query_key_size)
         self.assertEqual(queries.shape, expected_shape)
         self.assertEqual(keys.shape, expected_shape)
+
+    def test_get_attention_details(self):
+        sentence1 = 'The quickest brown fox jumped over the lazy dog'
+        sentence2 = "the quick brown fox jumped over the laziest lazy elmo"
+        tokens_a, tokens_b, queries, keys = self.attention_details_data.get_data(sentence1, sentence2)
+        attention_details = _get_attention_details(tokens_a, tokens_b, queries, keys)
+        queries_squeezed = np.squeeze(queries)
+        expected_all_queries = queries_squeezed.tolist()
+        self.assertEqual(attention_details['all']['queries'], expected_all_queries)
+        keys_squeezed = np.squeeze(keys)
+        expected_all_keys = keys_squeezed.tolist()
+        self.assertEqual(attention_details['all']['keys'], expected_all_keys)
+        num_layers = self.config.num_hidden_layers
+        num_heads = self.config.num_attention_heads
+        vector_size = self.config.hidden_size / num_heads
+        self.assertEqual(np.array(attention_details['aa']['queries']).shape,
+                         (num_layers, num_heads, len(tokens_a), vector_size))
+        self.assertEqual(np.array(attention_details['aa']['keys']).shape,
+                         (num_layers, num_heads, len(tokens_a), vector_size))
+        self.assertEqual(np.array(attention_details['bb']['queries']).shape,
+                         (num_layers, num_heads, len(tokens_b), vector_size))
+        self.assertEqual(np.array(attention_details['bb']['keys']).shape,
+                         (num_layers, num_heads, len(tokens_b), vector_size))
+        self.assertEqual(np.array(attention_details['ab']['queries']).shape,
+                         (num_layers, num_heads, len(tokens_a), vector_size))
+        self.assertEqual(np.array(attention_details['ab']['keys']).shape,
+                         (num_layers, num_heads, len(tokens_b), vector_size))
+        self.assertEqual(np.array(attention_details['ba']['queries']).shape,
+                         (num_layers, num_heads, len(tokens_b), vector_size))
+        self.assertEqual(np.array(attention_details['ba']['keys']).shape,
+                         (num_layers, num_heads, len(tokens_a), vector_size))
+
 
 if __name__ == "__main__":
     unittest.main()
