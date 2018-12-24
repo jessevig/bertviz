@@ -33,10 +33,11 @@ class AttentionDetailsData:
 vis_html = """
   <span style="user-select:none">
     Layer: <select id="layer"></select>
+    Head: <select id="att_head"></select>
     Attention: <select id="att_type">
       <option value="all">All</option>
-      <option value="a">Sentence A self-attention</option>
-      <option value="b">Sentence B self-attention</option>
+      <option value="a">Sentence A -> Sentence A</option>
+      <option value="b">Sentence B -> Sentence B</option>
       <option value="ab">Sentence A -> Sentence B</option>
       <option value="ba">Sentence B -> Sentence A</option>
     </select>
@@ -46,7 +47,7 @@ vis_html = """
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
-vis_js = open(os.path.join(__location__, 'attention.js')).read()
+vis_js = open(os.path.join(__location__, 'attention_details.js')).read()
 
 
 def show(tokens_a, tokens_b, query_vectors, key_vectors):
@@ -80,8 +81,8 @@ def _get_attention_details(tokens_a, tokens_b, query_vectors, key_vectors):
       {
         'left_text': list of source tokens, to be displayed on the left of the vis
         'right_text': list of target tokens, to be displayed on the right of the vis
-        'queries': list of query vector arrays, one for each layer. Each is of shape [num_heads, source_seq_len, vector_size]
-        'keys': list of key vector arrays, one for each layer. Each is of shape [num_heads, target_seq_len, vector_size]
+        'queries': list of query vector arrays, one for each layer. Each is nested list, shape (num_heads, source_seq_len, vector_size)
+        'keys': list of key vector arrays, one for each layer. Each is nested list, shape (num_heads, target_seq_len, vector_size)
       }
     """
 
