@@ -3,6 +3,7 @@ import json
 import os
 import IPython.display as display
 from collections import defaultdict
+from bertviz.attention import _get_attentions
 
 class AttentionDetailsData:
     """Represents data needed for attention details visualization"""
@@ -17,7 +18,8 @@ class AttentionDetailsData:
         _, _, attn_data_list = self.model(tokens_tensor, token_type_ids=token_type_tensor)
         query_tensor = torch.stack([attn_data['query_layer'] for attn_data in attn_data_list])
         key_tensor = torch.stack([attn_data['key_layer'] for attn_data in attn_data_list])
-        return tokens_a, tokens_b, query_tensor.data.numpy(), key_tensor.data.numpy()
+        attn_tensor = torch.stack([attn_data['attn_probs'] for attn_data in attn_data_list])
+        return tokens_a, tokens_b, query_tensor.data.numpy(), key_tensor.data.numpy(), attn_tensor.data.numpy()
 
     def _get_inputs(self, sentence_a, sentence_b):
         tokens_a = self.tokenizer.tokenize(sentence_a)
@@ -50,16 +52,16 @@ __location__ = os.path.realpath(
 vis_js = open(os.path.join(__location__, 'attention_details.js')).read()
 
 
-def show(tokens_a, tokens_b, query_vectors, key_vectors):
+def show(tokens_a, tokens_b, query_vectors, key_vectors, attn):
     """Displays attention visualization"""
-    attention_details = _get_attention_details(tokens_a, tokens_b, query_vectors, key_vectors)
+    attention_details = _get_attention_details(tokens_a, tokens_b, query_vectors, key_vectors, attn)
     att_json = json.dumps(attention_details)
     display.display(display.HTML(vis_html))
     display.display(display.Javascript('window.attention = %s' % att_json))
     display.display(display.Javascript(vis_js))
 
 
-def _get_attention_details(tokens_a, tokens_b, query_vectors, key_vectors):
+def _get_attention_details(tokens_a, tokens_b, query_vectors, key_vectors, atts):
     """Compute representation of the attention to pass to the d3 visualization
 
     Args:
@@ -67,6 +69,8 @@ def _get_attention_details(tokens_a, tokens_b, query_vectors, key_vectors):
       tokens_b: tokens in sentence B
       query_vectors: numpy array, [num_layers, batch_size, num_heads, seq_len, vector_size]
       key_vectors: numpy array, [num_layers, batch_size, num_heads, seq_len, vector_size]
+      atts: numpy array, attention
+          [num_layers, batch_size, num_heads, seq_len, seq_len]
 
     Returns:
       Dictionary of query/key representations with the structure:
@@ -83,16 +87,20 @@ def _get_attention_details(tokens_a, tokens_b, query_vectors, key_vectors):
         'right_text': list of target tokens, to be displayed on the right of the vis
         'queries': list of query vector arrays, one for each layer. Each is nested list, shape (num_heads, source_seq_len, vector_size)
         'keys': list of key vector arrays, one for each layer. Each is nested list, shape (num_heads, target_seq_len, vector_size)
+        'att': list of inter attentions matrices, one for each layer. Each is of shape [num_heads, source_seq_len, target_seq_len]
+
       }
     """
 
     key_vectors_dict = defaultdict(list)
     query_vectors_dict = defaultdict(list)
+    atts_dict = defaultdict(list)
 
     slice_a = slice(0, len(tokens_a))  # Positions corresponding to sentence A in input
     slice_b = slice(len(tokens_a), len(tokens_a) + len(tokens_b))  # Position corresponding to sentence B in input
     num_layers = len(query_vectors)
     for layer in range(num_layers):
+        # Process queries and keys
         query_vector = query_vectors[layer][0] # assume batch_size=1; shape = [num_heads, seq_len, vector_size]
         key_vector = key_vectors[layer][0] # assume batch_size=1; shape = [num_heads, seq_len, vector_size]
         query_vectors_dict['all'].append(query_vector.tolist())
@@ -101,35 +109,47 @@ def _get_attention_details(tokens_a, tokens_b, query_vectors, key_vectors):
         key_vectors_dict['a'].append(key_vector[:, slice_a, :].tolist())
         query_vectors_dict['b'].append(query_vector[:, slice_b, :].tolist())
         key_vectors_dict['b'].append(key_vector[:, slice_b, :].tolist())
+        # Process attention
+        att = atts[layer][0] # assume batch_size=1; shape = [num_heads, source_seq_len, target_seq_len]
+        atts_dict['all'].append(att.tolist())
+        atts_dict['aa'].append(att[:, slice_a, slice_a].tolist()) # Append A->A attention for layer, across all heads
+        atts_dict['bb'].append(att[:, slice_b, slice_b].tolist()) # Append B->B attention for layer, across all heads
+        atts_dict['ab'].append(att[:, slice_a, slice_b].tolist()) # Append A->B attention for layer, across all heads
+        atts_dict['ba'].append(att[:, slice_b, slice_a].tolist()) # Append B->A attention for layer, across all heads
 
     attentions =  {
         'all': {
             'queries': query_vectors_dict['all'],
             'keys': key_vectors_dict['all'],
+            'att': atts_dict['all'],
             'left_text': tokens_a + tokens_b,
             'right_text': tokens_a + tokens_b
         },
         'aa': {
             'queries': query_vectors_dict['a'],
             'keys': key_vectors_dict['a'],
+            'att': atts_dict['aa'],
             'left_text': tokens_a,
             'right_text': tokens_a
         },
         'bb': {
             'queries': query_vectors_dict['b'],
             'keys': key_vectors_dict['b'],
+            'att': atts_dict['bb'],
             'left_text': tokens_b,
             'right_text': tokens_b
         },
         'ab': {
             'queries': query_vectors_dict['a'],
             'keys': key_vectors_dict['b'],
+            'att': atts_dict['ab'],
             'left_text': tokens_a,
             'right_text': tokens_b
         },
         'ba': {
             'queries': query_vectors_dict['b'],
             'keys': key_vectors_dict['a'],
+            'att': atts_dict['ba'],
             'left_text': tokens_b,
             'right_text': tokens_a
         }
