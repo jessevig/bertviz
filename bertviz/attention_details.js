@@ -13,7 +13,7 @@ requirejs(['jquery', 'd3'],
     var attention = window.attention;
 
     const TEXT_SIZE = 15;
-    const MATRIX_WIDTH = 200;
+    const MATRIX_WIDTH = 175;
     const BOXWIDTH = TEXT_SIZE * 8;
     const BOXHEIGHT = TEXT_SIZE * 1.5;
     const WIDTH = 3000;
@@ -77,7 +77,7 @@ requirejs(['jquery', 'd3'],
 
       var queryHeadingContainer = headingContainer.append("text")
         // .attr("x", posQueries + MATRIX_WIDTH / 2 - TEXT_SIZE * 2)
-        .attr("x", 200)
+        .attr("x", 185)
         .attr("y", HEADING_HEIGHT - 10)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
@@ -131,7 +131,7 @@ requirejs(['jquery', 'd3'],
 
       var keyHeadingContainer = headingContainer.append("text")
         // .attr("x", posKeys + MATRIX_WIDTH / 2)
-        .attr("x", 430)
+        .attr("x", 385)
         .attr("y", HEADING_HEIGHT - 10)
         // .attr("dy", TEXT_SIZE)
         .attr("height", BOXHEIGHT)
@@ -177,7 +177,7 @@ requirejs(['jquery', 'd3'],
 
       var productHeadingContainer = headingContainer.append("text")
         // .attr("x", posKeys + MATRIX_WIDTH / 2)
-        .attr("x", 660)
+        .attr("x", 580)
         .attr("y", HEADING_HEIGHT - 10)
         // .attr("dy", TEXT_SIZE)
         .attr("height", BOXHEIGHT)
@@ -231,7 +231,7 @@ requirejs(['jquery', 'd3'],
 
       var dotProductHeadingContainer = headingContainer.append("text")
         // .attr("x", posKeys + MATRIX_WIDTH / 2)
-        .attr("x", 800)
+        .attr("x", 714)
         .attr("y", HEADING_HEIGHT - 10)
         // .attr("dy", TEXT_SIZE)
         .attr("height", BOXHEIGHT)
