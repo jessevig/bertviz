@@ -33,9 +33,9 @@ requirejs(['jquery', 'd3'],
       $(id).empty();
 
       var posLeftText = 0;
-      var posQueries = posLeftText + BOXWIDTH + PADDING_WIDTH;
-      var posKeys = posQueries + MATRIX_WIDTH + PADDING_WIDTH;
-      var posProduct = posKeys + MATRIX_WIDTH + PADDING_WIDTH;
+      var posQueries = posLeftText + BOXWIDTH + PADDING_WIDTH / 2;
+      var posKeys = posQueries + MATRIX_WIDTH + 1 * PADDING_WIDTH;
+      var posProduct = posKeys + MATRIX_WIDTH + 1 * PADDING_WIDTH;
       var posDotProduct = posProduct + MATRIX_WIDTH + PADDING_WIDTH;
       var posSoftMax = posDotProduct + DOT_WIDTH+ PADDING_WIDTH;
       var posText = posSoftMax + SOFTMAX_WIDTH + PADDING_WIDTH;
@@ -49,14 +49,26 @@ requirejs(['jquery', 'd3'],
 
       renderHeadings(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftMax)
       renderText(svg, left_text, "left_text", posLeftText);
-      renderVectors(svg, "queries", queries, posQueries);
       renderVectors(svg, "keys", keys, posKeys);
+      renderVectors(svg, "queries", queries, posQueries);
       renderVectors(svg, "product", keys, posProduct);
       var dotProducts = new Array(right_text.length).fill(0);
       renderDotProducts(svg, dotProducts, posDotProduct);
       var softMax = new Array(right_text.length).fill(0);
       renderSoftmax(svg, softMax, posSoftMax);
       renderText(svg, right_text, "right_text", posText);
+      // renderSeperator(svg, posProduct - PADDING_WIDTH)
+    }
+
+    function renderSeperator(svg, left_pos) {
+      svg.append("svg:g")
+        .append("line")
+        .attr("x1", left_pos)
+        .attr("x2", left_pos)
+        .attr("y1", HEADING_HEIGHT)
+        .attr("y2", HEADING_HEIGHT + BOXHEIGHT * config.vector_size)
+        .style("stroke-width", 1.5)
+        .style("stroke", "lightgray")
     }
 
     function renderHeadings(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftmax) {
@@ -255,10 +267,6 @@ requirejs(['jquery', 'd3'],
           .attr("y", HEADING_HEIGHT - 8)
           .attr('dx', '1px')
 
-
-
-
-
       headingContainer.append("text")
         .attr("x", posSoftmax)
         .attr("y", HEADING_HEIGHT - 10)
@@ -281,7 +289,7 @@ requirejs(['jquery', 'd3'],
         .attr("id", id);
       //config.vector_size = 15;
 
-      if (id == "keys" || id == "product") {
+      // if (id == "keys") {
         vectorContainer.append("rect")
           .classed("matrixborder", true)
           .attr("x", left_pos - 2)
@@ -289,10 +297,10 @@ requirejs(['jquery', 'd3'],
           .attr("width", MATRIX_WIDTH + 4)
           .attr("height", BOXHEIGHT * vectors.length - 2)
           .style("fill-opacity", 0)
-          .style("stroke-opacity", 0)
+          // .style("stroke-opacity", 0)
           .style("stroke-width", 1.5)
           .style("stroke", "#817a7a")
-      }
+      // }
 
       var vector = vectorContainer.append("g") //.classed("attention_boxes", true) // Add outer group
         .selectAll("g")
@@ -304,19 +312,35 @@ requirejs(['jquery', 'd3'],
           return i;
         }) // make parent index available from DOM
 
-      // if (id=="queries") {
+      if (id=="queries") {
         vector.append("rect")
           .classed("vectorborder", true)
           .attr("x", left_pos - 2)
           .attr("y", function (d, i) {
             return i * BOXHEIGHT + HEADING_HEIGHT;
           })
-          .attr("width", MATRIX_WIDTH + 4)
+          .attr("width", MATRIX_WIDTH)
           .attr("height", BOXHEIGHT - 2)
           .style("fill-opacity", 0)
           .style("stroke-opacity", 0)
           .style("stroke-width", 1.5)
           .style("stroke", "#817a7a")
+      }
+        // if (id=="queries") {
+        //   vector.append("line")
+        //     .classed("joinline", true)
+        //     .attr("x1", left_pos + MATRIX_WIDTH + PADDING_WIDTH - 2)
+        //     .attr("y1", function (d, i) {
+        //       return i * BOXHEIGHT + HEADING_HEIGHT + 1;
+        //     })
+        //     .attr("x2", left_pos + MATRIX_WIDTH + PADDING_WIDTH - 2)
+        //     .attr("y2", function (d, i) {
+        //       return (i + 1) * BOXHEIGHT + HEADING_HEIGHT - 3;
+        //     })
+        //     .style("stroke-width", 2)
+        //     .style("stroke", "white")
+        // }
+
       // }
 
       vector.selectAll(".element")
@@ -502,12 +526,20 @@ requirejs(['jquery', 'd3'],
         .style("stroke-opacity", function (d, i) {
           return i == index ? 1.0 : 0;
         })
-      svg.select("#keys")
-        .selectAll(".matrixborder")
-        .style("stroke-opacity", 1)
-      svg.select("#product")
-        .selectAll(".matrixborder")
-        .style("stroke-opacity", 1)
+      svg.select("#queries")
+        .select(".matrixborder")
+        .style("stroke-opacity", 0)
+      // svg.select("#queries")
+      //   .selectAll(".joinline")
+      //   .style("stroke-opacity", function (d, i) {
+      //     return i == index ? 1.0 : 0;
+      //   })
+      // svg.select("#keys")
+      //   .selectAll(".matrixborder")
+      //   .style("stroke-opacity", 1)
+      // svg.select("#product")
+      //   .selectAll(".matrixborder")
+      //   .style("stroke-opacity", 1)
       svg.select("#left_text")
         .selectAll("rect")
         .style("opacity", function (d, i) {
@@ -529,12 +561,18 @@ requirejs(['jquery', 'd3'],
       svg.select("#queries")
         .selectAll(".vectorborder")
         .style("stroke-opacity", 0)
-      svg.select("#keys")
-        .selectAll(".matrixborder")
-        .style("stroke-opacity", 0)
-      svg.select("#keys")
-        .selectAll(".vectorborder")
-        .style("stroke-opacity", 0)
+      // svg.select("queries")
+      //   .selectAll(".joinline")
+      //   .style("stroke-opacity", 0)
+      svg.select("#queries")
+        .select(".matrixborder")
+        .style("stroke-opacity", 1)
+      // svg.select("#keys")
+      //   .selectAll(".matrixborder")
+      //   .style("stroke-opacity", 0)
+      // svg.select("#keys")
+      //   .selectAll(".vectorborder")
+      //   .style("stroke-opacity", 0)
       svg.select("#left_text")
         .selectAll("rect")
         .style("opacity", 0.0)
