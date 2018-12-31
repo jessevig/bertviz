@@ -87,7 +87,7 @@ requirejs(['jquery', 'd3'],
         // .html('Query (Q')
 
       queryHeadingContainer.append('tspan')
-          .text('Query (Q')
+          .text('Query (q')
           .style('font-size', TEXT_SIZE + "px")
           // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
@@ -143,7 +143,7 @@ requirejs(['jquery', 'd3'],
         // .text("Key (K)")
 
       keyHeadingContainer.append('tspan')
-          .text('Key (K')
+          .text('Key (k')
           .style('font-size', TEXT_SIZE + "px")
           // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
@@ -175,6 +175,7 @@ requirejs(['jquery', 'd3'],
       //   .text("Q \u25CB K")
 
 
+
       var productHeadingContainer = headingContainer.append("text")
         // .attr("x", posKeys + MATRIX_WIDTH / 2)
         .attr("x", 580)
@@ -189,7 +190,7 @@ requirejs(['jquery', 'd3'],
         // .text("Key (K)")
 
       productHeadingContainer.append('tspan')
-          .text('Q')
+          .text('q')
           .style('font-size', TEXT_SIZE + "px")
           // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
@@ -202,7 +203,7 @@ requirejs(['jquery', 'd3'],
           .attr('dx', '1px')
 
       productHeadingContainer.append('tspan')
-          .text(' \u25CB K')
+          .text(' \u25CB k')
           .style('font-size', TEXT_SIZE + "px")
           // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
@@ -243,7 +244,7 @@ requirejs(['jquery', 'd3'],
         // .text("Key (K)")
 
       dotProductHeadingContainer.append('tspan')
-          .text('Q')
+          .text('q')
           .style('font-size', TEXT_SIZE + "px")
           // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
@@ -256,7 +257,7 @@ requirejs(['jquery', 'd3'],
           .attr('dx', '1px')
 
       dotProductHeadingContainer.append('tspan')
-          .text(' \u2219 K')
+          .text(' \u2219 k')
           .style('font-size', TEXT_SIZE + "px")
           // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
@@ -278,6 +279,20 @@ requirejs(['jquery', 'd3'],
         // .attr("dy", TEXT_SIZE)
         // .style("font-weight", "bold")
         .text("Softmax")
+
+      headingContainer.append("text")
+        .attr("id", "placeholder")
+        .attr("x", posSoftmax + SOFTMAX_WIDTH - (SOFTMAX_WIDTH + MATRIX_WIDTH + DOT_WIDTH)/2)
+        .attr("y", HEADING_HEIGHT + 55)
+        // .attr("dy", TEXT_SIZE)
+        .attr("height", BOXHEIGHT)
+        .attr("width", SOFTMAX_WIDTH + MATRIX_WIDTH + DOT_WIDTH)
+        .attr("font-size", 23 + "px")
+        .style("text-anchor", "middle")
+        // .attr("dy", TEXT_SIZE)
+        // .style("font-weight", "bold")
+        .text("No token selected")
+        .attr("fill", "darkgray")
     }
 
     function renderVectors(svg, id, vectors, left_pos) {
@@ -287,6 +302,10 @@ requirejs(['jquery', 'd3'],
       // Create vectorContainer of type svg:g ad w/id left or right
       var vectorContainer = svg.append("svg:g")
         .attr("id", id);
+
+      if (id=="product") {
+        vectorContainer.style("opacity", 0);
+      }
       //config.vector_size = 15;
 
       // if (id == "keys") {
@@ -298,9 +317,20 @@ requirejs(['jquery', 'd3'],
           .attr("height", BOXHEIGHT * vectors.length - 2)
           .style("fill-opacity", 0)
           // .style("stroke-opacity", 0)
-          .style("stroke-width", 1.5)
-          .style("stroke", "#817a7a")
+          .style("stroke-width", 2)
+          .style("stroke", "#b3aaaa")
+          .attr("rx", 2)
+          .attr("ry", 2)
       // }
+
+
+      //       svg.select("#queries")
+      //   .selectAll(".vector")
+      //   .style("opacity", 1.0)
+      // svg.select("#queries")
+      //   .selectAll(".vectorborder")
+
+
 
       var vector = vectorContainer.append("g") //.classed("attention_boxes", true) // Add outer group
         .selectAll("g")
@@ -323,8 +353,10 @@ requirejs(['jquery', 'd3'],
           .attr("height", BOXHEIGHT - 2)
           .style("fill-opacity", 0)
           .style("stroke-opacity", 0)
-          .style("stroke-width", 1.5)
-          .style("stroke", "#817a7a")
+          .style("stroke-width", 2)
+          .style("stroke", "#b3aaaa")
+          .attr("rx", 2)
+          .attr("ry", 2)
       }
         // if (id=="queries") {
         //   vector.append("line")
@@ -423,7 +455,8 @@ requirejs(['jquery', 'd3'],
         })
         .attr("height", BOXHEIGHT)
         .attr("width", BOXWIDTH)
-        .attr("dy", TEXT_SIZE);
+        .attr("dy", TEXT_SIZE)
+        // .style("fill", "#535354");
 
       if (id == "left_text") {
         textContainer.style("text-anchor", "end")
@@ -431,11 +464,11 @@ requirejs(['jquery', 'd3'],
 
         tokenContainer.on("mouseover", function (d, index) {
           highlightSelection(svg, index)
-          showProduct(svg, index);
+          showComputation(svg, index);
         });
         tokenContainer.on("mouseleave", function () {
           unhighlightSelection(svg)
-          hideProduct(svg)
+          hideComputation(svg)
         });
       }
     }
@@ -475,9 +508,18 @@ requirejs(['jquery', 'd3'],
         })
         .style("fill", function (d) {
           if (d >= 0) {
-            return 'blue';
+            //return '#1a8cff';
+            return "blue"
           } else {
-            return 'red'
+            //return '#ff5555'
+            return "red"
+          }
+        })
+        .style("stroke", function (d) {
+          if (d >= 0) {
+            return 'black';
+          } else {
+            return 'black'
           }
         })
         .attr("data-value", function (d) {
@@ -499,7 +541,11 @@ requirejs(['jquery', 'd3'],
         })
         .attr("height", BOXHEIGHT - 4)
         .attr("width", 0)
-        .style("fill", "grey");
+        // .style("fill", "#c3c3c3")
+        .style("fill", "#8d8d8d")
+        .style("stroke", "black")
+        // .stroke("stroke-width", 2)
+      ;
     }
 
     function updateSoftmax(svg, softmax) {
@@ -583,7 +629,7 @@ requirejs(['jquery', 'd3'],
       // .style("stroke-width", 0);
     }
 
-    function showProduct(svg, query_index) {
+    function showComputation(svg, query_index) {
       var att_dets = config.attention[config.att_type];
       var query_vector = att_dets.queries[config.layer][config.att_head][query_index];
       var keys = att_dets.keys[config.layer][config.att_head];
@@ -610,13 +656,16 @@ requirejs(['jquery', 'd3'],
       updateDotProducts(svg, dotProducts);
       updateSoftmax(svg, att);
       updateTextAttention(svg, att);
+      svg.select("#placeholder").style("opacity", 0);
+
     }
 
-    function hideProduct(svg) {
+    function hideComputation(svg) {
       svg.select("#product").style("opacity", 0);
       svg.select("#dotproducts").style("opacity", 0);
       svg.select("#softmaxes").style("opacity", 0);
       svg.select('#right_text').selectAll("rect").style("opacity", 0);
+      svg.select("#placeholder").style("opacity", 1);
     }
 
     function updateVectors(svg, id, data) {
