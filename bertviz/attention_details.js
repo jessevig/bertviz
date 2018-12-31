@@ -37,7 +37,7 @@ requirejs(['jquery', 'd3'],
       var posKeys = posQueries + MATRIX_WIDTH + 1 * PADDING_WIDTH;
       var posProduct = posKeys + MATRIX_WIDTH + 1 * PADDING_WIDTH;
       var posDotProduct = posProduct + MATRIX_WIDTH + PADDING_WIDTH;
-      var posSoftMax = posDotProduct + DOT_WIDTH+ PADDING_WIDTH;
+      var posSoftMax = posDotProduct + DOT_WIDTH + PADDING_WIDTH;
       var posText = posSoftMax + SOFTMAX_WIDTH + PADDING_WIDTH;
       var width = posText + BOXWIDTH
 
@@ -76,38 +76,38 @@ requirejs(['jquery', 'd3'],
         .attr("id", "heading");
 
       var queryHeadingContainer = headingContainer.append("text")
-        // .attr("x", posQueries + MATRIX_WIDTH / 2 - TEXT_SIZE * 2)
+      // .attr("x", posQueries + MATRIX_WIDTH / 2 - TEXT_SIZE * 2)
         .attr("x", 185)
         .attr("y", HEADING_HEIGHT - 10)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
-        // .attr("text-anchor", "middle")
-        // .html("Query <sub>sub</sub>sub>")
-        // .html('Query (Q')
+      // .attr("text-anchor", "middle")
+      // .html("Query <sub>sub</sub>sub>")
+      // .html('Query (Q')
 
       queryHeadingContainer.append('tspan')
-          .text('Query (q')
-          .style('font-size', TEXT_SIZE + "px")
-          // .attr('dx', '0em')
+        .text('Query (q')
+        .style('font-size', TEXT_SIZE + "px")
+        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
       queryHeadingContainer.append('tspan')
         .classed('i-index', 'true')
-          .text('i')
-          .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
-          .attr("y", HEADING_HEIGHT - 8)
-          .attr('dx', '1px')
-          .attr('dy', '0px')
+        .text('i')
+        .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
+        .attr("y", HEADING_HEIGHT - 8)
+        .attr('dx', '1px')
+        .attr('dy', '0px')
 
       queryHeadingContainer.append('tspan')
-          .text(')')
-          .style('font-size', TEXT_SIZE + "px")
-          // .attr('dx', '0em')
+        .text(')')
+        .style('font-size', TEXT_SIZE + "px")
+        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
 
-          // .attr('dy', '-.6em')
+      // .attr('dy', '-.6em')
 
       // headingContainer.append("text")
       //   .attr("x", posQueries + MATRIX_WIDTH / 2)
@@ -118,46 +118,46 @@ requirejs(['jquery', 'd3'],
       //   .style("text-anchor", "middle")
       //
       //   // .append('tspan')
-        //   .text('Query (Q')
-        //   .style('font-size', TEXT_SIZE + "px")
-        //   .append('tspan')
-        //   .text('i')
-        //   .style('font-size', Math.floor(TEXT_SIZE / 2) + "px")
-        //   .attr('dx', '.1em')
-        //   .attr('dy', '.9em')
-        //   .append('tspan')
-        //   .text(')')
-        //   .style('font-size', TEXT_SIZE + "px")
+      //   .text('Query (Q')
+      //   .style('font-size', TEXT_SIZE + "px")
+      //   .append('tspan')
+      //   .text('i')
+      //   .style('font-size', Math.floor(TEXT_SIZE / 2) + "px")
+      //   .attr('dx', '.1em')
+      //   .attr('dy', '.9em')
+      //   .append('tspan')
+      //   .text(')')
+      //   .style('font-size', TEXT_SIZE + "px")
 
       var keyHeadingContainer = headingContainer.append("text")
-        // .attr("x", posKeys + MATRIX_WIDTH / 2)
+      // .attr("x", posKeys + MATRIX_WIDTH / 2)
         .attr("x", 385)
         .attr("y", HEADING_HEIGHT - 10)
         // .attr("dy", TEXT_SIZE)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
-        // .style("text-anchor", "middle")
-        // .attr("dy", TEXT_SIZE)
-        // .style("font-weight", "bold")
-        // .text("Key (K)")
+      // .style("text-anchor", "middle")
+      // .attr("dy", TEXT_SIZE)
+      // .style("font-weight", "bold")
+      // .text("Key (K)")
 
       keyHeadingContainer.append('tspan')
-          .text('Key (k')
-          .style('font-size', TEXT_SIZE + "px")
-          // .attr('dx', '0em')
+        .text('Key (k')
+        .style('font-size', TEXT_SIZE + "px")
+        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
       keyHeadingContainer.append('tspan')
-          .text('j')
-          .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
-          .attr("y", HEADING_HEIGHT - 8)
-          .attr('dx', '1px')
+        .text('j')
+        .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
+        .attr("y", HEADING_HEIGHT - 8)
+        .attr('dx', '1px')
 
       keyHeadingContainer.append('tspan')
-          .text(')')
-          .style('font-size', TEXT_SIZE + "px")
-          // .attr('dx', '0em')
+        .text(')')
+        .style('font-size', TEXT_SIZE + "px")
+        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
 
@@ -175,45 +175,43 @@ requirejs(['jquery', 'd3'],
       //   .text("Q \u25CB K")
 
 
-
       var productHeadingContainer = headingContainer.append("text")
-        // .attr("x", posKeys + MATRIX_WIDTH / 2)
+      // .attr("x", posKeys + MATRIX_WIDTH / 2)
         .attr("x", 580)
         .attr("y", HEADING_HEIGHT - 10)
         // .attr("dy", TEXT_SIZE)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
-        // .style("text-anchor", "middle")
-        // .attr("dy", TEXT_SIZE)
-        // .style("font-weight", "bold")
-        // .text("Key (K)")
+      // .style("text-anchor", "middle")
+      // .attr("dy", TEXT_SIZE)
+      // .style("font-weight", "bold")
+      // .text("Key (K)")
 
       productHeadingContainer.append('tspan')
-          .text('q')
-          .style('font-size', TEXT_SIZE + "px")
-          // .attr('dx', '0em')
+        .text('q')
+        .style('font-size', TEXT_SIZE + "px")
+        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
       productHeadingContainer.append('tspan')
         .classed('i-index', 'true')
-          .text('i')
-          .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
-          .attr("y", HEADING_HEIGHT - 8)
-          .attr('dx', '1px')
+        .text('i')
+        .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
+        .attr("y", HEADING_HEIGHT - 8)
+        .attr('dx', '1px')
 
       productHeadingContainer.append('tspan')
-          .text(' \u25CB k')
-          .style('font-size', TEXT_SIZE + "px")
-          // .attr('dx', '0em')
+        .text(' \u25CB k')
+        .style('font-size', TEXT_SIZE + "px")
+        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
       productHeadingContainer.append('tspan')
-          .text('j')
-          .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
-          .attr("y", HEADING_HEIGHT - 8)
-          .attr('dx', '1px')
-
+        .text('j')
+        .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
+        .attr("y", HEADING_HEIGHT - 8)
+        .attr('dx', '1px')
 
 
       // headingContainer.append("text")
@@ -231,42 +229,42 @@ requirejs(['jquery', 'd3'],
       //
 
       var dotProductHeadingContainer = headingContainer.append("text")
-        // .attr("x", posKeys + MATRIX_WIDTH / 2)
+      // .attr("x", posKeys + MATRIX_WIDTH / 2)
         .attr("x", 714)
         .attr("y", HEADING_HEIGHT - 10)
         // .attr("dy", TEXT_SIZE)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
-        // .style("text-anchor", "middle")
-        // .attr("dy", TEXT_SIZE)
-        // .style("font-weight", "bold")
-        // .text("Key (K)")
+      // .style("text-anchor", "middle")
+      // .attr("dy", TEXT_SIZE)
+      // .style("font-weight", "bold")
+      // .text("Key (K)")
 
       dotProductHeadingContainer.append('tspan')
-          .text('q')
-          .style('font-size', TEXT_SIZE + "px")
-          // .attr('dx', '0em')
+        .text('q')
+        .style('font-size', TEXT_SIZE + "px")
+        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
       dotProductHeadingContainer.append('tspan')
         .classed('i-index', 'true')
-          .text('i')
-          .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
-          .attr("y", HEADING_HEIGHT - 8)
-          .attr('dx', '1px')
+        .text('i')
+        .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
+        .attr("y", HEADING_HEIGHT - 8)
+        .attr('dx', '1px')
 
       dotProductHeadingContainer.append('tspan')
-          .text(' \u2219 k')
-          .style('font-size', TEXT_SIZE + "px")
-          // .attr('dx', '0em')
+        .text(' \u2219 k')
+        .style('font-size', TEXT_SIZE + "px")
+        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
       dotProductHeadingContainer.append('tspan')
-          .text('j')
-          .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
-          .attr("y", HEADING_HEIGHT - 8)
-          .attr('dx', '1px')
+        .text('j')
+        .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
+        .attr("y", HEADING_HEIGHT - 8)
+        .attr('dx', '1px')
 
       headingContainer.append("text")
         .attr("x", posSoftmax)
@@ -282,7 +280,7 @@ requirejs(['jquery', 'd3'],
 
       headingContainer.append("text")
         .attr("id", "placeholder")
-        .attr("x", posSoftmax + SOFTMAX_WIDTH - (SOFTMAX_WIDTH + MATRIX_WIDTH + DOT_WIDTH)/2)
+        .attr("x", posSoftmax + SOFTMAX_WIDTH - (SOFTMAX_WIDTH + MATRIX_WIDTH + DOT_WIDTH) / 2)
         .attr("y", HEADING_HEIGHT + 55)
         // .attr("dy", TEXT_SIZE)
         .attr("height", BOXHEIGHT)
@@ -303,24 +301,24 @@ requirejs(['jquery', 'd3'],
       var vectorContainer = svg.append("svg:g")
         .attr("id", id);
 
-      if (id=="product") {
+      if (id == "product") {
         vectorContainer.style("opacity", 0);
       }
       //config.vector_size = 15;
 
       // if (id == "keys") {
-        vectorContainer.append("rect")
-          .classed("matrixborder", true)
-          .attr("x", left_pos - 2)
-          .attr("y", HEADING_HEIGHT)
-          .attr("width", MATRIX_WIDTH + 4)
-          .attr("height", BOXHEIGHT * vectors.length - 2)
-          .style("fill-opacity", 0)
-          // .style("stroke-opacity", 0)
-          .style("stroke-width", 2)
-          .style("stroke", "#b3aaaa")
-          .attr("rx", 2)
-          .attr("ry", 2)
+      vectorContainer.append("rect")
+        .classed("matrixborder", true)
+        .attr("x", left_pos - 2)
+        .attr("y", HEADING_HEIGHT)
+        .attr("width", MATRIX_WIDTH + 4)
+        .attr("height", BOXHEIGHT * vectors.length - 2)
+        .style("fill-opacity", 0)
+        // .style("stroke-opacity", 0)
+        .style("stroke-width", 2)
+        .style("stroke", "#b3aaaa")
+        .attr("rx", 2)
+        .attr("ry", 2)
       // }
 
 
@@ -329,7 +327,6 @@ requirejs(['jquery', 'd3'],
       //   .style("opacity", 1.0)
       // svg.select("#queries")
       //   .selectAll(".vectorborder")
-
 
 
       var vector = vectorContainer.append("g") //.classed("attention_boxes", true) // Add outer group
@@ -342,7 +339,7 @@ requirejs(['jquery', 'd3'],
           return i;
         }) // make parent index available from DOM
 
-      if (id=="queries") {
+      if (id == "queries") {
         vector.append("rect")
           .classed("vectorborder", true)
           .attr("x", left_pos - 2)
@@ -358,20 +355,20 @@ requirejs(['jquery', 'd3'],
           .attr("rx", 2)
           .attr("ry", 2)
       }
-        // if (id=="queries") {
-        //   vector.append("line")
-        //     .classed("joinline", true)
-        //     .attr("x1", left_pos + MATRIX_WIDTH + PADDING_WIDTH - 2)
-        //     .attr("y1", function (d, i) {
-        //       return i * BOXHEIGHT + HEADING_HEIGHT + 1;
-        //     })
-        //     .attr("x2", left_pos + MATRIX_WIDTH + PADDING_WIDTH - 2)
-        //     .attr("y2", function (d, i) {
-        //       return (i + 1) * BOXHEIGHT + HEADING_HEIGHT - 3;
-        //     })
-        //     .style("stroke-width", 2)
-        //     .style("stroke", "white")
-        // }
+      // if (id=="queries") {
+      //   vector.append("line")
+      //     .classed("joinline", true)
+      //     .attr("x1", left_pos + MATRIX_WIDTH + PADDING_WIDTH - 2)
+      //     .attr("y1", function (d, i) {
+      //       return i * BOXHEIGHT + HEADING_HEIGHT + 1;
+      //     })
+      //     .attr("x2", left_pos + MATRIX_WIDTH + PADDING_WIDTH - 2)
+      //     .attr("y2", function (d, i) {
+      //       return (i + 1) * BOXHEIGHT + HEADING_HEIGHT - 3;
+      //     })
+      //     .style("stroke-width", 2)
+      //     .style("stroke", "white")
+      // }
 
       // }
 
@@ -384,7 +381,7 @@ requirejs(['jquery', 'd3'],
         .classed('element', true)
         .attr("x", function (d, i) { // i is vector index, j is index of token
           return left_pos + i * MATRIX_WIDTH / config.vector_size;
-                  // return left_pos + i * Math.floor(MATRIX_WIDTH / config.vector_size);
+          // return left_pos + i * Math.floor(MATRIX_WIDTH / config.vector_size);
 
         })
         .attr("y", function (d, i) {
@@ -417,7 +414,7 @@ requirejs(['jquery', 'd3'],
         .enter()
         .append("g");
       // var fillColor = HEAD_COLORS(config.att_head);
-      if (id=="left_text" || id=="right_text") {
+      if (id == "left_text" || id == "right_text") {
         var fillColor;
         if (id == "right_text") {
           fillColor = '#1f77b4';
@@ -437,38 +434,81 @@ requirejs(['jquery', 'd3'],
             return i * BOXHEIGHT + HEADING_HEIGHT;
           });
       }
-      if (id=="left_text") {
-        var plusSign = tokenContainer.append("g").style("opacity", 0.0)
+      if (id == "left_text") {
+        tokenContainer.append('text')
           .classed("plus-sign", true)
-        plusSign.append("rect")
-          .attr("fill", "#3b3b3b")
-          .attr("height", 15)
-          .attr("width", 15)
-          .attr("x", left_pos + 4.5)
+          .attr("x", left_pos + 5)
           .attr("y", function (d, i) {
-            return i * BOXHEIGHT + HEADING_HEIGHT + 4;
-          });
-        plusSign.append("rect")
-          .attr("fill", "white")
-          .attr("height", 4)
-          .attr("width", 12)
-          .attr("x", left_pos + 5.5)
+            return i * BOXHEIGHT + HEADING_HEIGHT + 12;
+          })
+          .attr("fill", "#4a4a4a")
+          // .attr('text-anchor', 'middle')
+          // .attr('dominant-baseline', 'central')
+          .style('font-family', 'FontAwesome')
+          .style('font-size', '16px')
+          .style('opacity', 0)
+          .text(function (d) {
+            return '\uf067';
+          })
+        tokenContainer.append('text')
+          // .style("text-anchor", "end")
+          .classed("minus-sign", true)
+          .attr("x", left_pos + 5)
           .attr("y", function (d, i) {
-            return i * BOXHEIGHT + HEADING_HEIGHT + 9.5;
-          });
-        plusSign.append("rect")
-          .attr("fill", "white")
-          .attr("height", 12)
-          .attr("width", 4)
-          .attr("x", left_pos + 9)
+            return i * BOXHEIGHT + HEADING_HEIGHT + 12;
+          })
+          .attr("fill", "#4a4a4a")
+          // .attr('text-anchor', 'middle')
+          // .attr('dominant-baseline', 'central')
+          .style('font-family', 'FontAwesome')
+          .style('font-size', '16px')
+          .style('opacity', 0)
+          .text(function (d) {
+            return '\uf068';
+          })
+
+        var expandIcon = tokenContainer.append('rect')
+          .attr('class', 'expand-icon')
+          .style('visibility', 'hidden')
+          .attr("x", left_pos + 1)
           .attr("y", function (d, i) {
-            return i * BOXHEIGHT + HEADING_HEIGHT + 6;
-          });
-      }
+            return i * BOXHEIGHT + HEADING_HEIGHT - 4;
+          })
+          .attr('width', 18)
+          .attr('height', BOXHEIGHT);
+              }
+      // if (id=="left_text") {
+      //   var plusSign = tokenContainer.append("g").style("opacity", 0.0)
+      //     .classed("minus-sign", true)
+      //   plusSign.append("rect")
+      //     .attr("fill", "#3b3b3b")
+      //     .attr("height", 15)
+      //     .attr("width", 15)
+      //     .attr("x", left_pos + 4.5)
+      //     .attr("y", function (d, i) {
+      //       return i * BOXHEIGHT + HEADING_HEIGHT + 4;
+      //     });
+      //   plusSign.append("rect")
+      //     .attr("fill", "white")
+      //     .attr("height", 4)
+      //     .attr("width", 12)
+      //     .attr("x", left_pos + 5.5)
+      //     .attr("y", function (d, i) {
+      //       return i * BOXHEIGHT + HEADING_HEIGHT + 9.5;
+      //     });
+      //   plusSign.append("rect")
+      //     .attr("fill", "white")
+      //     .attr("height", 12)
+      //     .attr("width", 4)
+      //     .attr("x", left_pos + 9)
+      //     .attr("y", function (d, i) {
+      //       return i * BOXHEIGHT + HEADING_HEIGHT + 6;
+      //     });
+      // }
 
 
       var offset;
-      if (id=="left_text") {
+      if (id == "left_text") {
         offset = -10;
       } else {
         offset = 10;
@@ -489,12 +529,11 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", BOXWIDTH)
         .attr("dy", TEXT_SIZE)
-        // .style("fill", "#535354");
+      // .style("fill", "#535354");
 
       if (id == "left_text") {
         textContainer.style("text-anchor", "end")
           .attr("dx", BOXWIDTH - 2)
-
         tokenContainer.on("mouseover", function (d, index) {
           highlightSelection(svg, index)
           showComputation(svg, index);
@@ -503,6 +542,34 @@ requirejs(['jquery', 'd3'],
           unhighlightSelection(svg)
           hideComputation(svg)
         });
+        expandIcon.on("click", function () {
+              console.log('clicked me!')
+            })
+      // }
+      //
+      //       "mouseover": function (d) {
+      //         console.log('mousover')
+      //         d3.select(this).style("cursor", "pointer");
+      //       },
+      //       "mouseout": function (d) {
+      //         console.log('mouseout')
+      //         d3.select(this).style("cursor", "default");
+      //       }
+      //     })
+        // expandIcon.on(
+        //   {
+        //     "click": function () {
+        //       console.log('clicked me!')
+        //     },
+        //     "mouseover": function (d) {
+        //       console.log('mousover')
+        //       d3.select(this).style("cursor", "pointer");
+        //     },
+        //     "mouseout": function (d) {
+        //       console.log('mouseout')
+        //       d3.select(this).style("cursor", "default");
+        //     }
+        //   })
       }
     }
 
@@ -560,6 +627,7 @@ requirejs(['jquery', 'd3'],
         })
 
     }
+
     function renderSoftmax(svg, softmax, leftPos) {
       svg.append("svg:g")
         .attr("id", "softmaxes")
@@ -577,7 +645,7 @@ requirejs(['jquery', 'd3'],
         // .style("fill", "#c3c3c3")
         .style("fill", "#8d8d8d")
         .style("stroke", "black")
-        // .stroke("stroke-width", 2)
+      // .stroke("stroke-width", 2)
       ;
     }
 
@@ -625,14 +693,14 @@ requirejs(['jquery', 'd3'],
           return i == index ? 1.0 : 0.0;
         })
       svg.select("#left_text")
-        .selectAll(".plus-sign")
+        .selectAll(".minus-sign")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
         })
       svg.selectAll(".i-index")
         .text(index)
 
-        // .style("font-weight", "bold")
+      // .style("font-weight", "bold")
 
       // .style("stroke-width", 3)
       // .style("stroke", "grey");
@@ -661,12 +729,11 @@ requirejs(['jquery', 'd3'],
         .selectAll(".highlight")
         .style("opacity", 0.0)
       svg.select("#left_text")
-        .selectAll(".plus-sign")
+        .selectAll(".minus-sign")
         .style("opacity", 0)
       svg.selectAll(".i-index")
         .text("i")
-
-        // .style("font-weight", "normal")
+      // .style("font-weight", "normal")
       // .style("stroke-width", 0);
     }
 
