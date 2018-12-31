@@ -417,22 +417,55 @@ requirejs(['jquery', 'd3'],
         .enter()
         .append("g");
       // var fillColor = HEAD_COLORS(config.att_head);
-      var fillColor; 
-      if (id=="right_text") {
-        fillColor = '#1f77b4';
+      if (id=="left_text" || id=="right_text") {
+        var fillColor;
+        if (id == "right_text") {
+          fillColor = '#1f77b4';
+        }
+        if (id == "left_text") {
+          fillColor = 'lightgray';
+        }
+
+        tokenContainer.append("rect")
+          .classed("highlight", true)
+          .attr("fill", fillColor)
+          .style("opacity", 0.0)
+          .attr("height", BOXHEIGHT)
+          .attr("width", BOXWIDTH)
+          .attr("x", left_pos)
+          .attr("y", function (d, i) {
+            return i * BOXHEIGHT + HEADING_HEIGHT;
+          });
       }
       if (id=="left_text") {
-        fillColor = 'lightgray';
+        var plusSign = tokenContainer.append("g").style("opacity", 0.0)
+          .classed("plus-sign", true)
+        plusSign.append("rect")
+          .attr("fill", "#3b3b3b")
+          .attr("height", 15)
+          .attr("width", 15)
+          .attr("x", left_pos + 4.5)
+          .attr("y", function (d, i) {
+            return i * BOXHEIGHT + HEADING_HEIGHT + 4;
+          });
+        plusSign.append("rect")
+          .attr("fill", "white")
+          .attr("height", 4)
+          .attr("width", 12)
+          .attr("x", left_pos + 5.5)
+          .attr("y", function (d, i) {
+            return i * BOXHEIGHT + HEADING_HEIGHT + 9.5;
+          });
+        plusSign.append("rect")
+          .attr("fill", "white")
+          .attr("height", 12)
+          .attr("width", 4)
+          .attr("x", left_pos + 9)
+          .attr("y", function (d, i) {
+            return i * BOXHEIGHT + HEADING_HEIGHT + 6;
+          });
       }
-      tokenContainer.append("rect")
-        .attr("fill", fillColor)
-        .style("opacity", 0.0)
-        .attr("height", BOXHEIGHT)
-        .attr("width", BOXWIDTH)
-        .attr("x", left_pos)
-        .attr("y", function (d, i) {
-          return i * BOXHEIGHT + HEADING_HEIGHT;
-        });
+
 
       var offset;
       if (id=="left_text") {
@@ -475,7 +508,7 @@ requirejs(['jquery', 'd3'],
 
     function updateTextAttention(svg, attn) {
       var container = svg.select('#right_text');
-      container.selectAll("rect")
+      container.selectAll(".highlight")
         .data(attn)
         .style("opacity", function (d) {
           return d;
@@ -587,7 +620,12 @@ requirejs(['jquery', 'd3'],
       //   .selectAll(".matrixborder")
       //   .style("stroke-opacity", 1)
       svg.select("#left_text")
-        .selectAll("rect")
+        .selectAll(".highlight")
+        .style("opacity", function (d, i) {
+          return i == index ? 1.0 : 0.0;
+        })
+      svg.select("#left_text")
+        .selectAll(".plus-sign")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
         })
@@ -620,8 +658,11 @@ requirejs(['jquery', 'd3'],
       //   .selectAll(".vectorborder")
       //   .style("stroke-opacity", 0)
       svg.select("#left_text")
-        .selectAll("rect")
+        .selectAll(".highlight")
         .style("opacity", 0.0)
+      svg.select("#left_text")
+        .selectAll(".plus-sign")
+        .style("opacity", 0)
       svg.selectAll(".i-index")
         .text("i")
 
