@@ -22,24 +22,39 @@ requirejs(['jquery', 'd3'],
     const DOT_WIDTH = 70;
     const SOFTMAX_WIDTH = 70;
     const HEADING_HEIGHT = 40;
-    //const HEAD_COLORS = d3.scaleOrdinal(d3.schemeCategory20);
-    // const HEAD_COLORS = d3.scaleOrdinal().range(d3.schemeCategory20);
+    const ATTENTION_WIDTH = 175;
 
-// const CHECKBOX_SIZE = 20;
-//     var numeric_colors = d3.scaleSequential(d3.interpolateRdBu);
-//     var productContainer = null;
-
-    function renderVis(id, left_text, right_text, queries, keys, att, config) {
+    function renderVisCollapsed(id, left_text, right_text) {
       $(id).empty();
 
       var posLeftText = 0;
-      var posQueries = posLeftText + BOXWIDTH + PADDING_WIDTH / 2;
-      var posKeys = posQueries + MATRIX_WIDTH + 1 * PADDING_WIDTH;
-      var posProduct = posKeys + MATRIX_WIDTH + 1 * PADDING_WIDTH;
+      var posAttention = posLeftText + BOXWIDTH + PADDING_WIDTH;
+      var posRightText = posAttention + ATTENTION_WIDTH + PADDING_WIDTH;
+      var width = posRightText + BOXWIDTH
+
+      var svg = d3.select(id)
+        .append('svg')
+        .attr("width", width)
+        .attr("height", HEIGHT);
+
+      renderHeadingsCollapsed(svg, posAttention)
+      renderText(svg, left_text, "left_text", posLeftText);
+      renderAttn(svg, posAttention, ATTENTION_WIDTH, false)
+      renderText(svg, right_text, "right_text", posRightText);
+    }
+
+
+    function renderVisExpanded(id, left_text, right_text, queries, keys) {
+      $(id).empty();
+
+      var posLeftText = 0;
+      var posQueries = posLeftText + BOXWIDTH + PADDING_WIDTH;
+      var posKeys = posQueries + MATRIX_WIDTH + PADDING_WIDTH;
+      var posProduct = posKeys + MATRIX_WIDTH + PADDING_WIDTH;
       var posDotProduct = posProduct + MATRIX_WIDTH + PADDING_WIDTH;
       var posSoftMax = posDotProduct + DOT_WIDTH + PADDING_WIDTH;
-      var posText = posSoftMax + SOFTMAX_WIDTH + PADDING_WIDTH;
-      var width = posText + BOXWIDTH
+      var posRightText = posSoftMax + SOFTMAX_WIDTH + PADDING_WIDTH;
+      var width = posRightText + BOXWIDTH
 
       var svg = d3.select(id)
         .append('svg')
@@ -47,49 +62,84 @@ requirejs(['jquery', 'd3'],
         .attr("height", HEIGHT);
 
 
-      renderHeadings(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftMax)
+      renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftMax)
       renderText(svg, left_text, "left_text", posLeftText);
-      renderVectors(svg, "keys", keys, posKeys);
-      renderVectors(svg, "queries", queries, posQueries);
-      renderVectors(svg, "product", keys, posProduct);
+      renderVectors(svg, "keys", keys, posKeys, true);
+      renderVectors(svg, "queries", queries, posQueries, true);
+      renderVectors(svg, "product", keys, posProduct, false);
       var dotProducts = new Array(right_text.length).fill(0);
       renderDotProducts(svg, dotProducts, posDotProduct);
       var softMax = new Array(right_text.length).fill(0);
       renderSoftmax(svg, softMax, posSoftMax);
-      renderText(svg, right_text, "right_text", posText);
-      // renderSeperator(svg, posProduct - PADDING_WIDTH)
+      renderText(svg, right_text, "right_text", posRightText);
+      renderAttn(svg, posQueries, posRightText - posQueries, true)
+
     }
 
-    function renderSeperator(svg, left_pos) {
-      svg.append("svg:g")
-        .append("line")
-        .attr("x1", left_pos)
-        .attr("x2", left_pos)
-        .attr("y1", HEADING_HEIGHT)
-        .attr("y2", HEADING_HEIGHT + BOXHEIGHT * config.vector_size)
-        .style("stroke-width", 1.5)
-        .style("stroke", "lightgray")
-    }
-
-    function renderHeadings(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftmax) {
+    function renderHeadingsCollapsed(svg, posAttn) {
       var headingContainer = svg.append("svg:g")
         .attr("id", "heading");
 
+      // Add expand icon
+      headingContainer.append('text')
+          .classed("plus-sign", true)
+          .attr("x", posAttn - 20)
+          .attr("y", HEADING_HEIGHT - 5)
+          .attr("fill", "#909090")
+          .style('font-family', 'FontAwesome')
+          .style('font-size', "17px")
+          .text(function (d) {
+            return '\uf055';
+          })
+          .on("click", function(d,i){
+            config.expanded = true;
+            render();
+          })
+         .on("mouseover", function(d,i){
+           d3.select(this).style("cursor", "pointer");
+         })
+         .on("mouseout", function(d,i){
+           d3.select(this).style("cursor", "default");
+         })
+    }
+
+    function renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftmax) {
+      var headingContainer = svg.append("svg:g")
+        .attr("id", "heading");
+
+      // Add expand icon
+      headingContainer.append('text')
+          .classed("minus-sign", true)
+          .attr("x", posQueries - 20)
+          .attr("y", HEADING_HEIGHT - 5)
+          .attr("fill", "#909090")
+          .style('font-family', 'FontAwesome')
+          .style('font-size', "17px")
+          .text(function (d) {
+            return '\uf056';
+          })
+         .on("click", function(d,i){
+            config.expanded = false;
+            render();
+          })
+         .on("mouseover", function(d,i){
+           d3.select(this).style("cursor", "pointer");
+         })
+         .on("mouseout", function(d,i){
+           d3.select(this).style("cursor", "default");
+         })
+
+
       var queryHeadingContainer = headingContainer.append("text")
-      // .attr("x", posQueries + MATRIX_WIDTH / 2 - TEXT_SIZE * 2)
         .attr("x", 185)
         .attr("y", HEADING_HEIGHT - 10)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
-      // .attr("text-anchor", "middle")
-      // .html("Query <sub>sub</sub>sub>")
-      // .html('Query (Q')
 
       queryHeadingContainer.append('tspan')
         .text('Query (q')
         .style('font-size', TEXT_SIZE + "px")
-        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
       queryHeadingContainer.append('tspan')
@@ -103,49 +153,18 @@ requirejs(['jquery', 'd3'],
       queryHeadingContainer.append('tspan')
         .text(')')
         .style('font-size', TEXT_SIZE + "px")
-        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
-
-
-      // .attr('dy', '-.6em')
-
-      // headingContainer.append("text")
-      //   .attr("x", posQueries + MATRIX_WIDTH / 2)
-      //   .attr("y", HEADING_HEIGHT - 10)
-      //   .attr("height", BOXHEIGHT)
-      //   .attr("width", MATRIX_WIDTH)
-      //   .attr("font-size", TEXT_SIZE + "px")
-      //   .style("text-anchor", "middle")
-      //
-      //   // .append('tspan')
-      //   .text('Query (Q')
-      //   .style('font-size', TEXT_SIZE + "px")
-      //   .append('tspan')
-      //   .text('i')
-      //   .style('font-size', Math.floor(TEXT_SIZE / 2) + "px")
-      //   .attr('dx', '.1em')
-      //   .attr('dy', '.9em')
-      //   .append('tspan')
-      //   .text(')')
-      //   .style('font-size', TEXT_SIZE + "px")
 
       var keyHeadingContainer = headingContainer.append("text")
-      // .attr("x", posKeys + MATRIX_WIDTH / 2)
         .attr("x", 385)
         .attr("y", HEADING_HEIGHT - 10)
-        // .attr("dy", TEXT_SIZE)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
-      // .style("text-anchor", "middle")
-      // .attr("dy", TEXT_SIZE)
-      // .style("font-weight", "bold")
-      // .text("Key (K)")
 
       keyHeadingContainer.append('tspan')
         .text('Key (k')
         .style('font-size', TEXT_SIZE + "px")
-        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
       keyHeadingContainer.append('tspan')
@@ -157,41 +176,18 @@ requirejs(['jquery', 'd3'],
       keyHeadingContainer.append('tspan')
         .text(')')
         .style('font-size', TEXT_SIZE + "px")
-        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
-
-
-      // headingContainer.append("text")
-      //   .attr("x", posProduct + MATRIX_WIDTH / 2)
-      //   .attr("y", HEADING_HEIGHT - 10)
-      //   // .attr("dy", TEXT_SIZE)
-      //   .attr("height", BOXHEIGHT)
-      //   .attr("width", MATRIX_WIDTH)
-      //   .attr("font-size", TEXT_SIZE + "px")
-      //   .style("text-anchor", "middle")
-      //   // .attr("dy", TEXT_SIZE)
-      //   // .style("font-weight", "bold")
-      //   //.text("Query \u2218 Key")
-      //   .text("Q \u25CB K")
-
 
       var productHeadingContainer = headingContainer.append("text")
-      // .attr("x", posKeys + MATRIX_WIDTH / 2)
         .attr("x", 580)
         .attr("y", HEADING_HEIGHT - 10)
-        // .attr("dy", TEXT_SIZE)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
-      // .style("text-anchor", "middle")
-      // .attr("dy", TEXT_SIZE)
-      // .style("font-weight", "bold")
-      // .text("Key (K)")
 
       productHeadingContainer.append('tspan')
         .text('q')
         .style('font-size', TEXT_SIZE + "px")
-        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
       productHeadingContainer.append('tspan')
@@ -204,7 +200,6 @@ requirejs(['jquery', 'd3'],
       productHeadingContainer.append('tspan')
         .text(' \u25CB k')
         .style('font-size', TEXT_SIZE + "px")
-        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
       productHeadingContainer.append('tspan')
@@ -213,38 +208,16 @@ requirejs(['jquery', 'd3'],
         .attr("y", HEADING_HEIGHT - 8)
         .attr('dx', '1px')
 
-
-      // headingContainer.append("text")
-      //   .attr("x", posDotProduct)
-      //   .attr("y", HEADING_HEIGHT - 10)
-      //   // .attr("dy", TEXT_SIZE)
-      //   .attr("height", BOXHEIGHT)
-      //   .attr("width", DOT_WIDTH)
-      //   .attr("font-size", TEXT_SIZE + "px")
-      //   .style("text-anchor", "start")
-      //   // .attr("dy", TEXT_SIZE)
-      //   // .style("font-weight", "bold")
-      //   // .text("Q \u25CF K")
-      //   .text("Q \u2219 K")
-      //
-
       var dotProductHeadingContainer = headingContainer.append("text")
-      // .attr("x", posKeys + MATRIX_WIDTH / 2)
         .attr("x", 714)
         .attr("y", HEADING_HEIGHT - 10)
-        // .attr("dy", TEXT_SIZE)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
-      // .style("text-anchor", "middle")
-      // .attr("dy", TEXT_SIZE)
-      // .style("font-weight", "bold")
-      // .text("Key (K)")
 
       dotProductHeadingContainer.append('tspan')
         .text('q')
         .style('font-size', TEXT_SIZE + "px")
-        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
       dotProductHeadingContainer.append('tspan')
@@ -257,7 +230,6 @@ requirejs(['jquery', 'd3'],
       dotProductHeadingContainer.append('tspan')
         .text(' \u2219 k')
         .style('font-size', TEXT_SIZE + "px")
-        // .attr('dx', '0em')
         .attr("y", HEADING_HEIGHT - 10)
 
       dotProductHeadingContainer.append('tspan')
@@ -269,31 +241,66 @@ requirejs(['jquery', 'd3'],
       headingContainer.append("text")
         .attr("x", posSoftmax)
         .attr("y", HEADING_HEIGHT - 10)
-        // .attr("dy", TEXT_SIZE)
         .attr("height", BOXHEIGHT)
         .attr("width", SOFTMAX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
         .style("text-anchor", "start")
-        // .attr("dy", TEXT_SIZE)
-        // .style("font-weight", "bold")
         .text("Softmax")
 
       headingContainer.append("text")
         .attr("id", "placeholder")
         .attr("x", posSoftmax + SOFTMAX_WIDTH - (SOFTMAX_WIDTH + MATRIX_WIDTH + DOT_WIDTH) / 2)
         .attr("y", HEADING_HEIGHT + 55)
-        // .attr("dy", TEXT_SIZE)
         .attr("height", BOXHEIGHT)
         .attr("width", SOFTMAX_WIDTH + MATRIX_WIDTH + DOT_WIDTH)
         .attr("font-size", 23 + "px")
         .style("text-anchor", "middle")
-        // .attr("dy", TEXT_SIZE)
-        // .style("font-weight", "bold")
         .text("No token selected")
         .attr("fill", "darkgray")
+
     }
 
-    function renderVectors(svg, id, vectors, left_pos) {
+    function renderAttn(svg, left_pos, attnWidth, do_fade) {
+
+      var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
+      console.log('attn matrix')
+      console.log(attnMatrix)
+      var attnContainer = svg.append("svg:g")
+        .attr("id", "attn");
+      attnContainer.selectAll("g")
+        .data(attnMatrix)
+        .enter()
+        .append("g") // Add group for each source token
+        .classed('attnGroup', true)
+        .attr("source-index", function (d, i) { // Save index of source token
+          return i;
+        })
+        .selectAll("line")
+        .data(function (d) { // Loop over all target tokens
+          return d;
+        })
+        .enter() // When entering
+        .append("line")
+        .attr("x1", left_pos)
+        .attr("y1", function(d) {
+          var sourceIndex = +this.parentNode.getAttribute("source-index");
+          return sourceIndex * BOXHEIGHT + HEADING_HEIGHT;
+        })
+        .attr("x2", left_pos + attnWidth)
+        .attr("y2", function(d, targetIndex) {
+          return targetIndex * BOXHEIGHT + HEADING_HEIGHT;
+        })
+        .attr("stroke-width", 2)
+        .attr("stroke", "blue")
+        .attr("stroke-opacity", function(d) {
+          return d;
+        });
+      if (do_fade) {
+        attnContainer.transition().duration(500).style("opacity", 0)
+      }
+    }
+
+    function renderVectors(svg, id, vectors, left_pos, fadeIn) {
       // text: list of tokens
       // queries: query vectors [seq_len, vector_size]
 
@@ -304,9 +311,7 @@ requirejs(['jquery', 'd3'],
       if (id == "product") {
         vectorContainer.style("opacity", 0);
       }
-      //config.vector_size = 15;
 
-      // if (id == "keys") {
       vectorContainer.append("rect")
         .classed("matrixborder", true)
         .attr("x", left_pos - 2)
@@ -314,20 +319,10 @@ requirejs(['jquery', 'd3'],
         .attr("width", MATRIX_WIDTH + 4)
         .attr("height", BOXHEIGHT * vectors.length - 2)
         .style("fill-opacity", 0)
-        // .style("stroke-opacity", 0)
         .style("stroke-width", 2)
         .style("stroke", "#b3aaaa")
         .attr("rx", 2)
         .attr("ry", 2)
-      // }
-
-
-      //       svg.select("#queries")
-      //   .selectAll(".vector")
-      //   .style("opacity", 1.0)
-      // svg.select("#queries")
-      //   .selectAll(".vectorborder")
-
 
       var vector = vectorContainer.append("g") //.classed("attention_boxes", true) // Add outer group
         .selectAll("g")
@@ -355,22 +350,6 @@ requirejs(['jquery', 'd3'],
           .attr("rx", 2)
           .attr("ry", 2)
       }
-      // if (id=="queries") {
-      //   vector.append("line")
-      //     .classed("joinline", true)
-      //     .attr("x1", left_pos + MATRIX_WIDTH + PADDING_WIDTH - 2)
-      //     .attr("y1", function (d, i) {
-      //       return i * BOXHEIGHT + HEADING_HEIGHT + 1;
-      //     })
-      //     .attr("x2", left_pos + MATRIX_WIDTH + PADDING_WIDTH - 2)
-      //     .attr("y2", function (d, i) {
-      //       return (i + 1) * BOXHEIGHT + HEADING_HEIGHT - 3;
-      //     })
-      //     .style("stroke-width", 2)
-      //     .style("stroke", "white")
-      // }
-
-      // }
 
       vector.selectAll(".element")
         .data(function (d) {
@@ -381,8 +360,6 @@ requirejs(['jquery', 'd3'],
         .classed('element', true)
         .attr("x", function (d, i) { // i is vector index, j is index of token
           return left_pos + i * MATRIX_WIDTH / config.vector_size;
-          // return left_pos + i * Math.floor(MATRIX_WIDTH / config.vector_size);
-
         })
         .attr("y", function (d, i) {
           var j = +this.parentNode.getAttribute("data-index");
@@ -403,6 +380,10 @@ requirejs(['jquery', 'd3'],
         .style("opacity", function (d) {
           return Math.tanh(Math.abs(d) / 4);
         })
+
+        if (fadeIn) {
+          vectorContainer.style("opacity", 0).transition().delay(100).duration(500).style("opacity", 1);
+        }
     }
 
     function renderText(svg, text, id, left_pos) {
@@ -413,7 +394,6 @@ requirejs(['jquery', 'd3'],
         .data(text)
         .enter()
         .append("g");
-      // var fillColor = HEAD_COLORS(config.att_head);
       if (id == "left_text" || id == "right_text") {
         var fillColor;
         if (id == "right_text") {
@@ -434,78 +414,6 @@ requirejs(['jquery', 'd3'],
             return i * BOXHEIGHT + HEADING_HEIGHT;
           });
       }
-      if (id == "left_text") {
-        tokenContainer.append('text')
-          .classed("plus-sign", true)
-          .attr("x", left_pos + 5)
-          .attr("y", function (d, i) {
-            return i * BOXHEIGHT + HEADING_HEIGHT + 12;
-          })
-          .attr("fill", "#4a4a4a")
-          // .attr('text-anchor', 'middle')
-          // .attr('dominant-baseline', 'central')
-          .style('font-family', 'FontAwesome')
-          .style('font-size', '16px')
-          .style('opacity', 0)
-          .text(function (d) {
-            return '\uf067';
-          })
-        tokenContainer.append('text')
-          // .style("text-anchor", "end")
-          .classed("minus-sign", true)
-          .attr("x", left_pos + 5)
-          .attr("y", function (d, i) {
-            return i * BOXHEIGHT + HEADING_HEIGHT + 12;
-          })
-          .attr("fill", "#4a4a4a")
-          // .attr('text-anchor', 'middle')
-          // .attr('dominant-baseline', 'central')
-          .style('font-family', 'FontAwesome')
-          .style('font-size', '16px')
-          .style('opacity', 0)
-          .text(function (d) {
-            return '\uf068';
-          })
-
-        var expandIcon = tokenContainer.append('rect')
-          .attr('class', 'expand-icon')
-          .style('visibility', 'hidden')
-          .attr("x", left_pos + 1)
-          .attr("y", function (d, i) {
-            return i * BOXHEIGHT + HEADING_HEIGHT - 4;
-          })
-          .attr('width', 18)
-          .attr('height', BOXHEIGHT);
-              }
-      // if (id=="left_text") {
-      //   var plusSign = tokenContainer.append("g").style("opacity", 0.0)
-      //     .classed("minus-sign", true)
-      //   plusSign.append("rect")
-      //     .attr("fill", "#3b3b3b")
-      //     .attr("height", 15)
-      //     .attr("width", 15)
-      //     .attr("x", left_pos + 4.5)
-      //     .attr("y", function (d, i) {
-      //       return i * BOXHEIGHT + HEADING_HEIGHT + 4;
-      //     });
-      //   plusSign.append("rect")
-      //     .attr("fill", "white")
-      //     .attr("height", 4)
-      //     .attr("width", 12)
-      //     .attr("x", left_pos + 5.5)
-      //     .attr("y", function (d, i) {
-      //       return i * BOXHEIGHT + HEADING_HEIGHT + 9.5;
-      //     });
-      //   plusSign.append("rect")
-      //     .attr("fill", "white")
-      //     .attr("height", 12)
-      //     .attr("width", 4)
-      //     .attr("x", left_pos + 9)
-      //     .attr("y", function (d, i) {
-      //       return i * BOXHEIGHT + HEADING_HEIGHT + 6;
-      //     });
-      // }
-
 
       var offset;
       if (id == "left_text") {
@@ -529,7 +437,6 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", BOXWIDTH)
         .attr("dy", TEXT_SIZE)
-      // .style("fill", "#535354");
 
       if (id == "left_text") {
         textContainer.style("text-anchor", "end")
@@ -542,34 +449,6 @@ requirejs(['jquery', 'd3'],
           unhighlightSelection(svg)
           hideComputation(svg)
         });
-        expandIcon.on("click", function () {
-              console.log('clicked me!')
-            })
-      // }
-      //
-      //       "mouseover": function (d) {
-      //         console.log('mousover')
-      //         d3.select(this).style("cursor", "pointer");
-      //       },
-      //       "mouseout": function (d) {
-      //         console.log('mouseout')
-      //         d3.select(this).style("cursor", "default");
-      //       }
-      //     })
-        // expandIcon.on(
-        //   {
-        //     "click": function () {
-        //       console.log('clicked me!')
-        //     },
-        //     "mouseover": function (d) {
-        //       console.log('mousover')
-        //       d3.select(this).style("cursor", "pointer");
-        //     },
-        //     "mouseout": function (d) {
-        //       console.log('mouseout')
-        //       d3.select(this).style("cursor", "default");
-        //     }
-        //   })
       }
     }
 
@@ -608,10 +487,8 @@ requirejs(['jquery', 'd3'],
         })
         .style("fill", function (d) {
           if (d >= 0) {
-            //return '#1a8cff';
             return "blue"
           } else {
-            //return '#ff5555'
             return "red"
           }
         })
@@ -642,10 +519,8 @@ requirejs(['jquery', 'd3'],
         })
         .attr("height", BOXHEIGHT - 4)
         .attr("width", 0)
-        // .style("fill", "#c3c3c3")
         .style("fill", "#8d8d8d")
         .style("stroke", "black")
-      // .stroke("stroke-width", 2)
       ;
     }
 
@@ -676,17 +551,6 @@ requirejs(['jquery', 'd3'],
       svg.select("#queries")
         .select(".matrixborder")
         .style("stroke-opacity", 0)
-      // svg.select("#queries")
-      //   .selectAll(".joinline")
-      //   .style("stroke-opacity", function (d, i) {
-      //     return i == index ? 1.0 : 0;
-      //   })
-      // svg.select("#keys")
-      //   .selectAll(".matrixborder")
-      //   .style("stroke-opacity", 1)
-      // svg.select("#product")
-      //   .selectAll(".matrixborder")
-      //   .style("stroke-opacity", 1)
       svg.select("#left_text")
         .selectAll(".highlight")
         .style("opacity", function (d, i) {
@@ -699,11 +563,6 @@ requirejs(['jquery', 'd3'],
         })
       svg.selectAll(".i-index")
         .text(index)
-
-      // .style("font-weight", "bold")
-
-      // .style("stroke-width", 3)
-      // .style("stroke", "grey");
     }
 
     function unhighlightSelection(svg) {
@@ -713,18 +572,9 @@ requirejs(['jquery', 'd3'],
       svg.select("#queries")
         .selectAll(".vectorborder")
         .style("stroke-opacity", 0)
-      // svg.select("queries")
-      //   .selectAll(".joinline")
-      //   .style("stroke-opacity", 0)
       svg.select("#queries")
         .select(".matrixborder")
         .style("stroke-opacity", 1)
-      // svg.select("#keys")
-      //   .selectAll(".matrixborder")
-      //   .style("stroke-opacity", 0)
-      // svg.select("#keys")
-      //   .selectAll(".vectorborder")
-      //   .style("stroke-opacity", 0)
       svg.select("#left_text")
         .selectAll(".highlight")
         .style("opacity", 0.0)
@@ -733,8 +583,6 @@ requirejs(['jquery', 'd3'],
         .style("opacity", 0)
       svg.selectAll(".i-index")
         .text("i")
-      // .style("font-weight", "normal")
-      // .style("stroke-width", 0);
     }
 
     function showComputation(svg, query_index) {
@@ -742,8 +590,6 @@ requirejs(['jquery', 'd3'],
       var query_vector = att_dets.queries[config.layer][config.att_head][query_index];
       var keys = att_dets.keys[config.layer][config.att_head];
       var att = att_dets.att[config.layer][config.att_head][query_index];
-
-      // JSON.parse(JSON.stringify(keys)); // deep copy, just to initialize array with proper shape
 
       var seq_len = keys.length;
       var productVectors = []
@@ -809,10 +655,9 @@ requirejs(['jquery', 'd3'],
 
     function visualize() {
       var num_heads = attention['all']['queries'][0].length; // Num heads for layer 0 (same as for all layers)
-      //config.head_vis  = new Array(num_heads).fill(true);
-      //config.num_heads = num_heads;
       config.vector_size = attention['all']['queries'][0][0][0].length // Layer 0, head 0, position 0 length
       config.attention = attention;
+      config.expanded = true;
       render();
     }
 
@@ -824,7 +669,11 @@ requirejs(['jquery', 'd3'],
       var keys = att_dets.keys[config.layer][config.att_head];
       var att = att_dets.att[config.layer][config.att_head];
       $("#vis svg").empty();
-      renderVis("#vis", left_text, right_text, queries, keys, att, config);
+      if (config.expanded == true) {
+        renderVisExpanded("#vis", left_text, right_text, queries, keys);
+      } else {
+        renderVisCollapsed("#vis", left_text, right_text, att)
+      }
     }
 
     $("#layer").empty();
