@@ -18,7 +18,7 @@ requirejs(['jquery', 'd3'],
     const BOXHEIGHT = TEXT_SIZE * 1.5;
     const WIDTH = 3000;
     const HEIGHT = attention.all.right_text.length * BOXHEIGHT * 2 + 100 + 700;
-    const PADDING_WIDTH = 20;
+    const PADDING_WIDTH = 25;
     const DOT_WIDTH = 70;
     const SOFTMAX_WIDTH = 70;
     const HEADING_HEIGHT = 40;
@@ -64,17 +64,24 @@ requirejs(['jquery', 'd3'],
         .attr("id", "expanded")
         .attr("visibility", "hidden")
 
+
+      // renderHorizLines(svg, "hlines3", posDotProduct - PADDING_WIDTH, posDotProduct)
       renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftMax)
       renderText(svg, left_text, "left_text", posLeftText, true);
      // renderAttn(svg, posLeftText + BOXWIDTH, posRightText, true);
+      renderTextQueryLines(svg, posQueries - PADDING_WIDTH, posQueries)
       renderVectors(svg, "keys", keys, posKeys);
+      renderQueryKeyLines(svg, posQueries + MATRIX_WIDTH + 1, posKeys - 3)
       renderVectors(svg, "queries", queries, posQueries);
+      renderHorizLines(svg, "hlines1", posProduct - PADDING_WIDTH, posProduct)
       renderVectors(svg, "product", keys, posProduct);
+      // renderHorizLines(svg, "hlines2", posDotProduct - PADDING_WIDTH, posDotProduct)
       var dotProducts = new Array(right_text.length).fill(0);
       renderDotProducts(svg, dotProducts, posDotProduct);
       var softMax = new Array(right_text.length).fill(0);
       renderSoftmax(svg, softMax, posSoftMax);
       renderText(svg, right_text, "right_text", posRightText, true);
+      // renderHorizLines(svg, "hlines4", posRightText - PADDING_WIDTH, posRightText)
 
     }
 
@@ -264,13 +271,137 @@ requirejs(['jquery', 'd3'],
 
     }
 
-    function renderAttn(svg, start_pos, end_pos, expanded) {
+    // function renderHorizLines(svg, start_pos, end_pos) {
+    //   var att_dets = config.attention[config.att_type];
+    //   var right_text = att_dets.right_text; // Use for shape not values
+    //   var linesContainer = svg.append("svg:g")
+    //     .classed('horiz-line-group', true)
+    //     .style("opacity", 0)
+    //   linesContainer.selectAll("line")
+    //     .data(right_text)
+    //     .enter()
+    //     .append("line") // Add group for each target token
+    //     .attr("x1", start_pos)
+    //     .attr("y1", function (d, i) {
+    //       return i * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+    //     })
+    //     .attr("x2", end_pos)
+    //     .attr("y2", function (d, i) {
+    //       return i * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+    //     })
+    //     .attr("stroke-width", .5)
+    //     .attr("stroke", "#a9a9a9")
+    // }
 
+    function renderHorizLines(svg, id, start_pos, end_pos) {
       var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
-      console.log('attn matrix')
-      console.log(attnMatrix)
+      var linesContainer = svg.append("svg:g")
+        .attr("id", id)
+      linesContainer.selectAll("g")
+        .data(attnMatrix)
+        .enter()
+        .append("g") // Add group for each source token
+        .classed('horiz-line-group', true)
+        .style("opacity", 0)
+        .attr("source-index", function (d, i) { // Save index of source token
+          return i;
+        })
+        .selectAll("line")
+        .data(function (d) { // Loop over all target tokens
+          return d;
+        })
+        .enter() // When entering
+        .append("line")
+        .attr("x1", start_pos)
+        .attr("y1", function (d, targetIndex) {
+          return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+        })
+        .attr("x2", end_pos)
+        .attr("y2", function (d, targetIndex) {
+          return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+        })
+        .attr("stroke-width", 2)
+        .attr("stroke", "blue")
+        .attr("stroke-opacity", function (d) {
+          if (expanded) {
+            return d;
+          } else {
+            return d;
+          }
+        });
+    }
+
+    function renderQueryKeyLines(svg, start_pos, end_pos) {
+      var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
+      var linesContainer = svg.append("svg:g")
+      linesContainer.selectAll("g")
+        .data(attnMatrix)
+        .enter()
+        .append("g") // Add group for each source token
+        .classed('qk-line-group', true)
+        .style("opacity", 0)
+        .attr("source-index", function (d, i) { // Save index of source token
+          return i;
+        })
+        .selectAll("line")
+        .data(function (d) { // Loop over all target tokens
+          return d;
+        })
+        .enter() // When entering
+        .append("line")
+        .attr("x1", start_pos)
+        .attr("y1", function (d) {
+          var sourceIndex = +this.parentNode.getAttribute("source-index");
+          return sourceIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+        })
+        .attr("x2", end_pos)
+        .attr("y2", function (d, targetIndex) {
+          return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+        })
+        .attr("stroke-width", 2)
+        .attr("stroke", "blue")
+        .attr("stroke-opacity", function (d) {
+          if (expanded) {
+            return d;
+          } else {
+            return d;
+          }
+        });
+    }
+
+    function renderTextQueryLines(svg, start_pos, end_pos) {
+      var att_dets = config.attention[config.att_type];
+      var left_text = att_dets.left_text; // Use for shape not values
+      var linesContainer = svg.append("svg:g")
+      linesContainer.selectAll("line")
+        .data(left_text)
+        .enter()
+        .append("line") // Add line
+        .classed('text-query-line', true)
+         .style("opacity", 0)
+        .attr("x1", start_pos)
+        .attr("y1", function (d, i) {
+          return i * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+        })
+        .attr("x2", end_pos)
+        .attr("y2", function (d, i) {
+          return i * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+        })
+        .attr("stroke-width", 2)
+        .attr("stroke", "blue")
+    }
+
+    function renderAttn(svg, start_pos, end_pos, expanded) {
+      // console.log("renderAttn")
+      // console.log(config)
+      // console.log(config.layer)
+      //
+      // console.log(config.att_head)
+      var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
+      // console.log('attn matrix')
+      // console.log(attnMatrix)
       var attnContainer = svg.append("svg:g")
-        .attr("id", "attn");
+        // .attr("id", "attn");
       attnContainer.selectAll("g")
         .data(attnMatrix)
         .enter()
@@ -296,7 +427,10 @@ requirejs(['jquery', 'd3'],
         })
         .attr("stroke-width", 2)
         .attr("stroke", "blue")
-        .attr("stroke-opacity", function (d) {
+        .attr("stroke-opacity", function (d, i) {
+          console.log('point b')
+          console.log(i)
+          console.log(d)
           if (expanded) {
             return d;
           } else {
@@ -632,13 +766,45 @@ requirejs(['jquery', 'd3'],
             return i == index ? 1.0 : 0.0;
           })
       }
-
       svg.selectAll(".i-index")
         .text(index)
       svg.selectAll(".attn-line-group")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
         })
+      svg.selectAll(".qk-line-group")
+        .style("opacity", function (d, i) {
+          return i == index ? 1.0 : 0.0;
+        })
+      svg.select('#hlines1')
+        .selectAll(".horiz-line-group")
+          .style("opacity", function (d, i) {
+          return i == index ? 1.0 : 0.0;
+        })
+      svg.select('#hlines2')
+        .selectAll(".horiz-line-group")
+          .style("opacity", function (d, i) {
+          return i == index ? 1.0 : 0.0;
+        })
+        svg.select('#hlines3')
+        .selectAll(".horiz-line-group")
+          .style("opacity", function (d, i) {
+          return i == index ? 1.0 : 0.0;
+        })
+        svg.select('#hlines4')
+        .selectAll(".horiz-line-group")
+          .style("opacity", function (d, i) {
+          return i == index ? 1.0 : 0.0;
+        })
+      svg.selectAll(".text-query-line")
+          .style("opacity", function (d, i) {
+            return i == index ? 1.0 : 0.0;
+        })
+
+
+
+      // svg.selectAll(".horiz-line-group")
+      //   .style("opacity", 1)
     }
 
     function unhighlightSelection(svg) {
@@ -666,6 +832,12 @@ requirejs(['jquery', 'd3'],
         svg.selectAll(".attn-line-group")
           .style("opacity", 1)
       }
+      svg.selectAll(".qk-line-group")
+          .style("opacity", 0)
+      svg.selectAll(".horiz-line-group")
+        .style("opacity", 0)
+      svg.selectAll(".text-query-line")
+        .style("opacity", 0)
     }
 
     function showComputation(svg, query_index) {
@@ -770,7 +942,7 @@ requirejs(['jquery', 'd3'],
       //   renderVisCollapsed("#vis", left_text, right_text, att)
       // }
 
-      $("vis").empty();
+      $("#vis").empty();
       var svg = d3.select("#vis")
         .append('svg')
       .attr("width", WIDTH)
