@@ -24,28 +24,32 @@ requirejs(['jquery', 'd3'],
     const HEADING_HEIGHT = 40;
     const ATTENTION_WIDTH = 175;
 
-    function renderVisCollapsed(id, left_text, right_text) {
-      $(id).empty();
+    function renderVisCollapsed(svg, left_text, right_text) {
 
       var posLeftText = 0;
       var posAttention = posLeftText + BOXWIDTH;
       var posRightText = posAttention + ATTENTION_WIDTH + PADDING_WIDTH;
       var width = posRightText + BOXWIDTH
 
-      var svg = d3.select(id)
-        .append('svg')
-        .attr("width", width)
-        .attr("height", HEIGHT);
+      // var svg = d3.select(id)
+      //   .append('svg')
+      //   .attr("id", "collapsed")
+      //   .attr("width", width)
+      //   .attr("height", HEIGHT)
+      //   .attr("visibility", "hidden");
+
+      svg = svg.append("g")
+        .attr("id", "collapsed")
+        .attr("visibility", "hidden")
 
       renderHeadingsCollapsed(svg, posAttention)
-      renderText(svg, left_text, "left_text", posLeftText);
-      renderAttn(svg, posAttention, posRightText)
-      renderText(svg, right_text, "right_text", posRightText);
+      renderText(svg, left_text, "left_text", posLeftText, false);
+      renderAttn(svg, posAttention, posRightText, false)
+      renderText(svg, right_text, "right_text", posRightText, false);
     }
 
 
-    function renderVisExpanded(id, left_text, right_text, queries, keys) {
-      $(id).empty();
+    function renderVisExpanded(svg, left_text, right_text, queries, keys) {
 
       var posLeftText = 0;
       var posQueries = posLeftText + BOXWIDTH + PADDING_WIDTH;
@@ -56,13 +60,13 @@ requirejs(['jquery', 'd3'],
       var posRightText = posSoftMax + SOFTMAX_WIDTH + PADDING_WIDTH;
       var width = posRightText + BOXWIDTH
 
-      var svg = d3.select(id)
-        .append('svg')
-        .attr("width", width)
-        .attr("height", HEIGHT);
+      svg = svg.append("g")
+        .attr("id", "expanded")
+        .attr("visibility", "hidden")
 
       renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftMax)
-      renderText(svg, left_text, "left_text", posLeftText);
+      renderText(svg, left_text, "left_text", posLeftText, true);
+     // renderAttn(svg, posLeftText + BOXWIDTH, posRightText, true);
       renderVectors(svg, "keys", keys, posKeys);
       renderVectors(svg, "queries", queries, posQueries);
       renderVectors(svg, "product", keys, posProduct);
@@ -70,8 +74,7 @@ requirejs(['jquery', 'd3'],
       renderDotProducts(svg, dotProducts, posDotProduct);
       var softMax = new Array(right_text.length).fill(0);
       renderSoftmax(svg, softMax, posSoftMax);
-      renderText(svg, right_text, "right_text", posRightText);
-      renderAttn(svg, posLeftText + BOXWIDTH, posRightText)
+      renderText(svg, right_text, "right_text", posRightText, true);
 
     }
 
@@ -261,7 +264,7 @@ requirejs(['jquery', 'd3'],
 
     }
 
-    function renderAttn(svg, start_pos, end_pos) {
+    function renderAttn(svg, start_pos, end_pos, expanded) {
 
       var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
       console.log('attn matrix')
@@ -294,7 +297,11 @@ requirejs(['jquery', 'd3'],
         .attr("stroke-width", 2)
         .attr("stroke", "blue")
         .attr("stroke-opacity", function (d) {
-          return d;
+          if (expanded) {
+            return d;
+          } else {
+            return d;
+          }
         });
       // if (do_fade) {
       //   attnContainer.transition().duration(500).style("opacity", 0)
@@ -387,7 +394,7 @@ requirejs(['jquery', 'd3'],
       // }
     }
 
-    function renderText(svg, text, id, left_pos) {
+    function renderText(svg, text, id, left_pos, expanded) {
 
       var tokenContainer = svg.append("svg:g")
         .attr("id", id)
@@ -451,7 +458,8 @@ requirejs(['jquery', 'd3'],
           hideComputation(svg)
         });
 
-        if (config.expanded == true) {
+        // if (config.expanded == true) {
+        if (expanded) {
           tokenContainer.append('text')
             .classed("minus-sign", true)
             .attr("x", left_pos + 4)
@@ -468,7 +476,8 @@ requirejs(['jquery', 'd3'],
             })
             .on("click", function (d, i) {
               config.expanded = false;
-              render();
+              console.log("clicked on minus sign")
+              showCollapsed();
             })
             .on("mouseover", function (d, i) {
               d3.select(this).style("cursor", "pointer");
@@ -492,8 +501,9 @@ requirejs(['jquery', 'd3'],
               return '\uf055';
             })
             .on("click", function (d, i) {
+              console.log("clicked on plus sign")
               config.expanded = true;
-              render();
+              showExpanded();
             })
             .on("mouseover", function (d, i) {
               d3.select(this).style("cursor", "pointer");
@@ -502,8 +512,6 @@ requirejs(['jquery', 'd3'],
               d3.select(this).style("cursor", "default");
             })
         }
-
-
       }
     }
 
@@ -736,6 +744,17 @@ requirejs(['jquery', 'd3'],
       render();
     }
 
+    function showCollapsed() {
+      d3.select("#expanded").attr("visibility", "hidden")
+      d3.select("#collapsed").attr("visibility", "visible")
+    }
+
+    function showExpanded() {
+      d3.select("#expanded").attr("visibility", "visible")
+      d3.select("#collapsed").attr("visibility", "hidden")
+    }
+
+
     function render() {
       var att_dets = config.attention[config.att_type];
       var left_text = att_dets.left_text;
@@ -743,11 +762,27 @@ requirejs(['jquery', 'd3'],
       var queries = att_dets.queries[config.layer][config.att_head];
       var keys = att_dets.keys[config.layer][config.att_head];
       var att = att_dets.att[config.layer][config.att_head];
-      $("#vis svg").empty();
+      // $("#vis svg").empty();
+
+      // if (config.expanded == true) {
+      //   renderVisExpanded("#vis", left_text, right_text, queries, keys);
+      // } else {
+      //   renderVisCollapsed("#vis", left_text, right_text, att)
+      // }
+
+      $("vis").empty();
+      var svg = d3.select("#vis")
+        .append('svg')
+      .attr("width", WIDTH)
+      .attr("height", HEIGHT)
+      .attr("visibility", "hidden")
+
+      renderVisExpanded(svg, left_text, right_text, queries, keys);
+      renderVisCollapsed(svg, left_text, right_text, att)
       if (config.expanded == true) {
-        renderVisExpanded("#vis", left_text, right_text, queries, keys);
+        showExpanded();
       } else {
-        renderVisCollapsed("#vis", left_text, right_text, att)
+        showCollapsed();
       }
     }
 
