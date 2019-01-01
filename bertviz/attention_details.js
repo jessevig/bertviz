@@ -56,8 +56,11 @@ requirejs(['jquery', 'd3'],
       var posKeys = posQueries + MATRIX_WIDTH + PADDING_WIDTH;
       var posProduct = posKeys + MATRIX_WIDTH + PADDING_WIDTH;
       var posDotProduct = posProduct + MATRIX_WIDTH + PADDING_WIDTH;
-      var posSoftMax = posDotProduct + DOT_WIDTH + PADDING_WIDTH;
-      var posRightText = posSoftMax + SOFTMAX_WIDTH + PADDING_WIDTH;
+      // var posSoftMax = posDotProduct + DOT_WIDTH + PADDING_WIDTH;
+      // var posRightText = posSoftMax + SOFTMAX_WIDTH + PADDING_WIDTH;
+      // var posRightText = posDotProduct + DOT_WIDTH + PADDING_WIDTH;
+      var posRightText = posDotProduct + BOXHEIGHT + PADDING_WIDTH;
+
       var width = posRightText + BOXWIDTH
 
       svg = svg.append("g")
@@ -66,7 +69,7 @@ requirejs(['jquery', 'd3'],
 
 
       // renderHorizLines(svg, "hlines3", posDotProduct - PADDING_WIDTH, posDotProduct)
-      renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftMax)
+      renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posRightText)
       renderText(svg, left_text, "left_text", posLeftText, true);
      // renderAttn(svg, posLeftText + BOXWIDTH, posRightText, true);
       renderTextQueryLines(svg, posQueries - PADDING_WIDTH, posQueries)
@@ -79,7 +82,7 @@ requirejs(['jquery', 'd3'],
       var dotProducts = new Array(right_text.length).fill(0);
       renderDotProducts(svg, dotProducts, posDotProduct);
       var softMax = new Array(right_text.length).fill(0);
-      renderSoftmax(svg, softMax, posSoftMax);
+      // renderSoftmax(svg, softMax, posSoftMax);
       renderText(svg, right_text, "right_text", posRightText, true);
       // renderHorizLines(svg, "hlines4", posRightText - PADDING_WIDTH, posRightText)
 
@@ -142,7 +145,7 @@ requirejs(['jquery', 'd3'],
 
 
       var queryHeadingContainer = headingContainer.append("text")
-        .attr("x", 185)
+        .attr("x", posQueries + 55)
         .attr("y", HEADING_HEIGHT - 10)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
@@ -167,7 +170,7 @@ requirejs(['jquery', 'd3'],
         .attr("y", HEADING_HEIGHT - 10)
 
       var keyHeadingContainer = headingContainer.append("text")
-        .attr("x", 385)
+        .attr("x", posKeys + 60)
         .attr("y", HEADING_HEIGHT - 10)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
@@ -190,7 +193,7 @@ requirejs(['jquery', 'd3'],
         .attr("y", HEADING_HEIGHT - 10)
 
       var productHeadingContainer = headingContainer.append("text")
-        .attr("x", 580)
+        .attr("x", posProduct + 60)
         .attr("y", HEADING_HEIGHT - 10)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
@@ -220,7 +223,7 @@ requirejs(['jquery', 'd3'],
         .attr('dx', '1px')
 
       var dotProductHeadingContainer = headingContainer.append("text")
-        .attr("x", 714)
+        .attr("x", posDotProduct - 8)
         .attr("y", HEADING_HEIGHT - 10)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
@@ -260,12 +263,12 @@ requirejs(['jquery', 'd3'],
 
       headingContainer.append("text")
         .attr("id", "placeholder")
-        .attr("x", posSoftmax + SOFTMAX_WIDTH - (SOFTMAX_WIDTH + MATRIX_WIDTH + DOT_WIDTH) / 2)
+        .attr("x", posProduct + 22)
         .attr("y", HEADING_HEIGHT + 55)
         .attr("height", BOXHEIGHT)
         .attr("width", SOFTMAX_WIDTH + MATRIX_WIDTH + DOT_WIDTH)
-        .attr("font-size", 23 + "px")
-        .style("text-anchor", "middle")
+        .attr("font-size", 20 + "px")
+        // .style("text-anchor", "middle")
         .text("No token selected")
         .attr("fill", "darkgray")
 
@@ -428,9 +431,6 @@ requirejs(['jquery', 'd3'],
         .attr("stroke-width", 2)
         .attr("stroke", "blue")
         .attr("stroke-opacity", function (d, i) {
-          console.log('point b')
-          console.log(i)
-          console.log(d)
           if (expanded) {
             return d;
           } else {
@@ -610,7 +610,6 @@ requirejs(['jquery', 'd3'],
             })
             .on("click", function (d, i) {
               config.expanded = false;
-              console.log("clicked on minus sign")
               showCollapsed();
             })
             .on("mouseover", function (d, i) {
@@ -658,6 +657,21 @@ requirejs(['jquery', 'd3'],
         })
     }
 
+    // function renderDotProducts(svg, dotProducts, leftPos) {
+    //   svg.append("svg:g")
+    //     .attr("id", "dotproducts")
+    //     .selectAll("rect")
+    //     .data(dotProducts)
+    //     .enter()
+    //     .append("rect")
+    //     .classed('dotproduct', true)
+    //     .attr("x", leftPos)
+    //     .attr("y", function (d, i) {
+    //       return i * BOXHEIGHT + HEADING_HEIGHT;
+    //     })
+    //     .attr("height", BOXHEIGHT - 4)
+    //     .attr("width", 0);
+
     function renderDotProducts(svg, dotProducts, leftPos) {
       svg.append("svg:g")
         .attr("id", "dotproducts")
@@ -671,17 +685,45 @@ requirejs(['jquery', 'd3'],
           return i * BOXHEIGHT + HEADING_HEIGHT;
         })
         .attr("height", BOXHEIGHT - 4)
-        .attr("width", 0);
+        .attr("width", BOXHEIGHT - 4);
     }
+
+    // function updateDotProducts(svg, dotProducts) {
+    //   var unitSize = Math.floor(MATRIX_WIDTH / config.vector_size) // Pixel width of individual element in vector
+    //   var vectorContainer = svg.select('#dotproducts').style("opacity", 1);
+    //   vectorContainer.selectAll(".dotproduct")
+    //     .data(dotProducts)
+    //     .attr("width", function (d) {
+    //       return unitSize * Math.abs(d) / 8.0
+    //     })
+    //     .style("fill", function (d) {
+    //       if (d >= 0) {
+    //         return "blue"
+    //       } else {
+    //         return "red"
+    //       }
+    //     })
+    //     .style("stroke", function (d) {
+    //       if (d >= 0) {
+    //         return 'black';
+    //       } else {
+    //         return 'black'
+    //       }
+    //     })
+    //     .attr("data-value", function (d) {
+    //       return d
+    //     })
+    //
+    // }
 
     function updateDotProducts(svg, dotProducts) {
       var unitSize = Math.floor(MATRIX_WIDTH / config.vector_size) // Pixel width of individual element in vector
       var vectorContainer = svg.select('#dotproducts').style("opacity", 1);
       vectorContainer.selectAll(".dotproduct")
         .data(dotProducts)
-        .attr("width", function (d) {
-          return unitSize * Math.abs(d) / 8.0
-        })
+        // .attr("width", function (d) {
+        //   return unitSize * Math.abs(d) / 8.0
+        // })
         .style("fill", function (d) {
           if (d >= 0) {
             return "blue"
@@ -696,13 +738,37 @@ requirejs(['jquery', 'd3'],
             return 'black'
           }
         })
+        .style("opacity", function (d) {
+          return Math.tanh(Math.abs(d) / 64);
+        })
         .attr("data-value", function (d) {
           return d
         })
 
     }
 
-    function renderSoftmax(svg, softmax, leftPos) {
+
+
+    // function renderSoftmax(svg, softmax, leftPos) {
+    //   svg.append("svg:g")
+    //     .attr("id", "softmaxes")
+    //     .selectAll("rect")
+    //     .data(softmax)
+    //     .enter()
+    //     .append("rect")
+    //     .classed('softmax', true)
+    //     .attr("x", leftPos)
+    //     .attr("y", function (d, i) {
+    //       return i * BOXHEIGHT + HEADING_HEIGHT;
+    //     })
+    //     .attr("height", BOXHEIGHT - 4)
+    //     .attr("width", 0)
+    //     .style("fill", "#8d8d8d")
+    //     .style("stroke", "black")
+    //   ;
+    // }
+
+        function renderSoftmax(svg, softmax, leftPos) {
       svg.append("svg:g")
         .attr("id", "softmaxes")
         .selectAll("rect")
@@ -715,8 +781,8 @@ requirejs(['jquery', 'd3'],
           return i * BOXHEIGHT + HEADING_HEIGHT;
         })
         .attr("height", BOXHEIGHT - 4)
-        .attr("width", 0)
-        .style("fill", "#8d8d8d")
+        .attr("width", BOXHEIGHT - 4)
+        // .style("fill", "#8d8d8d")
         .style("stroke", "black")
       ;
     }
@@ -733,6 +799,9 @@ requirejs(['jquery', 'd3'],
         })
 
     }
+
+
+
 
     function highlightSelection(svg, index) {
       svg.select("#queries")
