@@ -72,19 +72,19 @@ requirejs(['jquery', 'd3'],
       renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posRightText)
       renderText(svg, left_text, "left_text", posLeftText, true);
      // renderAttn(svg, posLeftText + BOXWIDTH, posRightText, true);
-      renderTextQueryLines(svg, posQueries - PADDING_WIDTH, posQueries)
+      renderTextQueryLines(svg, posQueries - PADDING_WIDTH, posQueries - 2)
       renderVectors(svg, "keys", keys, posKeys);
       renderQueryKeyLines(svg, posQueries + MATRIX_WIDTH + 1, posKeys - 3)
       renderVectors(svg, "queries", queries, posQueries);
       renderHorizLines(svg, "hlines1", posProduct - PADDING_WIDTH, posProduct)
       renderVectors(svg, "product", keys, posProduct);
-      // renderHorizLines(svg, "hlines2", posDotProduct - PADDING_WIDTH, posDotProduct)
+      renderHorizLines(svg, "hlines2", posDotProduct - PADDING_WIDTH + 2, posDotProduct)
       var dotProducts = new Array(right_text.length).fill(0);
       renderDotProducts(svg, dotProducts, posDotProduct);
       var softMax = new Array(right_text.length).fill(0);
       // renderSoftmax(svg, softMax, posSoftMax);
       renderText(svg, right_text, "right_text", posRightText, true);
-      // renderHorizLines(svg, "hlines4", posRightText - PADDING_WIDTH, posRightText)
+      renderHorizLines(svg, "hlines4", posRightText - PADDING_WIDTH - 2, posRightText)
 
     }
 
