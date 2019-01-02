@@ -76,7 +76,7 @@ requirejs(['jquery', 'd3'],
       renderVectors(svg, "keys", keys, posKeys);
       renderQueryKeyLines(svg, posQueries + MATRIX_WIDTH + 1, posKeys - 3)
       renderVectors(svg, "queries", queries, posQueries);
-      renderHorizLines(svg, "hlines1", posProduct - PADDING_WIDTH, posProduct)
+      renderHorizLines(svg, "hlines1", posProduct - PADDING_WIDTH + 1, posProduct - 1)
       renderVectors(svg, "product", keys, posProduct);
       renderHorizLines(svg, "hlines2", posDotProduct - PADDING_WIDTH + 2, posDotProduct)
       var dotProducts = new Array(right_text.length).fill(0);
@@ -677,6 +677,7 @@ requirejs(['jquery', 'd3'],
     function renderDotProducts(svg, dotProducts, leftPos) {
       svg.append("svg:g")
         .attr("id", "dotproducts")
+        .style("opacity", 0)
         .selectAll("rect")
         .data(dotProducts)
         .enter()
