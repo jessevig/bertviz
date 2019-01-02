@@ -509,6 +509,8 @@ requirejs(['jquery', 'd3'],
         })
         .attr("width", MATRIX_WIDTH / config.vector_size)
         .attr("height", BOXHEIGHT - 2)
+        .attr("rx", 2)
+        .attr("ry", 2)
         .attr("data-value", function (d) {
           return d
         })
