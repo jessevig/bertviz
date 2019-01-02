@@ -461,8 +461,8 @@ requirejs(['jquery', 'd3'],
         .attr("width", MATRIX_WIDTH + 4)
         .attr("height", BOXHEIGHT * vectors.length - 2)
         .style("fill-opacity", 0)
-        .style("stroke-width", 2)
-        .style("stroke", "#b3aaaa")
+        .style("stroke-width", 1)
+        .style("stroke", "#655F5F")
         .attr("rx", 2)
         .attr("ry", 2)
 
@@ -487,8 +487,8 @@ requirejs(['jquery', 'd3'],
           .attr("height", BOXHEIGHT - 2)
           .style("fill-opacity", 0)
           .style("stroke-opacity", 0)
-          .style("stroke-width", 2)
-          .style("stroke", "#b3aaaa")
+          .style("stroke-width", 1)
+          .style("stroke", "#655F5F")
           .attr("rx", 2)
           .attr("ry", 2)
       }
@@ -685,7 +685,11 @@ requirejs(['jquery', 'd3'],
           return i * BOXHEIGHT + HEADING_HEIGHT;
         })
         .attr("height", BOXHEIGHT - 4)
-        .attr("width", BOXHEIGHT - 4);
+        .attr("width", BOXHEIGHT - 4)
+        .style("stroke-width", 1)
+        .style("stroke", "#655F5F")
+        .attr("rx", 2)
+        .attr("ry", 2)
     }
 
     // function updateDotProducts(svg, dotProducts) {
