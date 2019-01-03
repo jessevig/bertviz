@@ -13,9 +13,9 @@ requirejs(['jquery', 'd3'],
     var attention = window.attention;
 
     const TEXT_SIZE = 15;
-    const MATRIX_WIDTH = 175;
+    const MATRIX_WIDTH = 200;
     const BOXWIDTH = TEXT_SIZE * 8;
-    const BOXHEIGHT = TEXT_SIZE * 1.5;
+    const BOXHEIGHT = 26;
     const WIDTH = 3000;
     const HEIGHT = attention.all.right_text.length * BOXHEIGHT * 2 + 100 + 700;
     const PADDING_WIDTH = 25;
@@ -74,6 +74,8 @@ requirejs(['jquery', 'd3'],
      // renderAttn(svg, posLeftText + BOXWIDTH, posRightText, true);
       renderTextQueryLines(svg, posQueries - PADDING_WIDTH, posQueries - 2)
       renderVectors(svg, "keys", keys, posKeys);
+      // renderTextQueryLines(svg, posKeys - PADDING_WIDTH, posKeys - PADDING_WIDTH / 2)
+
       renderQueryKeyLines(svg, posQueries + MATRIX_WIDTH + 1, posKeys - 3)
       renderVectors(svg, "queries", queries, posQueries);
       renderHorizLines(svg, "hlines1", posProduct - PADDING_WIDTH + 1, posProduct - 1)
@@ -145,82 +147,118 @@ requirejs(['jquery', 'd3'],
 
 
       var queryHeadingContainer = headingContainer.append("text")
-        .attr("x", posQueries + 55)
+        .attr("x", posQueries + 68)
         .attr("y", HEADING_HEIGHT - 10)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
 
-      queryHeadingContainer.append('tspan')
-        .text('Query (q')
+
+        queryHeadingContainer.append('tspan')
+        .text('Query ')
         .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10)
 
-      queryHeadingContainer.append('tspan')
-        .classed('i-index', 'true')
-        .text('i')
-        .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
-        .attr("y", HEADING_HEIGHT - 8)
-        .attr('dx', '1px')
-        .attr('dy', '0px')
-
-      queryHeadingContainer.append('tspan')
-        .text(')')
-        .style('font-size', TEXT_SIZE + "px")
+          queryHeadingContainer.append('tspan')
+        .text('q')
+            // .attr('font-style', 'italic')
+            .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10)
+
+      // queryHeadingContainer.append('tspan')
+      //   .text('Query (q')
+      //   .style('font-size', TEXT_SIZE + "px")
+      //   .attr("y", HEADING_HEIGHT - 10)
+
+      // queryHeadingContainer.append('tspan')
+      //   .classed('i-index', 'true')
+      //   .text('i')
+      //   .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
+      //   .attr("y", HEADING_HEIGHT - 8)
+      //   .attr('dx', '1px')
+      //   .attr('dy', '0px')
+      //
+      // queryHeadingContainer.append('tspan')
+      //   .text(')')
+      //   .style('font-size', TEXT_SIZE + "px")
+      //   .attr("y", HEADING_HEIGHT - 10)
 
       var keyHeadingContainer = headingContainer.append("text")
-        .attr("x", posKeys + 60)
+        .attr("x", posKeys + 70)
         .attr("y", HEADING_HEIGHT - 10)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
 
       keyHeadingContainer.append('tspan')
-        .text('Key (k')
+        .text('Key ')
         .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10)
 
       keyHeadingContainer.append('tspan')
-        .text('j')
-        .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
-        .attr("y", HEADING_HEIGHT - 8)
-        .attr('dx', '1px')
-
-      keyHeadingContainer.append('tspan')
-        .text(')')
+        .text('k ')
+        // .style('font-style', "italic")
         .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10)
+
+      //
+      // keyHeadingContainer.append('tspan')
+      //   .text('Key (k')
+      //   .style('font-size', TEXT_SIZE + "px")
+      //   .attr("y", HEADING_HEIGHT - 10)
+      //
+      // keyHeadingContainer.append('tspan')
+      //   .text('j')
+      //   .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
+      //   .attr("y", HEADING_HEIGHT - 8)
+      //   .attr('dx', '1px')
+      //
+      // keyHeadingContainer.append('tspan')
+      //   .text(')')
+      //   .style('font-size', TEXT_SIZE + "px")
+      //   .attr("y", HEADING_HEIGHT - 10)
 
       var productHeadingContainer = headingContainer.append("text")
-        .attr("x", posProduct + 60)
+        .attr("x", posProduct + 28)
         .attr("y", HEADING_HEIGHT - 10)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
 
       productHeadingContainer.append('tspan')
-        .text('q')
+        .text('q \u00D7 k (element-wise)')
         .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10)
 
-      productHeadingContainer.append('tspan')
-        .classed('i-index', 'true')
-        .text('i')
-        .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
-        .attr("y", HEADING_HEIGHT - 8)
-        .attr('dx', '1px')
+      // productHeadingContainer.append('tspan')
+      //   .text('q x k (element-wise)')
+      //   .style('font-size', TEXT_SIZE + "px")
+      //   .attr("y", HEADING_HEIGHT - 10)
 
-      productHeadingContainer.append('tspan')
-        .text(' \u25CB k')
-        .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10)
 
-      productHeadingContainer.append('tspan')
-        .text('j')
-        .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
-        .attr("y", HEADING_HEIGHT - 8)
-        .attr('dx', '1px')
+
+      // productHeadingContainer.append('tspan')
+      //   .text('q')
+      //   .style('font-size', TEXT_SIZE + "px")
+      //   .attr("y", HEADING_HEIGHT - 10)
+      //
+      // productHeadingContainer.append('tspan')
+      //   .classed('i-index', 'true')
+      //   .text('i')
+      //   .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
+      //   .attr("y", HEADING_HEIGHT - 8)
+      //   .attr('dx', '1px')
+      //
+      // productHeadingContainer.append('tspan')
+      //   .text(' \u25CB k')
+      //   .style('font-size', TEXT_SIZE + "px")
+      //   .attr("y", HEADING_HEIGHT - 10)
+      //
+      // productHeadingContainer.append('tspan')
+      //   .text('j')
+      //   .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
+      //   .attr("y", HEADING_HEIGHT - 8)
+      //   .attr('dx', '1px')
 
       var dotProductHeadingContainer = headingContainer.append("text")
         .attr("x", posDotProduct - 8)
@@ -234,23 +272,23 @@ requirejs(['jquery', 'd3'],
         .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10)
 
-      dotProductHeadingContainer.append('tspan')
-        .classed('i-index', 'true')
-        .text('i')
-        .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
-        .attr("y", HEADING_HEIGHT - 8)
-        .attr('dx', '1px')
+      // dotProductHeadingContainer.append('tspan')
+      //   .classed('i-index', 'true')
+      //   .text('i')
+      //   .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
+      //   .attr("y", HEADING_HEIGHT - 8)
+      //   .attr('dx', '1px')
 
       dotProductHeadingContainer.append('tspan')
         .text(' \u2219 k')
         .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10)
 
-      dotProductHeadingContainer.append('tspan')
-        .text('j')
-        .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
-        .attr("y", HEADING_HEIGHT - 8)
-        .attr('dx', '1px')
+      // dotProductHeadingContainer.append('tspan')
+      //   .text('j')
+      //   .style('font-size', Math.floor(TEXT_SIZE / 1.4) + "px")
+      //   .attr("y", HEADING_HEIGHT - 8)
+      //   .attr('dx', '1px')
 
       headingContainer.append("text")
         .attr("x", posSoftmax)
@@ -323,21 +361,25 @@ requirejs(['jquery', 'd3'],
         .attr("y2", function (d, targetIndex) {
           return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
-        .attr("stroke-width", 2)
+        .attr("stroke-width", 1.5)
         .attr("stroke", "gray")
-        .attr("stroke-opacity", function (d) {
-          return 0.5
-          // if (expanded) {
+        // .attr("stroke-opacity", function (d) {
+        //   return 0.5
+        //   // if (expanded) {
           //   return d;
           // } else {
           //   return d;
           // }
-        });
+        // });
     }
 
     function renderQueryKeyLines(svg, start_pos, end_pos) {
       var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
       var linesContainer = svg.append("svg:g")
+      var lineFunction = d3.line()
+                          .x(function(d) { return d.x; })
+                          .y(function(d) { return d.y; });
+
       linesContainer.selectAll("g")
         .data(attnMatrix)
         .enter()
@@ -347,32 +389,89 @@ requirejs(['jquery', 'd3'],
         .attr("source-index", function (d, i) { // Save index of source token
           return i;
         })
-        .selectAll("line")
+        .selectAll("path")
         .data(function (d) { // Loop over all target tokens
           return d;
         })
         .enter() // When entering
-        .append("line")
-        .attr("x1", start_pos)
-        .attr("y1", function (d) {
-          var sourceIndex = +this.parentNode.getAttribute("source-index");
-          return sourceIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
-        })
-        .attr("x2", end_pos)
-        .attr("y2", function (d, targetIndex) {
-          return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
-        })
-        .attr("stroke-width", 2)
+        .append("path")
+       .attr("d", function(d, targetIndex) {
+         var sourceIndex = +this.parentNode.getAttribute("source-index");
+         var y1 =  sourceIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+         var y2 =  targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+         var x1 = start_pos
+         var x2 = (start_pos + end_pos) / 2
+         var x3 = end_pos
+
+         return lineFunction([
+           {'x':x1, 'y': y1},
+           {'x':x2, 'y': y1},
+           {'x':x2, 'y': y2},
+           {'x':x3, 'y': y2},
+
+         ])
+       })
+        // .attr("x1", start_pos)
+        // .attr("y1", function (d) {
+        //   var sourceIndex = +this.parentNode.getAttribute("source-index");
+        //   return sourceIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+        // })
+        // .attr("x2", end_pos)
+        // .attr("y2", function (d, targetIndex) {
+        //   return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+        // })
+        .attr("fill", "none")
+        .attr("stroke-width", 1.5)
         .attr("stroke", "gray")
-        .attr("stroke-opacity", function (d) {
-          return 0.5;
-          // if (expanded) {
-          //   return d;
-          // } else {
-          //   return d;
-          // }
-        });
+        // .attr("stroke-opacity", function (d) {
+        //   return 0.5;
+        //   // if (expanded) {
+        //   //   return d;
+        //   // } else {
+        //   //   return d;
+        //   // }
+        // });
     }
+
+
+    // function renderQueryKeyLines(svg, start_pos, end_pos) {
+    //   var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
+    //   var linesContainer = svg.append("svg:g")
+    //   linesContainer.selectAll("g")
+    //     .data(attnMatrix)
+    //     .enter()
+    //     .append("g") // Add group for each source token
+    //     .classed('qk-line-group', true)
+    //     .style("opacity", 0)
+    //     .attr("source-index", function (d, i) { // Save index of source token
+    //       return i;
+    //     })
+    //     .selectAll("line")
+    //     .data(function (d) { // Loop over all target tokens
+    //       return d;
+    //     })
+    //     .enter() // When entering
+    //     .append("line")
+    //     .attr("x1", start_pos)
+    //     .attr("y1", function (d) {
+    //       var sourceIndex = +this.parentNode.getAttribute("source-index");
+    //       return sourceIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+    //     })
+    //     .attr("x2", end_pos)
+    //     .attr("y2", function (d, targetIndex) {
+    //       return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
+    //     })
+    //     .attr("stroke-width", 1.5)
+    //     .attr("stroke", "gray")
+    //     // .attr("stroke-opacity", function (d) {
+    //     //   return 0.5;
+    //     //   // if (expanded) {
+    //     //   //   return d;
+    //     //   // } else {
+    //     //   //   return d;
+    //     //   // }
+    //     // });
+    // }
 
     function renderTextQueryLines(svg, start_pos, end_pos) {
       var att_dets = config.attention[config.att_type];
@@ -392,9 +491,10 @@ requirejs(['jquery', 'd3'],
         .attr("y2", function (d, i) {
           return i * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
-        .attr("stroke-width", 2)
-        .attr("stroke", "blue")
+        .attr("stroke-width", 1.5)
+        .attr("stroke", "gray")
     }
+
 
     function renderAttn(svg, start_pos, end_pos, expanded) {
       // console.log("renderAttn")
@@ -456,17 +556,17 @@ requirejs(['jquery', 'd3'],
         vectorContainer.style("opacity", 0);
       }
 
-      vectorContainer.append("rect")
-        .classed("matrixborder", true)
-        .attr("x", left_pos - 2)
-        .attr("y", HEADING_HEIGHT)
-        .attr("width", MATRIX_WIDTH + 4)
-        .attr("height", BOXHEIGHT * vectors.length - 2)
-        .style("fill-opacity", 0)
-        .style("stroke-width", 1)
-        .style("stroke", "#655F5F")
-        .attr("rx", 2)
-        .attr("ry", 2)
+      // vectorContainer.append("rect")
+      //   .classed("matrixborder", true)
+      //   .attr("x", left_pos - 2)
+      //   .attr("y", HEADING_HEIGHT)
+      //   .attr("width", MATRIX_WIDTH + 4)
+      //   .attr("height", BOXHEIGHT * vectors.length - 2)
+      //   .style("fill-opacity", 0)
+      //   .style("stroke-width", 1)
+      //   .style("stroke", "#655F5F")
+      //   .attr("rx", 2)
+      //   .attr("ry", 2)
 
       var vector = vectorContainer.append("g") //.classed("attention_boxes", true) // Add outer group
         .selectAll("g")
@@ -478,7 +578,7 @@ requirejs(['jquery', 'd3'],
           return i;
         }) // make parent index available from DOM
 
-      if (id == "queries") {
+      // if (id == "queries") {
         vector.append("rect")
           .classed("vectorborder", true)
           .attr("x", left_pos - 2)
@@ -486,14 +586,14 @@ requirejs(['jquery', 'd3'],
             return i * BOXHEIGHT + HEADING_HEIGHT;
           })
           .attr("width", MATRIX_WIDTH)
-          .attr("height", BOXHEIGHT - 2)
+          .attr("height", BOXHEIGHT - 6)
           .style("fill-opacity", 0)
-          .style("stroke-opacity", 0)
+          // .style("stroke-opacity", 0)
           .style("stroke-width", 1)
           .style("stroke", "#655F5F")
-          .attr("rx", 2)
-          .attr("ry", 2)
-      }
+          .attr("rx", 1)
+          .attr("ry", 1)
+      // }
 
       vector.selectAll(".element")
         .data(function (d) {
@@ -510,7 +610,7 @@ requirejs(['jquery', 'd3'],
           return j * BOXHEIGHT + HEADING_HEIGHT;
         })
         .attr("width", MATRIX_WIDTH / config.vector_size)
-        .attr("height", BOXHEIGHT - 2)
+        .attr("height", BOXHEIGHT - 6)
         .attr("rx", .7)
         .attr("ry", .7)
         .attr("data-value", function (d) {
@@ -518,9 +618,9 @@ requirejs(['jquery', 'd3'],
         })
         .style("fill", function (d) {
           if (d >= 0) {
-            return 'blue';
+            return '#0c36d8';
           } else {
-            return 'red'
+            return '#ff7e05'
           }
         })
         .style("opacity", function (d) {
@@ -735,10 +835,15 @@ requirejs(['jquery', 'd3'],
         // })
         .style("fill", function (d) {
           if (d >= 0) {
-            return "blue"
+            return '#0c36d8';
           } else {
-            return "red"
+            return '#ff7e05'
           }
+          // if (d >= 0) {
+          //   return "blue"
+          // } else {
+          //   return "red"
+          // }
         })
         .style("stroke", function (d) {
           if (d >= 0) {
@@ -965,10 +1070,15 @@ requirejs(['jquery', 'd3'],
           return d;
         }) // Bind them to array of elements from parent array
         .style("fill", function (d) {
+          // if (d >= 0) {
+          //   return 'blue';
+          // } else {
+          //   return 'red'
+          // }
           if (d >= 0) {
-            return 'blue';
+            return '#0c36d8';
           } else {
-            return 'red'
+            return '#ff7e05'
           }
         })
         .attr("data-value", function (d) {
