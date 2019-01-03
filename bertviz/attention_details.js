@@ -324,13 +324,14 @@ requirejs(['jquery', 'd3'],
           return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
         .attr("stroke-width", 2)
-        .attr("stroke", "blue")
+        .attr("stroke", "gray")
         .attr("stroke-opacity", function (d) {
-          if (expanded) {
-            return d;
-          } else {
-            return d;
-          }
+          return 0.5
+          // if (expanded) {
+          //   return d;
+          // } else {
+          //   return d;
+          // }
         });
     }
 
@@ -362,13 +363,14 @@ requirejs(['jquery', 'd3'],
           return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
         .attr("stroke-width", 2)
-        .attr("stroke", "blue")
+        .attr("stroke", "gray")
         .attr("stroke-opacity", function (d) {
-          if (expanded) {
-            return d;
-          } else {
-            return d;
-          }
+          return 0.5;
+          // if (expanded) {
+          //   return d;
+          // } else {
+          //   return d;
+          // }
         });
     }
 
@@ -988,7 +990,7 @@ requirejs(['jquery', 'd3'],
       var num_heads = attention['all']['queries'][0].length; // Num heads for layer 0 (same as for all layers)
       config.vector_size = attention['all']['queries'][0][0][0].length // Layer 0, head 0, position 0 length
       config.attention = attention;
-      config.expanded = true;
+      config.expanded = false;
       render();
     }
 
