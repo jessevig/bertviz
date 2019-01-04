@@ -23,6 +23,11 @@ requirejs(['jquery', 'd3'],
     const SOFTMAX_WIDTH = 70;
     const HEADING_HEIGHT = 40;
     const ATTENTION_WIDTH = 175;
+    const posColor = '#0c36d8';
+    const negColor = '#ff6318';
+    // const connectorColor = '#edb482'
+    const connectorColor = '#a2b4d5'
+    const headingColor = "#555"
 
     function renderVisCollapsed(svg, left_text, right_text) {
 
@@ -152,6 +157,7 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
+        .style('fill', headingColor)
 
 
         queryHeadingContainer.append('tspan')
@@ -189,17 +195,21 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
+              .style('fill', headingColor)
+
 
       keyHeadingContainer.append('tspan')
         .text('Key ')
         .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10)
 
+
       keyHeadingContainer.append('tspan')
         .text('k ')
         // .style('font-style', "italic")
         .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10)
+
 
       //
       // keyHeadingContainer.append('tspan')
@@ -224,6 +234,8 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
+        .style('fill', headingColor)
+
 
       productHeadingContainer.append('tspan')
         .text('q \u00D7 k (element-wise)')
@@ -266,6 +278,7 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
+        .style('fill', headingColor)
 
       dotProductHeadingContainer.append('tspan')
         .text('q')
@@ -283,6 +296,7 @@ requirejs(['jquery', 'd3'],
         .text(' \u2219 k')
         .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10)
+        .style('fill', headingColor)
 
       // dotProductHeadingContainer.append('tspan')
       //   .text('j')
@@ -297,6 +311,8 @@ requirejs(['jquery', 'd3'],
         .attr("width", SOFTMAX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
         .style("text-anchor", "start")
+                .style('fill', headingColor)
+
         .text("Softmax")
 
       headingContainer.append("text")
@@ -362,7 +378,7 @@ requirejs(['jquery', 'd3'],
           return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
         .attr("stroke-width", 1.5)
-        .attr("stroke", "gray")
+        .attr("stroke", connectorColor)
         // .attr("stroke-opacity", function (d) {
         //   return 0.5
         //   // if (expanded) {
@@ -422,7 +438,7 @@ requirejs(['jquery', 'd3'],
         // })
         .attr("fill", "none")
         .attr("stroke-width", 1.5)
-        .attr("stroke", "gray")
+        .attr("stroke", connectorColor)
         // .attr("stroke-opacity", function (d) {
         //   return 0.5;
         //   // if (expanded) {
@@ -492,7 +508,7 @@ requirejs(['jquery', 'd3'],
           return i * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
         .attr("stroke-width", 1.5)
-        .attr("stroke", "gray")
+        .attr("stroke", connectorColor)
     }
 
 
@@ -590,7 +606,8 @@ requirejs(['jquery', 'd3'],
           .style("fill-opacity", 0)
           // .style("stroke-opacity", 0)
           .style("stroke-width", 1)
-          .style("stroke", "#655F5F")
+          // .style("stroke", "#655F5F")
+          .style("stroke", connectorColor)
           .attr("rx", 1)
           .attr("ry", 1)
       // }
@@ -618,9 +635,9 @@ requirejs(['jquery', 'd3'],
         })
         .style("fill", function (d) {
           if (d >= 0) {
-            return '#0c36d8';
+            return posColor;
           } else {
-            return '#ff7e05'
+            return negColor
           }
         })
         .style("opacity", function (d) {
@@ -835,9 +852,9 @@ requirejs(['jquery', 'd3'],
         // })
         .style("fill", function (d) {
           if (d >= 0) {
-            return '#0c36d8';
+            return posColor;
           } else {
-            return '#ff7e05'
+            return negColor;
           }
           // if (d >= 0) {
           //   return "blue"
@@ -1076,9 +1093,9 @@ requirejs(['jquery', 'd3'],
           //   return 'red'
           // }
           if (d >= 0) {
-            return '#0c36d8';
+            return posColor;
           } else {
-            return '#ff7e05'
+            return negColor;
           }
         })
         .attr("data-value", function (d) {
