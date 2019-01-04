@@ -21,13 +21,13 @@ requirejs(['jquery', 'd3'],
     const PADDING_WIDTH = 25;
     const DOT_WIDTH = 70;
     const SOFTMAX_WIDTH = 70;
-    const HEADING_HEIGHT = 40;
+    const HEADING_HEIGHT = 55;
     const ATTENTION_WIDTH = 175;
     const posColor = '#0c36d8';
     const negColor = '#ff6318';
     // const connectorColor = '#edb482'
     const connectorColor = '#a2b4d5'
-    const headingColor = "#555"
+    const headingColor = "#6e6e6e"
 
     function renderVisCollapsed(svg, left_text, right_text) {
 
@@ -58,7 +58,7 @@ requirejs(['jquery', 'd3'],
 
       var posLeftText = 0;
       var posQueries = posLeftText + BOXWIDTH + PADDING_WIDTH;
-      var posKeys = posQueries + MATRIX_WIDTH + PADDING_WIDTH;
+      var posKeys = posQueries + MATRIX_WIDTH + PADDING_WIDTH * 1.5;
       var posProduct = posKeys + MATRIX_WIDTH + PADDING_WIDTH;
       var posDotProduct = posProduct + MATRIX_WIDTH + PADDING_WIDTH;
       // var posSoftMax = posDotProduct + DOT_WIDTH + PADDING_WIDTH;
@@ -100,27 +100,27 @@ requirejs(['jquery', 'd3'],
         .attr("id", "heading");
 
       // Add expand icon
-      headingContainer.append('text')
-        .classed("plus-sign", true)
-        .attr("x", posAttn - 20)
-        .attr("y", HEADING_HEIGHT - 5)
-        .attr("fill", "#909090")
-        .style('font-family', 'FontAwesome')
-        .style('font-size', "17px")
-        .style('opacity', 0)
-        .text(function (d) {
-          return '\uf055';
-        })
-        .on("click", function (d, i) {
-          config.expanded = true;
-          render();
-        })
-        .on("mouseover", function (d, i) {
-          d3.select(this).style("cursor", "pointer");
-        })
-        .on("mouseout", function (d, i) {
-          d3.select(this).style("cursor", "default");
-        })
+    //   headingContainer.append('text')
+    //     .classed("plus-sign", true)
+    //     .attr("x", posAttn - 20)
+    //     .attr("y", HEADING_HEIGHT - 5)
+    //     .attr("fill", "#909090")
+    //     .style('font-family', 'FontAwesome')
+    //     .style('font-size', "17px")
+    //     .style('opacity', 0)
+    //     .text(function (d) {
+    //       return '\uf055';
+    //     })
+    //     .on("click", function (d, i) {
+    //       config.expanded = true;
+    //       render();
+    //     })
+    //     .on("mouseover", function (d, i) {
+    //       d3.select(this).style("cursor", "pointer");
+    //     })
+    //     .on("mouseout", function (d, i) {
+    //       d3.select(this).style("cursor", "default");
+    //     })
     }
 
     function renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftmax) {
@@ -128,27 +128,27 @@ requirejs(['jquery', 'd3'],
         .attr("id", "heading");
 
       // Add expand icon
-      headingContainer.append('text')
-        .classed("minus-sign", true)
-        .attr("x", posQueries - 20)
-        .attr("y", HEADING_HEIGHT - 5)
-        .attr("fill", "#909090")
-        .style('font-family', 'FontAwesome')
-        .style('font-size', "17px")
-        .style('opacity', 0)
-        .text(function (d) {
-          return '\uf056';
-        })
-        .on("click", function (d, i) {
-          config.expanded = false;
-          render();
-        })
-        .on("mouseover", function (d, i) {
-          d3.select(this).style("cursor", "pointer");
-        })
-        .on("mouseout", function (d, i) {
-          d3.select(this).style("cursor", "default");
-        })
+      // headingContainer.append('text')
+      //   .classed("minus-sign", true)
+      //   .attr("x", posQueries - 20)
+      //   .attr("y", HEADING_HEIGHT - 5)
+      //   .attr("fill", "#909090")
+      //   .style('font-family', 'FontAwesome')
+      //   .style('font-size', "17px")
+      //   .style('opacity', 0)
+      //   .text(function (d) {
+      //     return '\uf056';
+      //   })
+      //   .on("click", function (d, i) {
+      //     config.expanded = false;
+      //     render();
+      //   })
+      //   .on("mouseover", function (d, i) {
+      //     d3.select(this).style("cursor", "pointer");
+      //   })
+      //   .on("mouseout", function (d, i) {
+      //     d3.select(this).style("cursor", "default");
+      //   })
 
 
       var queryHeadingContainer = headingContainer.append("text")
@@ -158,6 +158,7 @@ requirejs(['jquery', 'd3'],
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
         .style('fill', headingColor)
+        .style("font-weight", "bolder")
 
 
         queryHeadingContainer.append('tspan')
@@ -190,12 +191,13 @@ requirejs(['jquery', 'd3'],
       //   .attr("y", HEADING_HEIGHT - 10)
 
       var keyHeadingContainer = headingContainer.append("text")
-        .attr("x", posKeys + 70)
+        .attr("x", posKeys + 73)
         .attr("y", HEADING_HEIGHT - 10)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
               .style('fill', headingColor)
+        .style("font-weight", "bolder")
 
 
       keyHeadingContainer.append('tspan')
@@ -235,6 +237,7 @@ requirejs(['jquery', 'd3'],
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
         .style('fill', headingColor)
+        .style("font-weight", "bolder")
 
 
       productHeadingContainer.append('tspan')
@@ -273,12 +276,13 @@ requirejs(['jquery', 'd3'],
       //   .attr('dx', '1px')
 
       var dotProductHeadingContainer = headingContainer.append("text")
-        .attr("x", posDotProduct - 8)
+        .attr("x", posDotProduct - 6)
         .attr("y", HEADING_HEIGHT - 10)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
         .style('fill', headingColor)
+        .style("font-weight", "bolder")
 
       dotProductHeadingContainer.append('tspan')
         .text('q')
@@ -305,19 +309,19 @@ requirejs(['jquery', 'd3'],
       //   .attr('dx', '1px')
 
       headingContainer.append("text")
-        .attr("x", posSoftmax)
+        .attr("x", posSoftmax + 9)
         .attr("y", HEADING_HEIGHT - 10)
         .attr("height", BOXHEIGHT)
         .attr("width", SOFTMAX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
         .style("text-anchor", "start")
                 .style('fill', headingColor)
-
+        .style("font-weight", "bolder")
         .text("Softmax")
 
       headingContainer.append("text")
         .attr("id", "placeholder")
-        .attr("x", posProduct + 22)
+        .attr("x", posProduct + 55)
         .attr("y", HEADING_HEIGHT + 55)
         .attr("height", BOXHEIGHT)
         .attr("width", SOFTMAX_WIDTH + MATRIX_WIDTH + DOT_WIDTH)
@@ -377,16 +381,11 @@ requirejs(['jquery', 'd3'],
         .attr("y2", function (d, targetIndex) {
           return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
-        .attr("stroke-width", 1.5)
-        .attr("stroke", connectorColor)
-        // .attr("stroke-opacity", function (d) {
-        //   return 0.5
-        //   // if (expanded) {
-          //   return d;
-          // } else {
-          //   return d;
-          // }
-        // });
+        .attr("stroke-width", 2)
+        .attr("stroke", "blue")
+        .attr("stroke-opacity", function (d) {
+            return d * 1.1;
+        });
     }
 
     function renderQueryKeyLines(svg, start_pos, end_pos) {
@@ -416,7 +415,7 @@ requirejs(['jquery', 'd3'],
          var y1 =  sourceIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
          var y2 =  targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
          var x1 = start_pos
-         var x2 = (start_pos + end_pos) / 2
+         var x2 = (start_pos + end_pos) / 2 + 1
          var x3 = end_pos
 
          return lineFunction([
@@ -437,16 +436,11 @@ requirejs(['jquery', 'd3'],
         //   return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         // })
         .attr("fill", "none")
-        .attr("stroke-width", 1.5)
-        .attr("stroke", connectorColor)
-        // .attr("stroke-opacity", function (d) {
-        //   return 0.5;
-        //   // if (expanded) {
-        //   //   return d;
-        //   // } else {
-        //   //   return d;
-        //   // }
-        // });
+        .attr("stroke-width", 2)
+        .attr("stroke", "blue")
+        .attr("stroke-opacity", function (d) {
+            return d * 1.1;
+        });
     }
 
 
@@ -507,8 +501,8 @@ requirejs(['jquery', 'd3'],
         .attr("y2", function (d, i) {
           return i * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
-        .attr("stroke-width", 1.5)
-        .attr("stroke", connectorColor)
+        .attr("stroke-width", 2)
+        .attr("stroke", "blue")
     }
 
 
@@ -594,23 +588,40 @@ requirejs(['jquery', 'd3'],
           return i;
         }) // make parent index available from DOM
 
-      // if (id == "queries") {
+      if (id == "queries") {
         vector.append("rect")
           .classed("vectorborder", true)
-          .attr("x", left_pos - 2)
+          .attr("x", left_pos - 1)
           .attr("y", function (d, i) {
             return i * BOXHEIGHT + HEADING_HEIGHT;
           })
-          .attr("width", MATRIX_WIDTH)
+          .attr("width", MATRIX_WIDTH + 2)
+          .attr("height", BOXHEIGHT - 5)
+          .style("fill-opacity", 0)
+          // .style("stroke-opacity", 0)
+          .style("stroke-width", 1.9)
+          // .style("stroke", "#655F5F")
+          .style("stroke", "#5b83d5")
+          .attr("rx", 1)
+          .attr("ry", 1)
+      } else {
+                vector.append("rect")
+          .classed("vectorborder", true)
+          .attr("x", left_pos - 1)
+          .attr("y", function (d, i) {
+            return i * BOXHEIGHT + HEADING_HEIGHT;
+          })
+          .attr("width", MATRIX_WIDTH + 2)
           .attr("height", BOXHEIGHT - 6)
           .style("fill-opacity", 0)
           // .style("stroke-opacity", 0)
           .style("stroke-width", 1)
           // .style("stroke", "#655F5F")
-          .style("stroke", connectorColor)
+          .style("stroke", "#a2b4d5")
           .attr("rx", 1)
           .attr("ry", 1)
-      // }
+
+      }
 
       vector.selectAll(".element")
         .data(function (d) {
@@ -674,7 +685,7 @@ requirejs(['jquery', 'd3'],
           .attr("width", BOXWIDTH)
           .attr("x", left_pos)
           .attr("y", function (d, i) {
-            return i * BOXHEIGHT + HEADING_HEIGHT;
+            return i * BOXHEIGHT + HEADING_HEIGHT - 1;
           });
       }
 
@@ -717,9 +728,9 @@ requirejs(['jquery', 'd3'],
         if (expanded) {
           tokenContainer.append('text')
             .classed("minus-sign", true)
-            .attr("x", left_pos + 4)
+            .attr("x", left_pos + 5)
             .attr("y", function (d, i) {
-              return i * BOXHEIGHT + HEADING_HEIGHT;
+              return i * BOXHEIGHT + HEADING_HEIGHT + 1;
             })
             .attr("fill", "#909090")
             .style('font-family', 'FontAwesome')
@@ -742,9 +753,9 @@ requirejs(['jquery', 'd3'],
         } else {
           tokenContainer.append('text')
             .classed("plus-sign", true)
-            .attr("x", left_pos + 4)
+            .attr("x", left_pos + 5)
             .attr("y", function (d, i) {
-              return i * BOXHEIGHT + HEADING_HEIGHT;
+              return i * BOXHEIGHT + HEADING_HEIGHT + 1;
             })
             .attr("fill", "#909090")
             .style('font-family', 'FontAwesome')
@@ -802,14 +813,19 @@ requirejs(['jquery', 'd3'],
         .enter()
         .append("rect")
         .classed('dotproduct', true)
-        .attr("x", leftPos)
+        .attr("x", leftPos + 1)
         .attr("y", function (d, i) {
           return i * BOXHEIGHT + HEADING_HEIGHT;
         })
         .attr("height", BOXHEIGHT - 4)
         .attr("width", BOXHEIGHT - 4)
-        .style("stroke-width", 1)
-        .style("stroke", "#655F5F")
+        // .style("stroke-width", 1)
+        // .style("stroke", "#655F5F")
+          .style("stroke-width", 1)
+          // .style("stroke", "#655F5F")
+          .style("stroke", "#a2b4d5")
+        .style("stroke-opacity", 1)
+        .style("fill-opacity", 0)
         .attr("rx", 2)
         .attr("ry", 2)
     }
@@ -862,16 +878,17 @@ requirejs(['jquery', 'd3'],
           //   return "red"
           // }
         })
-        .style("stroke", function (d) {
-          if (d >= 0) {
-            return 'black';
-          } else {
-            return 'black'
-          }
-        })
-        .style("opacity", function (d) {
+        // .style("stroke", function (d) {
+        //   if (d >= 0) {
+        //     return 'black';
+        //   } else {
+        //     return 'black'
+        //   }
+        // })
+        .style("fill-opacity", function (d) {
           return Math.tanh(Math.abs(d) / 64);
         })
+
         .attr("data-value", function (d) {
           return d
         })
