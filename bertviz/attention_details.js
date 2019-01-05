@@ -75,7 +75,7 @@ requirejs(['jquery', 'd3'],
         .attr("id", "expanded")
         .attr("visibility", "hidden")
 
-      renderLegend(svg, 600);
+      // renderLegend(svg, 600);
       // renderHorizLines(svg, "hlines3", posDotProduct - PADDING_WIDTH, posDotProduct)
       renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posRightText)
       renderText(svg, left_text, "left_text", posLeftText, true);
@@ -648,7 +648,8 @@ requirejs(['jquery', 'd3'],
           .style("stroke", "#5b83d5")
           .attr("rx", 1)
           .attr("ry", 1)
-      } else {
+          .style("stroke-opacity", 0)
+      } else if (id == "keys") {
         vector.append("rect")
           .classed("vectorborder", true)
           .attr("x", left_pos - 1)
@@ -664,8 +665,25 @@ requirejs(['jquery', 'd3'],
           .style("stroke", "#a2b4d5")
           .attr("rx", 1)
           .attr("ry", 1)
-
+          .style("stroke-opacity", 0)
+      } else {
+                vector.append("rect")
+          .classed("vectorborder", true)
+          .attr("x", left_pos - 1)
+          .attr("y", function (d, i) {
+            return i * BOXHEIGHT + HEADING_HEIGHT;
+          })
+          .attr("width", MATRIX_WIDTH + 2)
+          .attr("height", BOXHEIGHT - 6)
+          .style("fill-opacity", 0)
+          // .style("stroke-opacity", 0)
+          .style("stroke-width", 1)
+          // .style("stroke", "#655F5F")
+          .style("stroke", "#a2b4d5")
+          .attr("rx", 1)
+          .attr("ry", 1)
       }
+
 
       vector.selectAll(".element")
         .data(function (d) {
@@ -1034,6 +1052,9 @@ requirejs(['jquery', 'd3'],
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
         })
+      svg.select("#keys")
+        .selectAll(".vectorborder")
+        .style("stroke-opacity", 1)
       svg.select('#hlines1')
         .selectAll(".horiz-line-group")
         .style("opacity", function (d, i) {
@@ -1091,6 +1112,10 @@ requirejs(['jquery', 'd3'],
       }
       svg.selectAll(".qk-line-group")
         .style("opacity", 0)
+      svg.select("#keys")
+        .selectAll(".vectorborder")
+        .style("stroke-opacity", 0)
+
       svg.selectAll(".horiz-line-group")
         .style("opacity", 0)
       svg.selectAll(".text-query-line")
