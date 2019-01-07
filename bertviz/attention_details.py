@@ -38,8 +38,8 @@ vis_html = """
     Head: <select id="att_head"></select>
     Attention: <select id="att_type">
       <option value="all">All</option>
-      <option value="a">Sentence A -> Sentence A</option>
-      <option value="b">Sentence B -> Sentence B</option>
+      <option value="aa">Sentence A -> Sentence A</option>
+      <option value="bb">Sentence B -> Sentence B</option>
       <option value="ab">Sentence A -> Sentence B</option>
       <option value="ba">Sentence B -> Sentence A</option>
     </select>
