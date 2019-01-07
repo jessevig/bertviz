@@ -418,7 +418,7 @@ requirejs(['jquery', 'd3'],
           .attr("ry", 1)
           .style("stroke-opacity", 0)
       } else {
-                vector.append("rect")
+        vector.append("rect")
           .classed("vectorborder", true)
           .attr("x", left_pos - 1)
           .attr("y", function (d, i) {
