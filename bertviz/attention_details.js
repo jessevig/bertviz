@@ -28,7 +28,6 @@ requirejs(['jquery', 'd3'],
     const LEGEND_INCREMENTS = 100;
     const posColor = '#0c36d8';
     const negColor = '#ff6318';
-    const connectorColor = '#a2b4d5';
     const headingColor = "#6e6e6e";
 
     function renderVisCollapsed(svg, left_text, right_text) {
@@ -42,7 +41,6 @@ requirejs(['jquery', 'd3'],
         .attr("id", "collapsed")
         .attr("visibility", "hidden");
 
-      renderHeadingsCollapsed(svg, posAttention);
       renderText(svg, left_text, "left_text", posLeftText, false);
       renderAttn(svg, posAttention, posRightText, false);
       renderText(svg, right_text, "right_text", posRightText, false);
@@ -57,8 +55,6 @@ requirejs(['jquery', 'd3'],
       var posProduct = posKeys + MATRIX_WIDTH + PADDING_WIDTH;
       var posDotProduct = posProduct + MATRIX_WIDTH + PADDING_WIDTH;
       var posRightText = posDotProduct + BOXHEIGHT + PADDING_WIDTH;
-
-      var width = posRightText + BOXWIDTH;
 
       svg = svg.append("g")
         .attr("id", "expanded")
@@ -75,14 +71,8 @@ requirejs(['jquery', 'd3'],
       renderHorizLines(svg, "hlines2", posDotProduct - PADDING_WIDTH + 2, posDotProduct);
       var dotProducts = new Array(right_text.length).fill(0);
       renderDotProducts(svg, dotProducts, posDotProduct);
-      var softMax = new Array(right_text.length).fill(0);
       renderText(svg, right_text, "right_text", posRightText, true);
       renderHorizLines(svg, "hlines4", posRightText - PADDING_WIDTH - 2, posRightText)
-    }
-
-    function renderHeadingsCollapsed(svg, posAttn) {
-      var headingContainer = svg.append("svg:g")
-        .attr("id", "heading");
     }
 
     function renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftmax) {
@@ -118,18 +108,15 @@ requirejs(['jquery', 'd3'],
         .style('fill', headingColor)
         .style("font-weight", "bolder");
 
-
       keyHeadingContainer.append('tspan')
         .text('Key ')
         .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10);
 
-
       keyHeadingContainer.append('tspan')
         .text('k ')
         .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10);
-
 
       var productHeadingContainer = headingContainer.append("text")
         .attr("x", posProduct + 28)
@@ -295,38 +282,6 @@ requirejs(['jquery', 'd3'],
         .attr("stroke", "blue")
     }
 
-    function renderLegend(svg, start_pos) {
-      var colorData = [];
-      for (var x = -1; x <= 1; x += 2.0 / LEGEND_INCREMENTS) {
-        var fill;
-        if (x >= 0) {
-          fill = posColor;
-        } else {
-          fill = negColor;
-        }
-        var opacity = Math.abs(x);
-        colorData.push({'fill': fill, 'opacity': opacity})
-      }
-      var legend = svg.append("g")
-        .attr("id", "legend")
-        .selectAll("rect")
-        .data(colorData)
-        .enter()
-        .append("rect")
-        .attr("x", function (d, i) {
-          return start_pos + i * LEGEND_WIDTH / LEGEND_INCREMENTS;
-        })
-        .attr("y", 0)
-        .attr("width", LEGEND_WIDTH / LEGEND_INCREMENTS)
-        .attr("height", LEGEND_HEIGHT)
-        .style("fill", function (d) {
-          return d["fill"];
-        })
-        .style("opacity", function (d) {
-          return d["opacity"];
-        });
-    }
-
     function renderAttn(svg, start_pos, end_pos, expanded) {
       var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
       var attnContainer = svg.append("svg:g");
@@ -365,7 +320,6 @@ requirejs(['jquery', 'd3'],
     }
 
     function renderVectors(svg, id, vectors, left_pos, fadeIn) {
-      // Create vectorContainer of type svg:g ad w/id left or right
       var vectorContainer = svg.append("svg:g")
         .attr("id", id);
 
@@ -393,9 +347,7 @@ requirejs(['jquery', 'd3'],
           .attr("width", MATRIX_WIDTH + 2)
           .attr("height", BOXHEIGHT - 5)
           .style("fill-opacity", 0)
-          // .style("stroke-opacity", 0)
           .style("stroke-width", 1.9)
-          // .style("stroke", "#655F5F")
           .style("stroke", "#5b83d5")
           .attr("rx", 1)
           .attr("ry", 1)
@@ -410,9 +362,7 @@ requirejs(['jquery', 'd3'],
           .attr("width", MATRIX_WIDTH + 2)
           .attr("height", BOXHEIGHT - 6)
           .style("fill-opacity", 0)
-          // .style("stroke-opacity", 0)
           .style("stroke-width", 1)
-          // .style("stroke", "#655F5F")
           .style("stroke", "#a2b4d5")
           .attr("rx", 1)
           .attr("ry", 1)
@@ -532,7 +482,6 @@ requirejs(['jquery', 'd3'],
           hideComputation(svg)
         });
 
-        // if (config.expanded == true) {
         if (expanded) {
           tokenContainer.append('text')
             .classed("minus-sign", true)
@@ -612,10 +561,7 @@ requirejs(['jquery', 'd3'],
         })
         .attr("height", BOXHEIGHT - 4)
         .attr("width", BOXHEIGHT - 4)
-        // .style("stroke-width", 1)
-        // .style("stroke", "#655F5F")
         .style("stroke-width", 1)
-        // .style("stroke", "#655F5F")
         .style("stroke", "#a2b4d5")
         .style("stroke-opacity", 1)
         .style("fill-opacity", 0)
@@ -624,7 +570,6 @@ requirejs(['jquery', 'd3'],
     }
 
     function updateDotProducts(svg, dotProducts) {
-      var unitSize = Math.floor(MATRIX_WIDTH / config.vector_size); // Pixel width of individual element in vector
       var vectorContainer = svg.select('#dotproducts').style("opacity", 1);
       vectorContainer.selectAll(".dotproduct")
         .data(dotProducts)
@@ -644,24 +589,6 @@ requirejs(['jquery', 'd3'],
         })
     }
 
-    function renderSoftmax(svg, softmax, leftPos) {
-      svg.append("svg:g")
-        .attr("id", "softmaxes")
-        .selectAll("rect")
-        .data(softmax)
-        .enter()
-        .append("rect")
-        .classed('softmax', true)
-        .attr("x", leftPos)
-        .attr("y", function (d, i) {
-          return i * BOXHEIGHT + HEADING_HEIGHT;
-        })
-        .attr("height", BOXHEIGHT - 4)
-        .attr("width", BOXHEIGHT - 4)
-        .style("stroke", "black")
-      ;
-    }
-
     function updateSoftmax(svg, softmax) {
       var vectorContainer = svg.select('#softmaxes').style("opacity", 1);
       vectorContainer.selectAll(".softmax")
@@ -674,7 +601,6 @@ requirejs(['jquery', 'd3'],
         })
 
     }
-
 
     function highlightSelection(svg, index) {
       svg.select("#queries")
@@ -845,7 +771,6 @@ requirejs(['jquery', 'd3'],
           return Math.tanh(Math.abs(d) / 4);
         });
     }
-
 
     var config = {
       layer: 0,
