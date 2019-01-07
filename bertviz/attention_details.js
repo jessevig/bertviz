@@ -23,19 +23,15 @@ requirejs(['jquery', 'd3'],
     const SOFTMAX_WIDTH = 70;
     const HEADING_HEIGHT = 55;
     const ATTENTION_WIDTH = 175;
-    const LEGEND_WIDTH = 80;
-    const LEGEND_HEIGHT = 20;
-    const LEGEND_INCREMENTS = 100;
-    const posColor = '#0c36d8';
-    const negColor = '#ff6318';
-    const headingColor = "#6e6e6e";
+    const POS_COLOR = '#0c36d8';
+    const NEG_COLOR = '#ff6318';
+    const HEADING_COLOR = "#6e6e6e";
 
     function renderVisCollapsed(svg, left_text, right_text) {
 
       var posLeftText = 0;
       var posAttention = posLeftText + BOXWIDTH;
       var posRightText = posAttention + ATTENTION_WIDTH + PADDING_WIDTH;
-      var width = posRightText + BOXWIDTH;
 
       svg = svg.append("g")
         .attr("id", "collapsed")
@@ -72,7 +68,7 @@ requirejs(['jquery', 'd3'],
       var dotProducts = new Array(right_text.length).fill(0);
       renderDotProducts(svg, dotProducts, posDotProduct);
       renderText(svg, right_text, "right_text", posRightText, true);
-      renderHorizLines(svg, "hlines4", posRightText - PADDING_WIDTH - 2, posRightText)
+      renderHorizLines(svg, "hlines3", posRightText - PADDING_WIDTH - 2, posRightText)
     }
 
     function renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftmax) {
@@ -85,10 +81,9 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
-        .style('fill', headingColor)
+        .style('fill', HEADING_COLOR)
         .style("font-weight", "bolder");
-
-
+      
       queryHeadingContainer.append('tspan')
         .text('Query ')
         .style('font-size', TEXT_SIZE + "px")
@@ -105,7 +100,7 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
-        .style('fill', headingColor)
+        .style('fill', HEADING_COLOR)
         .style("font-weight", "bolder");
 
       keyHeadingContainer.append('tspan')
@@ -124,7 +119,7 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
-        .style('fill', headingColor)
+        .style('fill', HEADING_COLOR)
         .style("font-weight", "bolder");
 
       productHeadingContainer.append('tspan')
@@ -138,7 +133,7 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
-        .style('fill', headingColor)
+        .style('fill', HEADING_COLOR)
         .style("font-weight", "bolder");
 
       dotProductHeadingContainer.append('tspan')
@@ -150,7 +145,7 @@ requirejs(['jquery', 'd3'],
         .text(' \u2219 k')
         .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10)
-        .style('fill', headingColor);
+        .style('fill', HEADING_COLOR);
 
       headingContainer.append("text")
         .attr("x", posSoftmax + 9)
@@ -159,7 +154,7 @@ requirejs(['jquery', 'd3'],
         .attr("width", SOFTMAX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
         .style("text-anchor", "start")
-        .style('fill', headingColor)
+        .style('fill', HEADING_COLOR)
         .style("font-weight", "bolder")
         .text("Softmax");
 
@@ -170,7 +165,6 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", SOFTMAX_WIDTH + MATRIX_WIDTH + DOT_WIDTH)
         .attr("font-size", 20 + "px")
-        // .style("text-anchor", "middle")
         .text("No token selected")
         .attr("fill", "darkgray")
 
@@ -383,7 +377,6 @@ requirejs(['jquery', 'd3'],
           .attr("ry", 1)
       }
 
-
       vector.selectAll(".element")
         .data(function (d) {
           return d;
@@ -407,9 +400,9 @@ requirejs(['jquery', 'd3'],
         })
         .style("fill", function (d) {
           if (d >= 0) {
-            return posColor;
+            return POS_COLOR;
           } else {
-            return negColor
+            return NEG_COLOR
           }
         })
         .style("opacity", function (d) {
@@ -575,9 +568,9 @@ requirejs(['jquery', 'd3'],
         .data(dotProducts)
         .style("fill", function (d) {
           if (d >= 0) {
-            return posColor;
+            return POS_COLOR;
           } else {
-            return negColor;
+            return NEG_COLOR;
           }
         })
         .style("fill-opacity", function (d) {
@@ -658,11 +651,6 @@ requirejs(['jquery', 'd3'],
           return i == index ? 1.0 : 0.0;
         });
       svg.select('#hlines3')
-        .selectAll(".horiz-line-group")
-        .style("opacity", function (d, i) {
-          return i == index ? 1.0 : 0.0;
-        });
-      svg.select('#hlines4')
         .selectAll(".horiz-line-group")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
@@ -759,9 +747,9 @@ requirejs(['jquery', 'd3'],
         .style("fill", function (d) {
 
           if (d >= 0) {
-            return posColor;
+            return POS_COLOR;
           } else {
-            return negColor;
+            return NEG_COLOR;
           }
         })
         .attr("data-value", function (d) {
