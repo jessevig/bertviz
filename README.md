@@ -2,6 +2,13 @@
 
 Tool for visualizing BERT's attention layers
 
+## Jupyter Notebooks
+
+[bertviz_detail](https://github.com/jessevig/bertviz/blob/master/bertviz/bertviz_detail.ipynb): new attention details view
+
+[bertviz_summary](https://github.com/jessevig/bertviz/blob/master/bertviz/bertviz_summary.ipynb): original summary view
+
+
 ## Authors
 
 * [Jesse Vig](https://github.com/jessevig)

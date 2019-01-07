@@ -467,6 +467,7 @@ requirejs(['jquery', 'd3'],
         textContainer.style("text-anchor", "end")
           .attr("dx", BOXWIDTH - 2);
         tokenContainer.on("mouseover", function (d, index) {
+          config.index = index;
           highlightSelection(svg, index);
           showComputation(svg, index);
         });
@@ -516,7 +517,6 @@ requirejs(['jquery', 'd3'],
               return '\uf055';
             })
             .on("click", function (d, i) {
-              console.log("clicked on plus sign");
               config.expanded = true;
               showExpanded();
             })
@@ -780,6 +780,11 @@ requirejs(['jquery', 'd3'],
     }
 
     function showExpanded() {
+      if (config.index != null) {
+        var svg = d3.select("#vis")
+        highlightSelection(svg, config.index);
+        showComputation(svg, config.index);
+      }
       d3.select("#expanded").attr("visibility", "visible");
       d3.select("#collapsed").attr("visibility", "hidden")
     }
