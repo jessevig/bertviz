@@ -486,6 +486,7 @@ requirejs(['jquery', 'd3'],
             .attr("fill", "#909090")
             .style('font-family', 'FontAwesome')
             .style('font-size', "17px")
+            .style('font-weight', 900)
             .style('opacity', 0)
             .attr("dy", 17)
             .text(function (d) {
@@ -511,6 +512,7 @@ requirejs(['jquery', 'd3'],
             .attr("fill", "#909090")
             .style('font-family', 'FontAwesome')
             .style('font-size', "17px")
+            .style('font-weight', 900)
             .style('opacity', 0)
             .attr("dy", 17)
             .text(function (d) {
