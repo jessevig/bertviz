@@ -28,23 +28,23 @@ requirejs(['jquery', 'd3'],
     const LEGEND_INCREMENTS = 100;
     const posColor = '#0c36d8';
     const negColor = '#ff6318';
-    const connectorColor = '#a2b4d5'
-    const headingColor = "#6e6e6e"
+    const connectorColor = '#a2b4d5';
+    const headingColor = "#6e6e6e";
 
     function renderVisCollapsed(svg, left_text, right_text) {
 
       var posLeftText = 0;
       var posAttention = posLeftText + BOXWIDTH;
       var posRightText = posAttention + ATTENTION_WIDTH + PADDING_WIDTH;
-      var width = posRightText + BOXWIDTH
+      var width = posRightText + BOXWIDTH;
 
       svg = svg.append("g")
         .attr("id", "collapsed")
-        .attr("visibility", "hidden")
+        .attr("visibility", "hidden");
 
-      renderHeadingsCollapsed(svg, posAttention)
+      renderHeadingsCollapsed(svg, posAttention);
       renderText(svg, left_text, "left_text", posLeftText, false);
-      renderAttn(svg, posAttention, posRightText, false)
+      renderAttn(svg, posAttention, posRightText, false);
       renderText(svg, right_text, "right_text", posRightText, false);
     }
 
@@ -58,21 +58,21 @@ requirejs(['jquery', 'd3'],
       var posDotProduct = posProduct + MATRIX_WIDTH + PADDING_WIDTH;
       var posRightText = posDotProduct + BOXHEIGHT + PADDING_WIDTH;
 
-      var width = posRightText + BOXWIDTH
+      var width = posRightText + BOXWIDTH;
 
       svg = svg.append("g")
         .attr("id", "expanded")
-        .attr("visibility", "hidden")
+        .attr("visibility", "hidden");
 
-      renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posRightText)
+      renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posRightText);
       renderText(svg, left_text, "left_text", posLeftText, true);
-      renderTextQueryLines(svg, posQueries - PADDING_WIDTH, posQueries - 2)
+      renderTextQueryLines(svg, posQueries - PADDING_WIDTH, posQueries - 2);
       renderVectors(svg, "keys", keys, posKeys);
-      renderQueryKeyLines(svg, posQueries + MATRIX_WIDTH + 1, posKeys - 3)
+      renderQueryKeyLines(svg, posQueries + MATRIX_WIDTH + 1, posKeys - 3);
       renderVectors(svg, "queries", queries, posQueries);
-      renderHorizLines(svg, "hlines1", posProduct - PADDING_WIDTH + 1, posProduct - 1)
+      renderHorizLines(svg, "hlines1", posProduct - PADDING_WIDTH + 1, posProduct - 1);
       renderVectors(svg, "product", keys, posProduct);
-      renderHorizLines(svg, "hlines2", posDotProduct - PADDING_WIDTH + 2, posDotProduct)
+      renderHorizLines(svg, "hlines2", posDotProduct - PADDING_WIDTH + 2, posDotProduct);
       var dotProducts = new Array(right_text.length).fill(0);
       renderDotProducts(svg, dotProducts, posDotProduct);
       var softMax = new Array(right_text.length).fill(0);
@@ -96,18 +96,18 @@ requirejs(['jquery', 'd3'],
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
         .style('fill', headingColor)
-        .style("font-weight", "bolder")
+        .style("font-weight", "bolder");
 
 
       queryHeadingContainer.append('tspan')
         .text('Query ')
         .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10)
+        .attr("y", HEADING_HEIGHT - 10);
 
       queryHeadingContainer.append('tspan')
         .text('q')
         .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10)
+        .attr("y", HEADING_HEIGHT - 10);
 
       var keyHeadingContainer = headingContainer.append("text")
         .attr("x", posKeys + 73)
@@ -116,19 +116,19 @@ requirejs(['jquery', 'd3'],
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
         .style('fill', headingColor)
-        .style("font-weight", "bolder")
+        .style("font-weight", "bolder");
 
 
       keyHeadingContainer.append('tspan')
         .text('Key ')
         .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10)
+        .attr("y", HEADING_HEIGHT - 10);
 
 
       keyHeadingContainer.append('tspan')
         .text('k ')
         .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10)
+        .attr("y", HEADING_HEIGHT - 10);
 
 
       var productHeadingContainer = headingContainer.append("text")
@@ -138,12 +138,12 @@ requirejs(['jquery', 'd3'],
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
         .style('fill', headingColor)
-        .style("font-weight", "bolder")
+        .style("font-weight", "bolder");
 
       productHeadingContainer.append('tspan')
         .text('q \u00D7 k (element-wise)')
         .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10)
+        .attr("y", HEADING_HEIGHT - 10);
 
       var dotProductHeadingContainer = headingContainer.append("text")
         .attr("x", posDotProduct - 6)
@@ -152,18 +152,18 @@ requirejs(['jquery', 'd3'],
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", TEXT_SIZE + "px")
         .style('fill', headingColor)
-        .style("font-weight", "bolder")
+        .style("font-weight", "bolder");
 
       dotProductHeadingContainer.append('tspan')
         .text('q')
         .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10)
+        .attr("y", HEADING_HEIGHT - 10);
 
       dotProductHeadingContainer.append('tspan')
         .text(' \u2219 k')
         .style('font-size', TEXT_SIZE + "px")
         .attr("y", HEADING_HEIGHT - 10)
-        .style('fill', headingColor)
+        .style('fill', headingColor);
 
       headingContainer.append("text")
         .attr("x", posSoftmax + 9)
@@ -174,7 +174,7 @@ requirejs(['jquery', 'd3'],
         .style("text-anchor", "start")
         .style('fill', headingColor)
         .style("font-weight", "bolder")
-        .text("Softmax")
+        .text("Softmax");
 
       headingContainer.append("text")
         .attr("id", "placeholder")
@@ -192,7 +192,7 @@ requirejs(['jquery', 'd3'],
     function renderHorizLines(svg, id, start_pos, end_pos) {
       var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
       var linesContainer = svg.append("svg:g")
-        .attr("id", id)
+        .attr("id", id);
       linesContainer.selectAll("g")
         .data(attnMatrix)
         .enter()
@@ -225,7 +225,7 @@ requirejs(['jquery', 'd3'],
 
     function renderQueryKeyLines(svg, start_pos, end_pos) {
       var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
-      var linesContainer = svg.append("svg:g")
+      var linesContainer = svg.append("svg:g");
       var lineFunction = d3.line()
         .x(function (d) {
           return d.x;
@@ -253,9 +253,9 @@ requirejs(['jquery', 'd3'],
           var sourceIndex = +this.parentNode.getAttribute("source-index");
           var y1 = sourceIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
           var y2 = targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
-          var x1 = start_pos
-          var x2 = (start_pos + end_pos) / 2 + 1
-          var x3 = end_pos
+          var x1 = start_pos;
+          var x2 = (start_pos + end_pos) / 2 + 1;
+          var x3 = end_pos;
 
           return lineFunction([
             {'x': x1, 'y': y1},
@@ -276,7 +276,7 @@ requirejs(['jquery', 'd3'],
     function renderTextQueryLines(svg, start_pos, end_pos) {
       var att_dets = config.attention[config.att_type];
       var left_text = att_dets.left_text; // Use for shape not values
-      var linesContainer = svg.append("svg:g")
+      var linesContainer = svg.append("svg:g");
       linesContainer.selectAll("line")
         .data(left_text)
         .enter()
@@ -296,7 +296,7 @@ requirejs(['jquery', 'd3'],
     }
 
     function renderLegend(svg, start_pos) {
-      var colorData = []
+      var colorData = [];
       for (var x = -1; x <= 1; x += 2.0 / LEGEND_INCREMENTS) {
         var fill;
         if (x >= 0) {
@@ -304,7 +304,7 @@ requirejs(['jquery', 'd3'],
         } else {
           fill = negColor;
         }
-        var opacity = Math.abs(x)
+        var opacity = Math.abs(x);
         colorData.push({'fill': fill, 'opacity': opacity})
       }
       var legend = svg.append("g")
@@ -329,7 +329,7 @@ requirejs(['jquery', 'd3'],
 
     function renderAttn(svg, start_pos, end_pos, expanded) {
       var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
-      var attnContainer = svg.append("svg:g")
+      var attnContainer = svg.append("svg:g");
       attnContainer.selectAll("g")
         .data(attnMatrix)
         .enter()
@@ -427,9 +427,7 @@ requirejs(['jquery', 'd3'],
           .attr("width", MATRIX_WIDTH + 2)
           .attr("height", BOXHEIGHT - 6)
           .style("fill-opacity", 0)
-          // .style("stroke-opacity", 0)
           .style("stroke-width", 1)
-          // .style("stroke", "#655F5F")
           .style("stroke", "#a2b4d5")
           .attr("rx", 1)
           .attr("ry", 1)
@@ -520,17 +518,17 @@ requirejs(['jquery', 'd3'],
         })
         .attr("height", BOXHEIGHT)
         .attr("width", BOXWIDTH)
-        .attr("dy", TEXT_SIZE)
+        .attr("dy", TEXT_SIZE);
 
       if (id == "left_text") {
         textContainer.style("text-anchor", "end")
-          .attr("dx", BOXWIDTH - 2)
+          .attr("dx", BOXWIDTH - 2);
         tokenContainer.on("mouseover", function (d, index) {
-          highlightSelection(svg, index)
+          highlightSelection(svg, index);
           showComputation(svg, index);
         });
         tokenContainer.on("mouseleave", function () {
-          unhighlightSelection(svg)
+          unhighlightSelection(svg);
           hideComputation(svg)
         });
 
@@ -576,7 +574,7 @@ requirejs(['jquery', 'd3'],
               return '\uf055';
             })
             .on("click", function (d, i) {
-              console.log("clicked on plus sign")
+              console.log("clicked on plus sign");
               config.expanded = true;
               showExpanded();
             })
@@ -626,7 +624,7 @@ requirejs(['jquery', 'd3'],
     }
 
     function updateDotProducts(svg, dotProducts) {
-      var unitSize = Math.floor(MATRIX_WIDTH / config.vector_size) // Pixel width of individual element in vector
+      var unitSize = Math.floor(MATRIX_WIDTH / config.vector_size); // Pixel width of individual element in vector
       var vectorContainer = svg.select('#dotproducts').style("opacity", 1);
       vectorContainer.selectAll(".dotproduct")
         .data(dotProducts)
@@ -683,20 +681,20 @@ requirejs(['jquery', 'd3'],
         .selectAll(".vector")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.4;
-        })
+        });
       svg.select("#queries")
         .selectAll(".vectorborder")
         .style("stroke-opacity", function (d, i) {
           return i == index ? 1.0 : 0;
-        })
+        });
       svg.select("#queries")
         .select(".matrixborder")
-        .style("stroke-opacity", 0)
+        .style("stroke-opacity", 0);
       svg.select("#left_text")
         .selectAll(".highlight")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
-        })
+        });
       if (config.expanded) {
         svg.select("#left_text")
           .selectAll(".minus-sign")
@@ -711,38 +709,38 @@ requirejs(['jquery', 'd3'],
           })
       }
       svg.selectAll(".i-index")
-        .text(index)
+        .text(index);
       svg.selectAll(".attn-line-group")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
-        })
+        });
       svg.selectAll(".qk-line-group")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
-        })
+        });
       svg.select("#keys")
         .selectAll(".vectorborder")
-        .style("stroke-opacity", 1)
+        .style("stroke-opacity", 1);
       svg.select('#hlines1')
         .selectAll(".horiz-line-group")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
-        })
+        });
       svg.select('#hlines2')
         .selectAll(".horiz-line-group")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
-        })
+        });
       svg.select('#hlines3')
         .selectAll(".horiz-line-group")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
-        })
+        });
       svg.select('#hlines4')
         .selectAll(".horiz-line-group")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
-        })
+        });
       svg.selectAll(".text-query-line")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
@@ -752,36 +750,36 @@ requirejs(['jquery', 'd3'],
     function unhighlightSelection(svg) {
       svg.select("#queries")
         .selectAll(".vector")
-        .style("opacity", 1.0)
+        .style("opacity", 1.0);
       svg.select("#queries")
         .selectAll(".vectorborder")
-        .style("stroke-opacity", 0)
+        .style("stroke-opacity", 0);
       svg.select("#queries")
         .select(".matrixborder")
-        .style("stroke-opacity", 1)
+        .style("stroke-opacity", 1);
       svg.select("#left_text")
         .selectAll(".highlight")
-        .style("opacity", 0.0)
+        .style("opacity", 0.0);
       svg.select("#left_text")
         .selectAll(".minus-sign")
-        .style("opacity", 0)
+        .style("opacity", 0);
       svg.select("#left_text")
         .selectAll(".plus-sign")
-        .style("opacity", 0)
+        .style("opacity", 0);
       svg.selectAll(".i-index")
-        .text("i")
+        .text("i");
       if (!config.expanded) {
         svg.selectAll(".attn-line-group")
           .style("opacity", 1)
       }
       svg.selectAll(".qk-line-group")
-        .style("opacity", 0)
+        .style("opacity", 0);
       svg.select("#keys")
         .selectAll(".vectorborder")
-        .style("stroke-opacity", 0)
+        .style("stroke-opacity", 0);
 
       svg.selectAll(".horiz-line-group")
-        .style("opacity", 0)
+        .style("opacity", 0);
       svg.selectAll(".text-query-line")
         .style("opacity", 0)
     }
@@ -793,21 +791,21 @@ requirejs(['jquery', 'd3'],
       var att = att_dets.att[config.layer][config.att_head][query_index];
 
       var seq_len = keys.length;
-      var productVectors = []
+      var productVectors = [];
       var dotProducts = [];
       for (var i = 0; i < seq_len; i++) {
         var key_vector = keys[i];
         var productVector = [];
         var dotProduct = 0;
         for (var j = 0; j < config.vector_size; j++) {
-          var product = query_vector[j] * key_vector[j]
-          productVector.push(product)
+          var product = query_vector[j] * key_vector[j];
+          productVector.push(product);
           dotProduct += product;
         }
         productVectors.push(productVector);
         dotProducts.push(dotProduct);
       }
-      updateVectors(svg, 'product', productVectors)
+      updateVectors(svg, 'product', productVectors);
       updateDotProducts(svg, dotProducts);
       updateSoftmax(svg, att);
       updateTextAttention(svg, att);
@@ -824,7 +822,7 @@ requirejs(['jquery', 'd3'],
     }
 
     function updateVectors(svg, id, data) {
-      var vectorContainer = svg.select('#' + id).style("opacity", 1)//.attr("hidden", false);
+      var vectorContainer = svg.select('#' + id).style("opacity", 1);
       var vectors = vectorContainer.selectAll(".vector");
       vectors
         .data(data)
@@ -857,19 +855,19 @@ requirejs(['jquery', 'd3'],
 
     function visualize() {
       var num_heads = attention['all']['queries'][0].length; // Num heads for layer 0 (same as for all layers)
-      config.vector_size = attention['all']['queries'][0][0][0].length // Layer 0, head 0, position 0 length
+      config.vector_size = attention['all']['queries'][0][0][0].length; // Layer 0, head 0, position 0 length
       config.attention = attention;
       config.expanded = false;
       render();
     }
 
     function showCollapsed() {
-      d3.select("#expanded").attr("visibility", "hidden")
+      d3.select("#expanded").attr("visibility", "hidden");
       d3.select("#collapsed").attr("visibility", "visible")
     }
 
     function showExpanded() {
-      d3.select("#expanded").attr("visibility", "visible")
+      d3.select("#expanded").attr("visibility", "visible");
       d3.select("#collapsed").attr("visibility", "hidden")
     }
 
@@ -887,10 +885,10 @@ requirejs(['jquery', 'd3'],
         .append('svg')
         .attr("width", WIDTH)
         .attr("height", HEIGHT)
-        .attr("visibility", "hidden")
+        .attr("visibility", "hidden");
 
       renderVisExpanded(svg, left_text, right_text, queries, keys);
-      renderVisCollapsed(svg, left_text, right_text, att)
+      renderVisCollapsed(svg, left_text, right_text, att);
       if (config.expanded == true) {
         showExpanded();
       } else {
