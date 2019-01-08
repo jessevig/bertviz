@@ -477,18 +477,21 @@ requirejs(['jquery', 'd3'],
         });
 
         if (expanded) {
-          tokenContainer.append('svg:foreignObject')
+          tokenContainer.append('text')
             .classed("minus-sign", true)
             .attr("x", left_pos + 5)
             .attr("y", function (d, i) {
               return i * BOXHEIGHT + HEADING_HEIGHT + 1;
             })
-            .style('color', "#909090")
+            .attr("fill", "#909090")
+            .style('font-family', 'FontAwesome')
             .style('font-size', "17px")
             .style('font-weight', 900)
             .style('opacity', 0)
             .attr("dy", 17)
-            .html("<i class=\"fa fa-minus-circle\" aria-hidden=\"true\"></i>\n")
+            .text(function (d) {
+              return '\uf056';
+            })
             .on("click", function (d, i) {
               config.expanded = false;
               showCollapsed();
@@ -500,18 +503,21 @@ requirejs(['jquery', 'd3'],
               d3.select(this).style("cursor", "default");
             })
         } else {
-          tokenContainer.append('svg:foreignObject')
+          tokenContainer.append('text')
             .classed("plus-sign", true)
             .attr("x", left_pos + 5)
             .attr("y", function (d, i) {
               return i * BOXHEIGHT + HEADING_HEIGHT + 1;
             })
+            .attr("fill", "#909090")
+            .style('font-family', 'FontAwesome')
             .style('font-size', "17px")
             .style('font-weight', 900)
-            .style('color', "#909090")
             .style('opacity', 0)
             .attr("dy", 17)
-            .html("<i class=\"fa fa-plus-circle\" aria-hidden=\"true\"></i>\n")
+            .text(function (d) {
+              return '\uf055';
+            })
             .on("click", function (d, i) {
               config.expanded = true;
               showExpanded();
