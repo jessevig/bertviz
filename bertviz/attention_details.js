@@ -83,7 +83,7 @@ requirejs(['jquery', 'd3'],
         .attr("font-size", TEXT_SIZE + "px")
         .style('fill', HEADING_COLOR)
         .style("font-weight", "bolder");
-      
+
       queryHeadingContainer.append('tspan')
         .text('Query ')
         .style('font-size', TEXT_SIZE + "px")
@@ -477,21 +477,29 @@ requirejs(['jquery', 'd3'],
         });
 
         if (expanded) {
-          tokenContainer.append('text')
+          tokenContainer.append('path')
+            .attr("d", "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zM124 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H124z")
             .classed("minus-sign", true)
-            .attr("x", left_pos + 5)
-            .attr("y", function (d, i) {
-              return i * BOXHEIGHT + HEADING_HEIGHT + 1;
-            })
             .attr("fill", "#909090")
-            .style('font-family', 'FontAwesome')
             .style('font-size', "17px")
             .style('font-weight', 900)
             .style('opacity', 0)
             .attr("dy", 17)
-            .text(function (d) {
-              return '\uf056';
+            .attr("transform", function (d, i) {
+              var x = left_pos + 5;
+              var y = i * BOXHEIGHT + HEADING_HEIGHT + 4;
+              return "translate(" + x + " " + y + ")" +
+                "scale(0.03 0.03) "
             })
+          tokenContainer.append('rect')
+            .attr("x", left_pos + 5)
+            .attr("y", function (d, i) {
+              return i * BOXHEIGHT + HEADING_HEIGHT + 4;
+            })
+            .style('opacity', 0)
+            .attr("dy", 17)
+            .attr("height", 16)
+            .attr("width", 16)
             .on("click", function (d, i) {
               config.expanded = false;
               showCollapsed();
@@ -502,22 +510,31 @@ requirejs(['jquery', 'd3'],
             .on("mouseout", function (d, i) {
               d3.select(this).style("cursor", "default");
             })
+
         } else {
-          tokenContainer.append('text')
+          tokenContainer.append('path')
+            .attr("d", "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z")
             .classed("plus-sign", true)
-            .attr("x", left_pos + 5)
-            .attr("y", function (d, i) {
-              return i * BOXHEIGHT + HEADING_HEIGHT + 1;
-            })
             .attr("fill", "#909090")
-            .style('font-family', 'FontAwesome')
             .style('font-size', "17px")
             .style('font-weight', 900)
             .style('opacity', 0)
             .attr("dy", 17)
-            .text(function (d) {
-              return '\uf055';
+            .attr("transform", function (d, i) {
+              var x = left_pos + 5;
+              var y = i * BOXHEIGHT + HEADING_HEIGHT + 4;
+              return "translate(" + x + " " + y + ")" +
+                "scale(0.03 0.03) "
             })
+          tokenContainer.append('rect')
+            .attr("x", left_pos + 5)
+            .attr("y", function (d, i) {
+              return i * BOXHEIGHT + HEADING_HEIGHT + 4;
+            })
+            .style('opacity', 0)
+            .attr("dy", 17)
+            .attr("height", 16)
+            .attr("width", 16)
             .on("click", function (d, i) {
               config.expanded = true;
               showExpanded();
