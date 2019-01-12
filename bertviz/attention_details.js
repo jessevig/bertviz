@@ -69,6 +69,9 @@ requirejs(['jquery', 'd3'],
       renderDotProducts(svg, dotProducts, posDotProduct);
       renderText(svg, right_text, "right_text", posRightText, true);
       renderHorizLines(svg, "hlines3", posRightText - PADDING_WIDTH - 2, posRightText)
+      renderVectorHighlights(svg, "key-vector-highlights", posKeys)
+      renderVectorHighlights(svg, "product-vector-highlights", posProduct)
+
     }
 
     function renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftmax) {
@@ -203,6 +206,40 @@ requirejs(['jquery', 'd3'],
           return d * 1.1;
         });
     }
+
+    function renderVectorHighlights(svg, id, start_pos) {
+      var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
+      var vectorHighlightsContainer = svg.append("svg:g")
+        .attr("id", id);
+      vectorHighlightsContainer.selectAll("g")
+        .data(attnMatrix)
+        .enter()
+        .append("g") // Add group for each source token
+        .classed('vector-highlight-group', true)
+        .style("opacity", 0)
+        .attr("source-index", function (d, i) { // Save index of source token
+          return i;
+        })
+        .selectAll("rect")
+        .data(function (d) { // Loop over all target tokens
+          return d;
+        })
+        .enter() // When entering
+        .append("rect")
+        .attr("x", start_pos - 1)
+        .attr("y", function (d, targetIndex) {
+          return targetIndex * BOXHEIGHT + HEADING_HEIGHT;
+        })
+        .attr("height", BOXHEIGHT - 5)
+        .attr("width", MATRIX_WIDTH + 3)
+        .style("fill-opacity", 0)
+        .attr("stroke-width", 1.9)
+        .attr("stroke", "blue")
+        .attr("stroke-opacity", function (d) {
+          return d * 1.6;
+        });
+    }
+
 
     function renderQueryKeyLines(svg, start_pos, end_pos) {
       var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
@@ -674,6 +711,16 @@ requirejs(['jquery', 'd3'],
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
         });
+      svg.select('#key-vector-highlights')
+        .selectAll(".vector-highlight-group")
+        .style("opacity", function (d, i) {
+          return i == index ? 1.0 : 0.0;
+        });
+      svg.select('#product-vector-highlights')
+        .selectAll(".vector-highlight-group")
+        .style("opacity", function (d, i) {
+          return i == index ? 1.0 : 0.0;
+        });
       svg.selectAll(".text-query-line")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
@@ -712,6 +759,8 @@ requirejs(['jquery', 'd3'],
         .style("stroke-opacity", 0);
 
       svg.selectAll(".horiz-line-group")
+        .style("opacity", 0);
+      svg.selectAll(".vector-highlight-group")
         .style("opacity", 0);
       svg.selectAll(".text-query-line")
         .style("opacity", 0)
