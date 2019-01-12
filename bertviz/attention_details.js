@@ -843,6 +843,10 @@ requirejs(['jquery', 'd3'],
     }
 
     function showCollapsed() {
+       if (config.index != null) {
+        var svg = d3.select("#vis")
+        highlightSelection(svg, config.index);
+      }
       d3.select("#expanded").attr("visibility", "hidden");
       d3.select("#collapsed").attr("visibility", "visible")
     }
