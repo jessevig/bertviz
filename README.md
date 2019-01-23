@@ -6,9 +6,11 @@ Tool for visualizing BERT's attention layers
 
 [bertviz_detail](https://github.com/jessevig/bertviz/blob/master/bertviz/bertviz_detail.ipynb): new attention details view
 
+* [Colab](https://colab.research.google.com/drive/1vlOJ1lhdujVjfH857hvYKIdKPTD9Kid8)
+
 [bertviz_summary](https://github.com/jessevig/bertviz/blob/master/bertviz/bertviz_summary.ipynb): original summary view
 
-
+* [Colab](https://colab.research.google.com/drive/1Nlhh2vwlQdKleNMqpmLDBsAwrv_7NnrB)
 ## Authors
 
 * [Jesse Vig](https://github.com/jessevig)
