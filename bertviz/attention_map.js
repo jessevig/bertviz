@@ -13,63 +13,58 @@ requirejs(['jquery', 'd3'],
         const TEXT_SIZE = 15;
         const BOXWIDTH = TEXT_SIZE * 8;
         const BOXHEIGHT = 26;
-        const WIDTH = 3000;
-        const HEIGHT = attention.all.right_text.length * BOXHEIGHT * 2 + 100 + 700;
-        const PADDING_WIDTH = 25;
+        const WIDTH = 5000;
+        const HEIGHT = 60000;
+        // const HEIGHT = attention.all.right_text.length * BOXHEIGHT * 2 + 100 + 700;
+        // const PADDING_WIDTH = 25;
+        // const ATTENTION_WIDTH = 175;
+        // const HEADING_HEIGHT = 50; //TODO Remove
+        const CELL_WIDTH = 300;
+        const CELL_HEIGHT = 575;
         const ATTENTION_WIDTH = 175;
-        const HEADING_HEIGHT = 50; //TODO Remove
 
-        function renderVis(svg, left_text, right_text) {
-            var posLeftText = 0;
+        function render() {
+            var att_data = config.attention[config.att_type];
+            var left_text = att_data.left_text;
+            var right_text = att_data.right_text;
+            var att = att_data.att;
+
+            $("#vis").empty();
+            var svg = d3.select("#vis")
+                .append('svg')
+                .attr("width", WIDTH)
+                .attr("height", HEIGHT)
+
+            var num_layers =  att.length
+            var num_heads =  att[0].length
+            var i;
+            var j;
+            for (i = 0; i < num_layers; i++) {
+                for (j = 0; j < num_heads; j++) {
+                    renderCell(svg, left_text, right_text, att, i, j);
+                }
+            }
+        }
+
+        function renderCell(svg, left_text, right_text, att, layer_index, head_index) {
+            var posLeftText = head_index * CELL_WIDTH;
             var posAttention = posLeftText + BOXWIDTH;
-            var posRightText = posAttention + ATTENTION_WIDTH + PADDING_WIDTH;
+            var posRightText = posAttention + ATTENTION_WIDTH;
+            var y = layer_index * CELL_HEIGHT;
 
-            renderText(svg, left_text, "left_text", posLeftText, false);
-            renderAttn(svg, posAttention, posRightText, false);
-            renderText(svg, right_text, "right_text", posRightText, false);
+            renderText(svg, left_text, "left_text", posLeftText, y);
+            renderAttn(svg, posAttention, y, att[layer_index][head_index], layer_index, head_index);
+            renderText(svg, right_text, "right_text", posRightText, y);
         }
 
-        function renderAttn(svg, start_pos, end_pos) {
-            var attnMatrix = config.attention[config.att_type].att[config.layer][config.att_head];
-            var attnContainer = svg.append("svg:g");
-            attnContainer.selectAll("g")
-                .data(attnMatrix)
-                .enter()
-                .append("g") // Add group for each source token
-                .classed('attn-line-group', true)
-                .attr("source-index", function (d, i) { // Save index of source token
-                    return i;
-                })
-                .selectAll("line")
-                .data(function (d) { // Loop over all target tokens
-                    return d;
-                })
-                .enter() // When entering
-                .append("line")
-                .attr("x1", start_pos)
-                .attr("y1", function (d) {
-                    var sourceIndex = +this.parentNode.getAttribute("source-index");
-                    return sourceIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
-                })
-                .attr("x2", end_pos)
-                .attr("y2", function (d, targetIndex) {
-                    return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
-                })
-                .attr("stroke-width", 2)
-                .attr("stroke", "blue")
-                .attr("stroke-opacity", function (d) {
-                    return d;
-                });
-        }
-
-        function renderText(svg, text, id, left_pos) {
+         function renderText(svg, text, id, x, y) {
             var tokenContainer = svg.append("svg:g")
-                .attr("id", id)
+                // .attr("id", id)
                 .selectAll("g")
                 .data(text)
                 .enter()
                 .append("g");
-            if (id == "left_text" || id == "right_text") {
+            // if (id == "left_text" || id == "right_text") {
                 var fillColor;
                 if (id == "right_text") {
                     fillColor = '#1f77b4';
@@ -84,18 +79,18 @@ requirejs(['jquery', 'd3'],
                     .style("opacity", 0.0)
                     .attr("height", BOXHEIGHT)
                     .attr("width", BOXWIDTH)
-                    .attr("x", left_pos)
+                    .attr("x", x)
                     .attr("y", function (d, i) {
-                        return i * BOXHEIGHT + HEADING_HEIGHT - 1;
+                        return y + i * BOXHEIGHT - 1;
                     });
-            }
+            // }
 
-            var offset;
-            if (id == "left_text") {
-                offset = -10;
-            } else {
-                offset = 10;
-            }
+            // var offset;
+            // if (id == "left_text") {
+            //     offset = -10;
+            // } else {
+            //     offset = 10;
+            // }
 
             var textContainer = tokenContainer.append("text")
                 .classed("token", true)
@@ -105,9 +100,9 @@ requirejs(['jquery', 'd3'],
                 .attr("font-size", TEXT_SIZE + "px")
                 .style("cursor", "default")
                 .style("-webkit-user-select", "none")
-                .attr("x", left_pos + offset)
+                .attr("x", x)
                 .attr("y", function (d, i) {
-                    return i * BOXHEIGHT + HEADING_HEIGHT;
+                    return i * BOXHEIGHT + y;
                 })
                 .attr("height", BOXHEIGHT)
                 .attr("width", BOXWIDTH)
@@ -128,36 +123,50 @@ requirejs(['jquery', 'd3'],
             }
         }
 
+        function renderAttn(svg, x, y, att) {
+            var attnContainer = svg.append("svg:g");
+            attnContainer.selectAll("g")
+                .data(att)
+                .enter()
+                .append("g") // Add group for each source token
+                .classed('attn-line-group', true)
+                .attr("source-index", function (d, i) { // Save index of source token
+                    return i;
+                })
+                .selectAll("line")
+                .data(function (d) { // Loop over all target tokens
+                    return d;
+                })
+                .enter() // When entering
+                .append("line")
+                .attr("x1", x)
+                .attr("y1", function (d) {
+                    var sourceIndex = +this.parentNode.getAttribute("source-index");
+                    return sourceIndex * BOXHEIGHT + y + BOXHEIGHT / 2;
+                })
+                .attr("x2", x + ATTENTION_WIDTH)
+                .attr("y2", function (d, targetIndex) {
+                    return targetIndex * BOXHEIGHT + y + BOXHEIGHT / 2;
+                })
+                .attr("stroke-width", 2)
+                .attr("stroke", "blue")
+                .attr("stroke-opacity", function (d) {
+                    return d;
+                });
+        }
+
         var config = {
-            layer: 0,
-            att_head: 0,
+            // layer: 0,
+            // att_head: 0,
             att_type: 'all'
         };
 
         function visualize() {
-            config.vector_size = attention['all']['att'][0][0][0].length; // Layer 0, head 0, position 0 length
+            // config.vector_size = attention['all']['att'][0][0][0].length; // Layer 0, head 0, position 0 length
             config.attention = attention;
             render();
         }
 
-        function render() {
-            console.log('config')
-            console.log(config)
-            var att_data = config.attention[config.att_type];
-            console.log('att_data')
-            console.log(att_data)
-            var left_text = att_data.left_text;
-            var right_text = att_data.right_text;
-            var att = att_data.att[config.layer][config.att_head];
-
-            $("#vis").empty();
-            var svg = d3.select("#vis")
-                .append('svg')
-                .attr("width", WIDTH)
-                .attr("height", HEIGHT)
-
-            renderVis(svg, left_text, right_text, att);
-        }
 
         $("#layer").empty();
         for (var i = 0; i < 12; i++) {
