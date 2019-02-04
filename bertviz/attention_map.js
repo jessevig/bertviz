@@ -10,18 +10,18 @@ requirejs(['jquery', 'd3'],
     function ($, d3) {
 
         var attention = window.attention;
-        const TEXT_SIZE = 15;
+        const TEXT_SIZE = 3;
         const BOXWIDTH = TEXT_SIZE * 8;
-        const BOXHEIGHT = 26;
+        const BOXHEIGHT = 7;
         const WIDTH = 5000;
         const HEIGHT = 60000;
         // const HEIGHT = attention.all.right_text.length * BOXHEIGHT * 2 + 100 + 700;
         // const PADDING_WIDTH = 25;
         // const ATTENTION_WIDTH = 175;
         // const HEADING_HEIGHT = 50; //TODO Remove
-        const CELL_WIDTH = 300;
-        const CELL_HEIGHT = 575;
-        const ATTENTION_WIDTH = 175;
+        const CELL_WIDTH = 100;
+        const CELL_HEIGHT = 180;
+        const ATTENTION_WIDTH = 65;
 
         function render() {
             var att_data = config.attention[config.att_type];
