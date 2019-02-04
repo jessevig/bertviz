@@ -19,8 +19,8 @@ requirejs(['jquery', 'd3'],
         // const PADDING_WIDTH = 25;
         // const ATTENTION_WIDTH = 175;
         // const HEADING_HEIGHT = 50; //TODO Remove
-        const CELL_WIDTH = 100;
-        const CELL_HEIGHT = 180;
+        const CELL_WIDTH = 80;
+        const CELL_HEIGHT = 160;
         const ATTENTION_WIDTH = 65;
 
         function render() {
@@ -47,15 +47,26 @@ requirejs(['jquery', 'd3'],
         }
 
         function renderCell(svg, left_text, right_text, att, layer_index, head_index) {
-            var posLeftText = head_index * CELL_WIDTH;
-            var posAttention = posLeftText + BOXWIDTH;
-            var posRightText = posAttention + ATTENTION_WIDTH;
+            var x1 = head_index * CELL_WIDTH + 10;
+            var x2 = (head_index + 1) * CELL_WIDTH - 10;
             var y = layer_index * CELL_HEIGHT;
 
-            renderText(svg, left_text, "left_text", posLeftText, y);
-            renderAttn(svg, posAttention, y, att[layer_index][head_index], layer_index, head_index);
-            renderText(svg, right_text, "right_text", posRightText, y);
+            // renderText(svg, left_text, "left_text", posLeftText, y);
+            renderAttn(svg, x1, x2, y, att[layer_index][head_index], layer_index, head_index);
+            // renderText(svg, right_text, "right_text", posRightText, y);
         }
+
+        // function renderCell(svg, left_text, right_text, att, layer_index, head_index) {
+        //     var posLeftText = head_index * CELL_WIDTH;
+        //     var posAttention = posLeftText + BOXWIDTH;
+        //     var posRightText = posAttention + ATTENTION_WIDTH;
+        //     var y = layer_index * CELL_HEIGHT;
+        //
+        //     renderText(svg, left_text, "left_text", posLeftText, y);
+        //     renderAttn(svg, posAttention, y, att[layer_index][head_index], layer_index, head_index);
+        //     renderText(svg, right_text, "right_text", posRightText, y);
+        // }
+
 
          function renderText(svg, text, id, x, y) {
             var tokenContainer = svg.append("svg:g")
@@ -123,7 +134,7 @@ requirejs(['jquery', 'd3'],
             }
         }
 
-        function renderAttn(svg, x, y, att) {
+        function renderAttn(svg, x1, x2, y, att) {
             var attnContainer = svg.append("svg:g");
             attnContainer.selectAll("g")
                 .data(att)
@@ -139,12 +150,12 @@ requirejs(['jquery', 'd3'],
                 })
                 .enter() // When entering
                 .append("line")
-                .attr("x1", x)
+                .attr("x1", x1)
                 .attr("y1", function (d) {
                     var sourceIndex = +this.parentNode.getAttribute("source-index");
                     return sourceIndex * BOXHEIGHT + y + BOXHEIGHT / 2;
                 })
-                .attr("x2", x + ATTENTION_WIDTH)
+                .attr("x2", x2)
                 .attr("y2", function (d, targetIndex) {
                     return targetIndex * BOXHEIGHT + y + BOXHEIGHT / 2;
                 })
