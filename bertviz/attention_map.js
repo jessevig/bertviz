@@ -22,6 +22,8 @@ requirejs(['jquery', 'd3'],
         const CELL_WIDTH = 80;
         const CELL_HEIGHT = 160;
         const ATTENTION_WIDTH = 65;
+        // const LAYER_COLORS = d3.schemeCategory10();
+        const LAYER_COLORS = d3.scaleOrdinal(d3.schemeCategory10);
 
         function render() {
             var att_data = config.attention[config.att_type];
@@ -134,7 +136,7 @@ requirejs(['jquery', 'd3'],
             }
         }
 
-        function renderAttn(svg, x1, x2, y, att) {
+        function renderAttn(svg, x1, x2, y, att, layer_index) {
             var attnContainer = svg.append("svg:g");
             attnContainer.selectAll("g")
                 .data(att)
@@ -160,7 +162,8 @@ requirejs(['jquery', 'd3'],
                     return targetIndex * BOXHEIGHT + y + BOXHEIGHT / 2;
                 })
                 .attr("stroke-width", 2)
-                .attr("stroke", "blue")
+                // .attr("stroke", "blue")
+                .attr("stroke", LAYER_COLORS(layer_index % 10))
                 .attr("stroke-opacity", function (d) {
                     return d;
                 });
