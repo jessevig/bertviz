@@ -10,19 +10,26 @@ requirejs(['jquery', 'd3'],
     function ($, d3) {
 
         var attention = window.attention;
-        const TEXT_SIZE = 3;
-        const BOXWIDTH = TEXT_SIZE * 8;
-        const BOXHEIGHT = 7;
         const WIDTH = 5000;
         const HEIGHT = 60000;
+        const MIN_X = 0;
+        const MIN_Y = 0;
         // const HEIGHT = attention.all.right_text.length * BOXHEIGHT * 2 + 100 + 700;
         // const PADDING_WIDTH = 25;
         // const ATTENTION_WIDTH = 175;
         // const HEADING_HEIGHT = 50; //TODO Remove
-        const CELL_WIDTH = 80;
-        const CELL_HEIGHT = 160;
-        const ATTENTION_WIDTH = 65;
-        // const LAYER_COLORS = d3.schemeCategory10();
+        const THUMBNAIL_WIDTH = 80;
+        const THUMBNAIL_HEIGHT = 160;
+        const THUMBNAIL_BOX_HEIGHT = 7;
+        const THUMBNAIL_ATTENTION_WIDTH = 65;
+
+        const DETAIL_WIDTH = 540;
+        const DETAIL_HEIGHT = 900;
+        const DETAIL_ATTENTION_WIDTH = 300;
+        const DETAIL_BOX_WIDTH = 120;
+        const DETAIL_BOX_HEIGHT = 23;
+        const TEXT_SIZE = 15;
+
         const LAYER_COLORS = d3.scaleOrdinal(d3.schemeCategory10);
 
         function render() {
@@ -43,32 +50,39 @@ requirejs(['jquery', 'd3'],
             var j;
             for (i = 0; i < num_layers; i++) {
                 for (j = 0; j < num_heads; j++) {
-                    renderCell(svg, left_text, right_text, att, i, j);
+                    renderThumbnail(svg, left_text, right_text, att, i, j);
                 }
             }
         }
 
-        function renderCell(svg, left_text, right_text, att, layer_index, head_index) {
-            var x1 = head_index * CELL_WIDTH + 10;
-            var x2 = (head_index + 1) * CELL_WIDTH - 10;
-            var y = layer_index * CELL_HEIGHT;
-
-            // renderText(svg, left_text, "left_text", posLeftText, y);
-            renderAttn(svg, x1, x2, y, att[layer_index][head_index], layer_index, head_index);
-            // renderText(svg, right_text, "right_text", posRightText, y);
+        function renderThumbnail(svg, left_text, right_text, att, layer_index, head_index) {
+            var x = head_index * THUMBNAIL_WIDTH;
+            var y = layer_index * THUMBNAIL_HEIGHT;
+            renderThumbnailAttn(svg, x, y, att[layer_index][head_index], layer_index, head_index);
         }
 
-        // function renderCell(svg, left_text, right_text, att, layer_index, head_index) {
-        //     var posLeftText = head_index * CELL_WIDTH;
-        //     var posAttention = posLeftText + BOXWIDTH;
-        //     var posRightText = posAttention + ATTENTION_WIDTH;
-        //     var y = layer_index * CELL_HEIGHT;
-        //
-        //     renderText(svg, left_text, "left_text", posLeftText, y);
-        //     renderAttn(svg, posAttention, y, att[layer_index][head_index], layer_index, head_index);
-        //     renderText(svg, right_text, "right_text", posRightText, y);
-        // }
-
+        function renderDetail(svg, left_text, right_text, att, layer_index, head_index) {
+            var xMidpoint = (head_index + .5) * THUMBNAIL_WIDTH;
+            var x = xMidpoint - .5 * DETAIL_WIDTH
+            if (x < MIN_X) {
+                x = MIN_X;
+            } else if (x + DETAIL_WIDTH > MAX_X) {
+                x = MAX_X - DETAIL_WIDTH;
+            }
+            var posLeftText = x;
+            var posAttention = posLeftText + DETAIL_BOX_WIDTH;
+            var posRightText = posAttention + DETAIL_ATTENTION_WIDTH;
+            var yMidpoint = (layer_index + .5) * THUMBNAIL_HEIGHT;
+            var y = yMidpoint - .5 * DETAIL_HEIGHT
+            if (y < MIN_Y) {
+                y = MIN_Y;
+            } else if (y + DETAIL_HEIGHT > MAX_Y) {
+                y = MAX_Y - DETAIL_HEIGHT;
+            }
+            renderText(svg, left_text, "left_text", posLeftText, y);
+            renderDetailAttn(svg, posAttention, y, att[layer_index][head_index], layer_index, head_index);
+            renderText(svg, right_text, "right_text", posRightText, y);
+        }
 
          function renderText(svg, text, id, x, y) {
             var tokenContainer = svg.append("svg:g")
@@ -90,11 +104,11 @@ requirejs(['jquery', 'd3'],
                     .classed("highlight", true)
                     .attr("fill", fillColor)
                     .style("opacity", 0.0)
-                    .attr("height", BOXHEIGHT)
-                    .attr("width", BOXWIDTH)
+                    .attr("height", DETAIL_BOX_HEIGHT)
+                    .attr("width", DETAIL_BOX_WIDTH)
                     .attr("x", x)
                     .attr("y", function (d, i) {
-                        return y + i * BOXHEIGHT - 1;
+                        return y + i * DETAIL_BOX_HEIGHT - 1;
                     });
             // }
 
@@ -115,15 +129,15 @@ requirejs(['jquery', 'd3'],
                 .style("-webkit-user-select", "none")
                 .attr("x", x)
                 .attr("y", function (d, i) {
-                    return i * BOXHEIGHT + y;
+                    return i * DETAIL_BOX_HEIGHT + y;
                 })
-                .attr("height", BOXHEIGHT)
-                .attr("width", BOXWIDTH)
+                .attr("height", DETAIL_BOX_HEIGHT)
+                .attr("width", DETAIL_BOX_WIDTH)
                 .attr("dy", TEXT_SIZE);
 
             if (id == "left_text") {
                 textContainer.style("text-anchor", "end")
-                    .attr("dx", BOXWIDTH - 2);
+                    .attr("dx", DETAIL_BOX_WIDTH - 2);
                 // tokenContainer.on("mouseover", function (d, index) {
                 //     config.index = index;
                 //     highlightSelection(svg, index);
@@ -136,8 +150,29 @@ requirejs(['jquery', 'd3'],
             }
         }
 
-        function renderAttn(svg, x1, x2, y, att, layer_index) {
+        function renderThumbnailAttn(svg, x, y, att, layer_index) {
+
+
             var attnContainer = svg.append("svg:g");
+
+            var x1 = x + 10
+            var x2 = x1 + THUMBNAIL_ATTENTION_WIDTH
+
+            var hoverRegion = attnContainer.append("rect")
+                .attr("x", x1)
+                .attr("y", y)
+                .attr("height", THUMBNAIL_HEIGHT)
+                .attr("width", THUMBNAIL_ATTENTION_WIDTH)
+                .style("opacity", 0)
+
+            hoverRegion.on("mouseover", function (d, index) {
+                console.log('mouseover on layer ' + layer_index)
+            });
+            hoverRegion.on("mouseleave", function () {
+                console.log('mouseleave on layer ' + layer_index)
+            });
+
+
             attnContainer.selectAll("g")
                 .data(att)
                 .enter()
@@ -155,11 +190,11 @@ requirejs(['jquery', 'd3'],
                 .attr("x1", x1)
                 .attr("y1", function (d) {
                     var sourceIndex = +this.parentNode.getAttribute("source-index");
-                    return sourceIndex * BOXHEIGHT + y + BOXHEIGHT / 2;
+                    return y + (sourceIndex + .5) * THUMBNAIL_BOX_HEIGHT;
                 })
                 .attr("x2", x2)
                 .attr("y2", function (d, targetIndex) {
-                    return targetIndex * BOXHEIGHT + y + BOXHEIGHT / 2;
+                    return y + (targetIndex + .5) * THUMBNAIL_BOX_HEIGHT;
                 })
                 .attr("stroke-width", 2)
                 // .attr("stroke", "blue")
@@ -168,6 +203,40 @@ requirejs(['jquery', 'd3'],
                     return d;
                 });
         }
+
+        function renderDetailAttn(svg, x, y, att, layer_index) {
+            var attnContainer = svg.append("svg:g");
+            attnContainer.selectAll("g")
+                .data(att)
+                .enter()
+                .append("g") // Add group for each source token
+                .classed('attn-line-group', true)
+                .attr("source-index", function (d, i) { // Save index of source token
+                    return i;
+                })
+                .selectAll("line")
+                .data(function (d) { // Loop over all target tokens
+                    return d;
+                })
+                .enter() // When entering
+                .append("line")
+                .attr("x1", x + 10)
+                .attr("y1", function (d) {
+                    var sourceIndex = +this.parentNode.getAttribute("source-index");
+                    return y + (sourceIndex + .5) * DETAIL_BOX_HEIGHT;
+                })
+                .attr("x2", x + THUMBNAIL_WIDTH - 10)
+                .attr("y2", function (d, targetIndex) {
+                    return y + (targetIndex + .5) * DETAIL_BOX_HEIGHT;
+                })
+                .attr("stroke-width", 2)
+                // .attr("stroke", "blue")
+                .attr("stroke", LAYER_COLORS(layer_index % 10))
+                .attr("stroke-opacity", function (d) {
+                    return d;
+                });
+        }
+
 
         var config = {
             // layer: 0,
