@@ -40,7 +40,7 @@ requirejs(['jquery', 'd3'],
         const LAYER_COLORS = d3.scaleOrdinal(d3.schemeCategory10);
 
         function render() {
-            var att_data = config.attention[config.att_type];
+            var att_data = state.attention[state.att_type];
             var left_text = att_data.left_text;
             var right_text = att_data.right_text;
             var att = att_data.att;
@@ -51,12 +51,12 @@ requirejs(['jquery', 'd3'],
                 .attr("width", WIDTH)
                 .attr("height", HEIGHT)
 
-            config.num_layers =  att.length
-            config.num_heads =  att[0].length
+            state.num_layers =  att.length
+            state.num_heads =  att[0].length
             var i;
             var j;
-            for (i = 0; i < config.num_layers; i++) {
-                for (j = 0; j < config.num_heads; j++) {
+            for (i = 0; i < state.num_layers; i++) {
+                for (j = 0; j < state.num_heads; j++) {
                     renderThumbnail(svg, left_text, right_text, att, i, j);
                 }
             }
@@ -191,7 +191,7 @@ requirejs(['jquery', 'd3'],
                 textContainer.style("text-anchor", "end")
                     .attr("dx", DETAIL_BOX_WIDTH - 2);
                 // tokenContainer.on("mouseover", function (d, index) {
-                //     config.index = index;
+                //     state.index = index;
                 //     highlightSelection(svg, index);
                 //     showComputation(svg, index);
                 // });
@@ -210,6 +210,7 @@ requirejs(['jquery', 'd3'],
 
             var attnBackground = attnContainer.append("rect")
                 .attr("id", 'attn_background_' + layer_index + "_" + head_index)
+                .classed("attn_background", true)
                 .attr("x", x)
                 .attr("y", y)
                 .attr("height", height)
@@ -265,15 +266,35 @@ requirejs(['jquery', 'd3'],
                 .attr("width", THUMBNAIL_WIDTH)
                 .style("opacity", 0)
 
+
+
             hoverRegion.on("mouseenter", function (d, index) {
-                renderDetail(svg, left_text, right_text, att, layer_index, head_index)
+
+                if (state.timer) {
+                    clearTimeout(state.timer);
+                }
+                svg.selectAll(".detail").remove();
+                var attnBackgroundOther = svg.selectAll(".attn_background")
+                attnBackgroundOther.attr("fill", "black")
+                attnBackgroundOther.attr("stroke-opacity", 0);
                 attnBackground.attr("fill", "#202020")
-               attnBackground.attr("stroke-opacity", .5);
+                attnBackground.attr("stroke-opacity", .5);
+                state.cursor_status = null;
+                state.timer = setTimeout(function() {
+
+                        // if (state.cursor_status == "thumbnail") {
+
+                        // }
+
+                        renderDetail(svg, left_text, right_text, att, layer_index, head_index)
+
+                        state.cursor_status = "thumbnail"
+                    }, 500);
 
                 // var i;
                 // var j;
-                // for (i = 0; i < config.num_layers; i++) {
-                //     for (j = 0; j < config.num_heads; j++) {
+                // for (i = 0; i < state.num_layers; i++) {
+                //     for (j = 0; j < state.num_heads; j++) {
                 //         if (i==layer_index && j==head_index) {
                 //             continue;
                 //         }
@@ -285,13 +306,19 @@ requirejs(['jquery', 'd3'],
                 console.log('mouseenter on layer ' + layer_index + ' head ' + head_index)
             });
             hoverRegion.on("mouseleave", function () {
-                svg.selectAll(".detail").remove();
-                attnBackground.attr("fill", "black")
-                attnBackground.attr("stroke-opacity", 0);
+                if (state.timer) {
+                    clearTimeout(state.timer);
+                }
+                // if (state.cursor_status == "thumbnail") {
+                //     svg.selectAll(".detail").remove();
+                //     attnBackground.attr("fill", "black")
+                //     attnBackground.attr("stroke-opacity", 0);
+                //     state.cursor_status = null;
+                // }
                 // var i;
                 // var j;
-                // for (i = 0; i < config.num_layers; i++) {
-                //     for (j = 0; j < config.num_heads; j++) {
+                // for (i = 0; i < state.num_layers; i++) {
+                //     for (j = 0; j < state.num_heads; j++) {
                 //         if (i==layer_index && j==head_index) {
                 //             continue;
                 //         }
@@ -307,9 +334,9 @@ requirejs(['jquery', 'd3'],
         function renderDetailFrame(svg, x, y, left_text, right_text, layer_index) {
             var height = Math.max(left_text.length, right_text.length) * DETAIL_BOX_HEIGHT + 2 * DETAIL_PADDING + DETAIL_HEADING_HEIGHT;
             // var width = 2 * DETAIL_BOX_WIDTH + DETAIL_ATTENTION_WIDTH
-            svg.append("rect")
+            var detailFrame = svg.append("rect")
                 .classed("detail", true)
-                .attr("pointer-events", "none")
+                // .attr("pointer-events", "none")
                 .attr("x", x)
                 .attr("y", y)
                 .attr("height", height)
@@ -317,8 +344,16 @@ requirejs(['jquery', 'd3'],
                 .style("opacity", 1)
                 .attr("fill", "white")
 
-                // .attr("stroke-width", 2)
-                // .attr("stroke", LAYER_COLORS(layer_index % 10))
+                .attr("stroke-width", 2)
+                .attr("stroke-opacity", 0.7)
+                .attr("stroke", LAYER_COLORS(layer_index % 10))
+            detailFrame.on("mouseenter", function (d, index) {
+                state.cursor_status = "detail"
+                console.log('set cursor status to detail')
+            });
+            // hoverRegion.on("mouseleave", function () {
+            //     state.cur
+            // });
 
         }
 
@@ -362,15 +397,15 @@ requirejs(['jquery', 'd3'],
         }
 
 
-        var config = {
+        var state = {
             // layer: 0,
             // att_head: 0,
             att_type: 'all'
         };
 
         function visualize() {
-            // config.vector_size = attention['all']['att'][0][0][0].length; // Layer 0, head 0, position 0 length
-            config.attention = attention;
+            // state.vector_size = attention['all']['att'][0][0][0].length; // Layer 0, head 0, position 0 length
+            state.attention = attention;
             render();
         }
 
@@ -381,7 +416,7 @@ requirejs(['jquery', 'd3'],
         }
 
         $("#layer").on('change', function (e) {
-            config.layer = +e.currentTarget.value;
+            state.layer = +e.currentTarget.value;
             render();
         });
 
@@ -391,12 +426,12 @@ requirejs(['jquery', 'd3'],
         }
 
         $("#att_head").on('change', function (e) {
-            config.att_head = +e.currentTarget.value;
+            state.att_head = +e.currentTarget.value;
             render();
         });
 
         $("#att_type").on('change', function (e) {
-            config.att_type = e.currentTarget.value;
+            state.att_type = e.currentTarget.value;
             render();
         });
 
