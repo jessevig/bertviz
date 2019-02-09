@@ -33,7 +33,8 @@ requirejs(['jquery', 'd3'],
         const DETAIL_BOX_WIDTH = 80;
         const DETAIL_BOX_HEIGHT = 20;
         const DETAIL_PADDING = 5;
-        const DETAIL_HEADING_HEIGHT = 20;
+        const DETAIL_HEADING_HEIGHT = 40;
+        const DETAIL_HEADING_TEXT_SIZE = 17;
         const TEXT_SIZE = 13;
 
         const LAYER_COLORS = d3.scaleOrdinal(d3.schemeCategory10);
@@ -50,12 +51,12 @@ requirejs(['jquery', 'd3'],
                 .attr("width", WIDTH)
                 .attr("height", HEIGHT)
 
-            var num_layers =  att.length
-            var num_heads =  att[0].length
+            config.num_layers =  att.length
+            config.num_heads =  att[0].length
             var i;
             var j;
-            for (i = 0; i < num_layers; i++) {
-                for (j = 0; j < num_heads; j++) {
+            for (i = 0; i < config.num_layers; i++) {
+                for (j = 0; j < config.num_heads; j++) {
                     renderThumbnail(svg, left_text, right_text, att, i, j);
                 }
             }
@@ -69,7 +70,7 @@ requirejs(['jquery', 'd3'],
         }
 
         function renderDetail(svg, left_text, right_text, att, layer_index, head_index) {
-            var xOffset = 10;
+            var xOffset = 65;
             var x = head_index * THUMBNAIL_WIDTH + THUMBNAIL_PADDING + xOffset;
             if (x < MIN_X) {
                 x = MIN_X;
@@ -80,18 +81,36 @@ requirejs(['jquery', 'd3'],
             var posAttention = posLeftText + DETAIL_BOX_WIDTH;
             var posRightText = posAttention + DETAIL_ATTENTION_WIDTH;
             var thumbnailHeight = Math.max(left_text.length, right_text.length) * THUMBNAIL_BOX_HEIGHT + 2 * THUMBNAIL_PADDING;
-            var yOffset = 12;
+            var yOffset = 38;
             var y = layer_index * thumbnailHeight + THUMBNAIL_PADDING + yOffset;
-            var height = Math.max(left_text.length, right_text.length) * DETAIL_BOX_HEIGHT + 2 * DETAIL_PADDING;
+            var height = Math.max(left_text.length, right_text.length) * DETAIL_BOX_HEIGHT + 2 * DETAIL_PADDING + DETAIL_HEADING_HEIGHT;
             if (y < MIN_Y) {
                 y = MIN_Y;
             } else if (y + height > MAX_Y) {
                 y = MAX_Y - height;
             }
             renderDetailFrame(svg, x, y, left_text, right_text, layer_index)
-            renderText(svg, left_text, "left_text", posLeftText, y, layer_index);
-            renderDetailAttn(svg, posAttention, y, att, layer_index, head_index);
-            renderText(svg, right_text, "right_text", posRightText, y, layer_index);
+            renderDetailHeading(svg, x, y, layer_index, head_index)
+            renderText(svg, left_text, "left_text", posLeftText, y + DETAIL_HEADING_HEIGHT, layer_index);
+            renderDetailAttn(svg, posAttention, y + DETAIL_HEADING_HEIGHT, att, layer_index, head_index);
+            renderText(svg, right_text, "right_text", posRightText, y + DETAIL_HEADING_HEIGHT, layer_index);
+        }
+
+        function renderDetailHeading(svg, x, y, layer_index, head_index) {
+             var fillColor = LAYER_COLORS(layer_index % 10)
+
+            svg.append("text")
+                .classed("detail", true)
+                .text('Layer ' + layer_index + ", Head " + head_index)
+                .attr("font-size", DETAIL_HEADING_TEXT_SIZE + "px")
+                .style("cursor", "default")
+                .style("-webkit-user-select", "none")
+                .attr("fill", fillColor)
+                .attr("x", x + 88)
+                .attr("y", y + 8)
+                .attr("height", DETAIL_HEADING_HEIGHT)
+                .attr("width", DETAIL_WIDTH)
+                .attr("dy", DETAIL_HEADING_TEXT_SIZE);
         }
 
         // function renderDetail(svg, left_text, right_text, att, layer_index, head_index) {
@@ -187,9 +206,26 @@ requirejs(['jquery', 'd3'],
 
             var attnContainer = svg.append("svg:g");
 
+            var height = Math.max(left_text.length, right_text.length) * THUMBNAIL_BOX_HEIGHT + 2 * THUMBNAIL_PADDING;
+
+            var attnBackground = attnContainer.append("rect")
+                .attr("id", 'attn_background_' + layer_index + "_" + head_index)
+                .attr("x", x)
+                .attr("y", y)
+                .attr("height", height)
+                .attr("width", THUMBNAIL_WIDTH)
+                // .style("opacity", 0)
+                // .attr("fill", "black")
+                .attr("stroke-width", 2)
+                // .attr("stroke", "#606060")
+                .attr("stroke", LAYER_COLORS(layer_index % 10))
+                .attr("stroke-opacity", 0);
+
+
             var x1 = x + THUMBNAIL_PADDING
             var x2 = x1 + THUMBNAIL_ATTENTION_WIDTH
             var y1 = y + THUMBNAIL_PADDING;
+
 
             attnContainer.selectAll("g")
                 .data(att)
@@ -221,7 +257,6 @@ requirejs(['jquery', 'd3'],
                     return d;
                 });
 
-            var height = Math.max(left_text.length, right_text.length) * THUMBNAIL_BOX_HEIGHT + 2 * THUMBNAIL_PADDING;
 
             var hoverRegion = attnContainer.append("rect")
                 .attr("x", x)
@@ -232,16 +267,45 @@ requirejs(['jquery', 'd3'],
 
             hoverRegion.on("mouseenter", function (d, index) {
                 renderDetail(svg, left_text, right_text, att, layer_index, head_index)
+                attnBackground.attr("fill", "#202020")
+               attnBackground.attr("stroke-opacity", .5);
+
+                // var i;
+                // var j;
+                // for (i = 0; i < config.num_layers; i++) {
+                //     for (j = 0; j < config.num_heads; j++) {
+                //         if (i==layer_index && j==head_index) {
+                //             continue;
+                //         }
+                //         var othId = 'attn_background_' + i + "_" + j
+                //         svg.selectAll("#" + othId).attr("fill", "#707070");
+                //     }
+                // }
+
                 console.log('mouseenter on layer ' + layer_index + ' head ' + head_index)
             });
             hoverRegion.on("mouseleave", function () {
                 svg.selectAll(".detail").remove();
+                attnBackground.attr("fill", "black")
+                attnBackground.attr("stroke-opacity", 0);
+                // var i;
+                // var j;
+                // for (i = 0; i < config.num_layers; i++) {
+                //     for (j = 0; j < config.num_heads; j++) {
+                //         if (i==layer_index && j==head_index) {
+                //             continue;
+                //         }
+                //         var othId = 'attn_background_' + i + "_" + j
+                //         svg.selectAll("#" + othId).attr("fill", "black");
+                //     }
+                // }
+
                 console.log('mouseleave on layer ' + layer_index + ' head ' + head_index)
             });
         }
 
         function renderDetailFrame(svg, x, y, left_text, right_text, layer_index) {
-            var height = Math.max(left_text.length, right_text.length) * DETAIL_BOX_HEIGHT + 2 * DETAIL_PADDING;
+            var height = Math.max(left_text.length, right_text.length) * DETAIL_BOX_HEIGHT + 2 * DETAIL_PADDING + DETAIL_HEADING_HEIGHT;
             // var width = 2 * DETAIL_BOX_WIDTH + DETAIL_ATTENTION_WIDTH
             svg.append("rect")
                 .classed("detail", true)
@@ -250,7 +314,7 @@ requirejs(['jquery', 'd3'],
                 .attr("y", y)
                 .attr("height", height)
                 .attr("width", DETAIL_WIDTH)
-                .style("opacity", 0.9)
+                .style("opacity", 1)
                 .attr("fill", "white")
 
                 // .attr("stroke-width", 2)
@@ -289,7 +353,7 @@ requirejs(['jquery', 'd3'],
                 .attr("y2", function (d, targetIndex) {
                     return y + (targetIndex + .5) * DETAIL_BOX_HEIGHT;
                 })
-                .attr("stroke-width", 3)
+                .attr("stroke-width", 2)
                 // .attr("stroke", "blue")
                 .attr("stroke", LAYER_COLORS(layer_index % 10))
                 .attr("stroke-opacity", function (d) {
