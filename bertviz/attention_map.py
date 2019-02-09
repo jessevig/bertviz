@@ -44,7 +44,7 @@ class AttentionMapData:
 #   <div id='vis'></div>
 # """
 vis_html = """
-  <div id='vis'></div>
+  <div id='vis' style='background-color:black'></div>
 """
 
 
