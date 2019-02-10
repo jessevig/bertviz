@@ -10,12 +10,9 @@ requirejs(['jquery', 'd3'],
     function ($, d3) {
 
         var attention = window.attention;
-        const WIDTH = 5000;
-        const HEIGHT = 60000;
+
         const MIN_X = 0;
-        const MAX_X = WIDTH;
         const MIN_Y = 0;
-        const MAX_Y = HEIGHT
 
         // const HEIGHT = attention.all.right_text.length * BOXHEIGHT * 2 + 100 + 700;
         // const PADDING_WIDTH = 25;
@@ -33,7 +30,7 @@ requirejs(['jquery', 'd3'],
         const DETAIL_BOX_WIDTH = 80;
         const DETAIL_BOX_HEIGHT = 20;
         const DETAIL_PADDING = 5;
-        const DETAIL_HEADING_HEIGHT = 40;
+        const DETAIL_HEADING_HEIGHT = 47;
         const DETAIL_HEADING_TEXT_SIZE = 17;
         const TEXT_SIZE = 13;
 
@@ -45,14 +42,18 @@ requirejs(['jquery', 'd3'],
             var right_text = att_data.right_text;
             var att = att_data.att;
 
+
+
+            state.num_layers = att.length
+            state.num_heads = att[0].length
+            state.height = state.num_layers * (Math.max(left_text.length, right_text.length) * THUMBNAIL_BOX_HEIGHT + 2 * THUMBNAIL_PADDING);
+            state.width =  state.num_heads * THUMBNAIL_WIDTH
+
             $("#vis").empty();
             var svg = d3.select("#vis")
                 .append('svg')
-                .attr("width", WIDTH)
-                .attr("height", HEIGHT)
-
-            state.num_layers =  att.length
-            state.num_heads =  att[0].length
+                .attr("width", state.width)
+                .attr("height", state.height)
             var i;
             var j;
             for (i = 0; i < state.num_layers; i++) {
@@ -70,12 +71,14 @@ requirejs(['jquery', 'd3'],
         }
 
         function renderDetail(svg, left_text, right_text, att, layer_index, head_index) {
-            var xOffset = 65;
+            var xOffset = 52;
+            var maxX =  state.width;
+            var maxY = state.height;
             var x = head_index * THUMBNAIL_WIDTH + THUMBNAIL_PADDING + xOffset;
             if (x < MIN_X) {
                 x = MIN_X;
-            } else if (x + DETAIL_WIDTH > MAX_X) {
-                x = MAX_X - DETAIL_WIDTH;
+            } else if (x + DETAIL_WIDTH > maxX) {
+                x = maxX - DETAIL_WIDTH;
             }
             var posLeftText = x;
             var posAttention = posLeftText + DETAIL_BOX_WIDTH;
@@ -86,8 +89,8 @@ requirejs(['jquery', 'd3'],
             var height = Math.max(left_text.length, right_text.length) * DETAIL_BOX_HEIGHT + 2 * DETAIL_PADDING + DETAIL_HEADING_HEIGHT;
             if (y < MIN_Y) {
                 y = MIN_Y;
-            } else if (y + height > MAX_Y) {
-                y = MAX_Y - height;
+            } else if (y + height > maxY) {
+                y = maxY - height;
             }
             renderDetailFrame(svg, x, y, left_text, right_text, layer_index)
             renderDetailHeading(svg, x, y, layer_index, head_index)
@@ -97,7 +100,7 @@ requirejs(['jquery', 'd3'],
         }
 
         function renderDetailHeading(svg, x, y, layer_index, head_index) {
-             var fillColor = LAYER_COLORS(layer_index % 10)
+            var fillColor = LAYER_COLORS(layer_index % 10)
 
             svg.append("text")
                 .classed("detail", true)
@@ -107,7 +110,7 @@ requirejs(['jquery', 'd3'],
                 .style("-webkit-user-select", "none")
                 .attr("fill", fillColor)
                 .attr("x", x + 88)
-                .attr("y", y + 8)
+                .attr("y", y + 16)
                 .attr("height", DETAIL_HEADING_HEIGHT)
                 .attr("width", DETAIL_WIDTH)
                 .attr("dy", DETAIL_HEADING_TEXT_SIZE);
@@ -138,10 +141,12 @@ requirejs(['jquery', 'd3'],
         //     renderText(svg, right_text, "right_text", posRightText, y, layer_index);
         // }
 
-         function renderText(svg, text, id, x, y, layer_index) {
+        function renderText(svg, text, id, x, y, layer_index) {
+            var layerColor = LAYER_COLORS(layer_index % 10)
+
             var tokenContainer = svg.append("svg:g")
                 .classed("detail", true)
-                .attr("pointer-events", "none")
+                // .attr("pointer-events", "none")
                 // .attr("id", id)
                 .selectAll("g")
                 .data(text)
@@ -149,16 +154,26 @@ requirejs(['jquery', 'd3'],
                 .append("g");
             // if (id == "left_text" || id == "right_text") {
 
-                tokenContainer.append("rect")
-                    .classed("highlight", true)
-                    // .attr("fill", fillColor)
-                    .style("opacity", 0.0)
-                    .attr("height", DETAIL_BOX_HEIGHT)
-                    .attr("width", DETAIL_BOX_WIDTH)
-                    .attr("x", x)
-                    .attr("y", function (d, i) {
-                        return y + i * DETAIL_BOX_HEIGHT - 1;
-                    });
+            var fillColor;
+            // if (id == "right_text") {
+            //     fillColor = layerColor;
+            // }
+            // if (id == "left_text") {
+            //     fillColor = 'lightgray';
+            // }
+            fillColor = layerColor
+            tokenContainer.append("rect")
+                .classed("highlight", true)
+                .attr("fill", fillColor)
+                // .attr("fill", "lightgray")
+
+                .style("opacity", 0.0)
+                .attr("height", DETAIL_BOX_HEIGHT)
+                .attr("width", DETAIL_BOX_WIDTH)
+                .attr("x", x)
+                .attr("y", function (d, i) {
+                    return y + i * DETAIL_BOX_HEIGHT - 1;
+                });
             // }
 
             // var offset;
@@ -167,7 +182,6 @@ requirejs(['jquery', 'd3'],
             // } else {
             //     offset = 10;
             // }
-             var fillColor = LAYER_COLORS(layer_index % 10)
 
             var textContainer = tokenContainer.append("text")
                 .classed("token", true)
@@ -190,16 +204,46 @@ requirejs(['jquery', 'd3'],
             if (id == "left_text") {
                 textContainer.style("text-anchor", "end")
                     .attr("dx", DETAIL_BOX_WIDTH - 2);
-                // tokenContainer.on("mouseover", function (d, index) {
-                //     state.index = index;
-                //     highlightSelection(svg, index);
-                //     showComputation(svg, index);
-                // });
-                // tokenContainer.on("mouseleave", function () {
-                //     unhighlightSelection(svg);
-                //     hideComputation(svg)
-                // });
+                tokenContainer.on("mouseover", function (d, index) {
+                    // state.index = index;
+                    highlightSelection(svg, index);
+                    // showComputation(svg, index);
+                });
+                tokenContainer.on("mouseleave", function () {
+                    unhighlightSelection(svg);
+                    // hideComputation(svg)
+                });
             }
+
+
+        }
+
+        function highlightSelection(svg, index) {
+
+            svg.select("#left_text")
+                .selectAll(".highlight")
+                .style("opacity", function (d, i) {
+                    return i == index ? 1.0 : 0.0;
+                });
+
+            // svg.selectAll(".i-index")
+            //   .text(index);
+            svg.selectAll(".attn-line-group")
+                .style("opacity", function (d, i) {
+                    return i == index ? 1.0 : 0.0;
+                });
+        }
+
+        function unhighlightSelection(svg) {
+            svg.select("#left_text")
+                .selectAll(".highlight")
+                .style("opacity", 0.0);
+            //
+            // svg.selectAll(".i-index")
+            //   .text("i");
+            svg.selectAll(".attn-line-group")
+                .style("opacity", 1)
+            svg.selectAll(".qk-line-group")
         }
 
         function renderThumbnailAttn(svg, left_text, right_text, x, y, att, layer_index, head_index) {
@@ -232,7 +276,7 @@ requirejs(['jquery', 'd3'],
                 .data(att)
                 .enter()
                 .append("g") // Add group for each source token
-                .classed('attn-line-group', true)
+                // .classed('attn-line-group', true)
                 .attr("source-index", function (d, i) { // Save index of source token
                     return i;
                 })
@@ -267,7 +311,6 @@ requirejs(['jquery', 'd3'],
                 .style("opacity", 0)
 
 
-
             hoverRegion.on("mouseenter", function (d, index) {
 
                 if (state.timer) {
@@ -280,16 +323,16 @@ requirejs(['jquery', 'd3'],
                 attnBackground.attr("fill", "#202020")
                 attnBackground.attr("stroke-opacity", .5);
                 state.cursor_status = null;
-                state.timer = setTimeout(function() {
+                state.timer = setTimeout(function () {
 
-                        // if (state.cursor_status == "thumbnail") {
+                    // if (state.cursor_status == "thumbnail") {
 
-                        // }
+                    // }
 
-                        renderDetail(svg, left_text, right_text, att, layer_index, head_index)
+                    renderDetail(svg, left_text, right_text, att, layer_index, head_index)
 
-                        state.cursor_status = "thumbnail"
-                    }, 500);
+                    state.cursor_status = "thumbnail"
+                }, 500);
 
                 // var i;
                 // var j;
@@ -359,13 +402,12 @@ requirejs(['jquery', 'd3'],
 
         function renderDetailAttn(svg, x, y, att, layer_index) {
             var attnContainer = svg.append("svg:g")
-                            .classed("detail", true)
-                            .attr("pointer-events", "none");
+                .classed("detail", true)
+                .attr("pointer-events", "none");
 
             console.log("att")
             console.log(att);
-            attnContainer.
-                selectAll("g")
+            attnContainer.selectAll("g")
                 .data(att)
                 .enter()
                 .append("g") // Add group for each source token
