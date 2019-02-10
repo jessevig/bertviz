@@ -71,7 +71,7 @@ requirejs(['jquery', 'd3'],
         }
 
         function renderDetail(svg, left_text, right_text, att, layer_index, head_index) {
-            var xOffset = 52;
+            var xOffset = 64;
             var maxX =  state.width;
             var maxY = state.height;
             var x = head_index * THUMBNAIL_WIDTH + THUMBNAIL_PADDING + xOffset;
@@ -84,7 +84,7 @@ requirejs(['jquery', 'd3'],
             var posAttention = posLeftText + DETAIL_BOX_WIDTH;
             var posRightText = posAttention + DETAIL_ATTENTION_WIDTH;
             var thumbnailHeight = Math.max(left_text.length, right_text.length) * THUMBNAIL_BOX_HEIGHT + 2 * THUMBNAIL_PADDING;
-            var yOffset = 38;
+            var yOffset = 20;
             var y = layer_index * thumbnailHeight + THUMBNAIL_PADDING + yOffset;
             var height = Math.max(left_text.length, right_text.length) * DETAIL_BOX_HEIGHT + 2 * DETAIL_PADDING + DETAIL_HEADING_HEIGHT;
             if (y < MIN_Y) {
@@ -311,67 +311,84 @@ requirejs(['jquery', 'd3'],
 
 
             hoverRegion.on("click", function(d, index){
+                                var attnBackgroundOther = svg.selectAll(".attn_background")
+                attnBackgroundOther.attr("fill", "black")
+                attnBackgroundOther.attr("stroke-opacity", 0);
+
                 svg.selectAll(".detail").remove();
                 if (state.detail_layer != layer_index || state.detail_head != head_index) {
                     renderDetail(svg, left_text, right_text, att, layer_index, head_index)
                     state.detail_layer = layer_index;
                     state.detail_head = head_index;
+                    attnBackground.attr("fill", "#202020")
+                    attnBackground.attr("stroke-opacity", .5);
+                } else {
+                    state.detail_layer = null;
+                    state.detail_head = null;
+                    attnBackground.attr("fill", "black")
+                    attnBackground.attr("stroke-opacity", 0);
                 }
             })
 
-            hoverRegion.on("mouseenter", function (d, index) {
-                var attnBackgroundOther = svg.selectAll(".attn_background")
-                attnBackgroundOther.attr("fill", "black")
-                attnBackgroundOther.attr("stroke-opacity", 0);
-                attnBackground.attr("fill", "#202020")
-                attnBackground.attr("stroke-opacity", .5);
-                // state.cursor_status = null;
-                // state.timer = setTimeout(function () {
-                //     renderDetail(svg, left_text, right_text, att, layer_index, head_index)
-                //     state.cursor_status = "thumbnail"
-                // }, 500);
 
-                // var i;
-                // var j;
-                // for (i = 0; i < state.num_layers; i++) {
-                //     for (j = 0; j < state.num_heads; j++) {
-                //         if (i==layer_index && j==head_index) {
-                //             continue;
-                //         }
-                //         var othId = 'attn_background_' + i + "_" + j
-                //         svg.selectAll("#" + othId).attr("fill", "#707070");
-                //     }
-                // }
-
-                console.log('mouseenter on layer ' + layer_index + ' head ' + head_index)
-            });
+            hoverRegion.on("mouseover", function(d) {
+                  console.log('setting to pointer')
+                d3.select(this).style("cursor", "pointer");
+              });
+            // ,
+            //   "mouseout": function(d) {
+            //     d3.select(this).style("cursor", "default");
+            //   }
+            // });
+            // hoverRegion.on("mouseenter", function (d, index) {
+            //
+            //     // state.cursor_status = null;
+            //     // state.timer = setTimeout(function () {
+            //     //     renderDetail(svg, left_text, right_text, att, layer_index, head_index)
+            //     //     state.cursor_status = "thumbnail"
+            //     // }, 500);
+            //
+            //     // var i;
+            //     // var j;
+            //     // for (i = 0; i < state.num_layers; i++) {
+            //     //     for (j = 0; j < state.num_heads; j++) {
+            //     //         if (i==layer_index && j==head_index) {
+            //     //             continue;
+            //     //         }
+            //     //         var othId = 'attn_background_' + i + "_" + j
+            //     //         svg.selectAll("#" + othId).attr("fill", "#707070");
+            //     //     }
+            //     // }
+            //
+            //     console.log('mouseenter on layer ' + layer_index + ' head ' + head_index)
+            // });
             // hoverRegion.on("mouseclick", function (d, index) {
             //     renderDetail(svg, left_text, right_text, att, layer_index, head_index)
             // }
-            hoverRegion.on("mouseleave", function () {
-                if (state.timer) {
-                    clearTimeout(state.timer);
-                }
-                // if (state.cursor_status == "thumbnail") {
-                //     svg.selectAll(".detail").remove();
-                //     attnBackground.attr("fill", "black")
-                //     attnBackground.attr("stroke-opacity", 0);
-                //     state.cursor_status = null;
-                // }
-                // var i;
-                // var j;
-                // for (i = 0; i < state.num_layers; i++) {
-                //     for (j = 0; j < state.num_heads; j++) {
-                //         if (i==layer_index && j==head_index) {
-                //             continue;
-                //         }
-                //         var othId = 'attn_background_' + i + "_" + j
-                //         svg.selectAll("#" + othId).attr("fill", "black");
-                //     }
-                // }
-
-                console.log('mouseleave on layer ' + layer_index + ' head ' + head_index)
-            });
+            // hoverRegion.on("mouseleave", function () {
+            //     if (state.timer) {
+            //         clearTimeout(state.timer);
+            //     }
+            //     // if (state.cursor_status == "thumbnail") {
+            //     //     svg.selectAll(".detail").remove();
+            //     //     attnBackground.attr("fill", "black")
+            //     //     attnBackground.attr("stroke-opacity", 0);
+            //     //     state.cursor_status = null;
+            //     // }
+            //     // var i;
+            //     // var j;
+            //     // for (i = 0; i < state.num_layers; i++) {
+            //     //     for (j = 0; j < state.num_heads; j++) {
+            //     //         if (i==layer_index && j==head_index) {
+            //     //             continue;
+            //     //         }
+            //     //         var othId = 'attn_background_' + i + "_" + j
+            //     //         svg.selectAll("#" + othId).attr("fill", "black");
+            //     //     }
+            //     // }
+            //
+            //     console.log('mouseleave on layer ' + layer_index + ' head ' + head_index)
+            // });
         }
 
         function renderDetailFrame(svg, x, y, left_text, right_text, layer_index) {
