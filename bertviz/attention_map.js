@@ -302,7 +302,6 @@ requirejs(['jquery', 'd3'],
                     return d;
                 });
 
-
             var hoverRegion = attnContainer.append("rect")
                 .attr("x", x)
                 .attr("y", y)
@@ -311,28 +310,26 @@ requirejs(['jquery', 'd3'],
                 .style("opacity", 0)
 
 
-            hoverRegion.on("mouseenter", function (d, index) {
-
-                if (state.timer) {
-                    clearTimeout(state.timer);
-                }
+            hoverRegion.on("click", function(d, index){
                 svg.selectAll(".detail").remove();
+                if (state.detail_layer != layer_index || state.detail_head != head_index) {
+                    renderDetail(svg, left_text, right_text, att, layer_index, head_index)
+                    state.detail_layer = layer_index;
+                    state.detail_head = head_index;
+                }
+            })
+
+            hoverRegion.on("mouseenter", function (d, index) {
                 var attnBackgroundOther = svg.selectAll(".attn_background")
                 attnBackgroundOther.attr("fill", "black")
                 attnBackgroundOther.attr("stroke-opacity", 0);
                 attnBackground.attr("fill", "#202020")
                 attnBackground.attr("stroke-opacity", .5);
-                state.cursor_status = null;
-                state.timer = setTimeout(function () {
-
-                    // if (state.cursor_status == "thumbnail") {
-
-                    // }
-
-                    renderDetail(svg, left_text, right_text, att, layer_index, head_index)
-
-                    state.cursor_status = "thumbnail"
-                }, 500);
+                // state.cursor_status = null;
+                // state.timer = setTimeout(function () {
+                //     renderDetail(svg, left_text, right_text, att, layer_index, head_index)
+                //     state.cursor_status = "thumbnail"
+                // }, 500);
 
                 // var i;
                 // var j;
@@ -348,6 +345,9 @@ requirejs(['jquery', 'd3'],
 
                 console.log('mouseenter on layer ' + layer_index + ' head ' + head_index)
             });
+            // hoverRegion.on("mouseclick", function (d, index) {
+            //     renderDetail(svg, left_text, right_text, att, layer_index, head_index)
+            // }
             hoverRegion.on("mouseleave", function () {
                 if (state.timer) {
                     clearTimeout(state.timer);
