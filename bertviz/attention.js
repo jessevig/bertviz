@@ -1,6 +1,10 @@
 /**
  * @fileoverview Transformer Visualization D3 javascript code.
  *
+ *
+
+ *  Based on: https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/visualization/attention.js
+ *
  * Change log:
  *
  * 12/19/18  Jesse Vig   Assorted cleanup. Changed orientation of attention matrices.
