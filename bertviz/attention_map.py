@@ -2,7 +2,6 @@ import torch
 import json
 import os
 import IPython.display as display
-from collections import defaultdict
 
 class AttentionMapData:
     """Represents data needed for attention map visualization"""
@@ -29,25 +28,18 @@ class AttentionMapData:
         return tokens_tensor, token_type_tensor, tokens_a_delim, tokens_b_delim
 
 
-# vis_html = """
-#   <span style="user-select:none">
-#     Layer: <select id="layer"></select>
-#     Head: <select id="att_head"></select>
-#     Attention: <select id="att_type">
-#       <option value="all">All</option>
-#       <option value="aa">Sentence A -> Sentence A</option>
-#       <option value="bb">Sentence B -> Sentence B</option>
-#       <option value="ab">Sentence A -> Sentence B</option>
-#       <option value="ba">Sentence B -> Sentence A</option>
-#     </select>
-#   </span>
-#   <div id='vis'></div>
-# """
 vis_html = """
-  <div id='vis' style='background-color:black'></div>
+  <span style="user-select:none">
+    Attention: <select id="att_type">
+      <option value="all">All</option>
+      <option value="aa">Sentence A -> Sentence A</option>
+      <option value="bb">Sentence B -> Sentence B</option>
+      <option value="ab">Sentence A -> Sentence B</option>
+      <option value="ba">Sentence B -> Sentence A</option>
+    </select>
+  </span>
+  <div id='vis'></div>
 """
-
-
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
