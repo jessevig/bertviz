@@ -30,7 +30,7 @@ class AttentionMapData:
 
 vis_html = """
   <span style="user-select:none">
-    Attention: <select id="att_type">
+    Attention: <select id="attType">
       <option value="all">All</option>
       <option value="aa">Sentence A -> Sentence A</option>
       <option value="bb">Sentence B -> Sentence B</option>
