@@ -30,8 +30,9 @@ class TestAttention(unittest.TestCase):
         self.assertEqual(top_half.shape, expected_top_half.shape)
         self.assertTrue(np.array_equal(top_half, expected_top_half))
         expected_bottom_half = attn_squeezed[:, :, len(tokens_a):, :]
-        bottom_half = np.concatenate((attn_b, attn_ba), axis=-1)
+        bottom_half = np.concatenate((attn_ba, attn_b), axis=-1)
         self.assertEqual(bottom_half.shape, expected_bottom_half.shape)
+        self.assertTrue(np.array_equal(bottom_half, expected_bottom_half))
         all = np.concatenate((top_half, bottom_half), axis=-2)
         self.assertEqual(all.shape, attn_squeezed.shape)
         self.assertTrue(np.allclose(all, attn_squeezed, atol=1e-06))
