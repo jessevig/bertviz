@@ -51,7 +51,8 @@ requirejs(['jquery', 'd3'],
             bertmap.svg = d3.select("#vis")
                 .append('svg')
                 .attr("width", bertmap.divWidth)
-                .attr("height", bertmap.divHeight);
+                .attr("height", bertmap.divHeight)
+              .attr("fill", "black");
 
             var i;
             var j;
@@ -76,7 +77,7 @@ requirejs(['jquery', 'd3'],
             if (x < MIN_X) {
                 x = MIN_X;
             } else if (x + DETAIL_WIDTH > maxX) {
-                x = maxX - DETAIL_WIDTH;
+                x = headIndex * THUMBNAIL_WIDTH + THUMBNAIL_PADDING - DETAIL_WIDTH + 8;
             }
             var posLeftText = x;
             var posAttention = posLeftText + DETAIL_BOX_WIDTH;
@@ -180,7 +181,6 @@ requirejs(['jquery', 'd3'],
                 .style("opacity", 0.0);
             bertmap.svg.selectAll(".attn-line-group")
                 .style("opacity", 1);
-            bertmap.svg.selectAll(".qk-line-group")
         }
 
         function renderThumbnailAttn(x, y, att, layerIndex, headIndex) {
@@ -247,7 +247,7 @@ requirejs(['jquery', 'd3'],
                     bertmap.detail_layer = layerIndex;
                     bertmap.detail_head = headIndex;
                     attnBackground.attr("fill", "#202020");
-                    attnBackground.attr("stroke-opacity", .5);
+                    attnBackground.attr("stroke-opacity", .8);
                 } else {
                     bertmap.detail_layer = null;
                     bertmap.detail_head = null;
