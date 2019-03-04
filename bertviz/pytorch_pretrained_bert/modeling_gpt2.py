@@ -13,6 +13,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# Changes made by Jesse Vig on 2/23/19:
+# - Return attention weights
+#
 """PyTorch OpenAI GPT-2 model."""
 
 import collections
@@ -217,7 +220,7 @@ class Attention(nn.Module):
         w = w * b - 1e10 * (1 - b)
 
         w = nn.Softmax(dim=-1)(w)
-        return torch.matmul(w, v)
+        return torch.matmul(w, v), w
 
     def merge_heads(self, x):
         x = x.permute(0, 2, 1, 3).contiguous()
@@ -243,10 +246,10 @@ class Attention(nn.Module):
             key = torch.cat((past_key, key), dim=-1)
             value = torch.cat((past_value, value), dim=-2)
         present = torch.stack((key.transpose(-2, -1), value))  # transpose to have same shapes for stacking
-        a = self._attn(query, key, value)
+        a, attn_probs = self._attn(query, key, value)
         a = self.merge_heads(a)
         a = self.c_proj(a)
-        return a, present
+        return a, present, attn_probs
 
 
 class MLP(nn.Module):
@@ -273,11 +276,11 @@ class Block(nn.Module):
         self.mlp = MLP(4 * nx, config)
 
     def forward(self, x, layer_past=None):
-        a, present = self.attn(self.ln_1(x), layer_past=layer_past)
+        a, present, attn_probs = self.attn(self.ln_1(x), layer_past=layer_past)
         x = x + a
         m = self.mlp(self.ln_2(x))
         x = x + m
-        return x, present
+        return x, present, attn_probs
 
 
 class GPT2LMHead(nn.Module):
@@ -544,12 +547,14 @@ class GPT2Model(GPT2PreTrainedModel):
             token_type_embeds = 0
         hidden_states = inputs_embeds + position_embeds + token_type_embeds
         presents = []
+        attn_probs_list = []
         for block, layer_past in zip(self.h, past):
-            hidden_states, present = block(hidden_states, layer_past)
+            hidden_states, present, attn_probs = block(hidden_states, layer_past)
             presents.append(present)
+            attn_probs_list.append(attn_probs)
         hidden_states = self.ln_f(hidden_states)
         output_shape = input_shape + (hidden_states.size(-1),)
-        return hidden_states.view(*output_shape), presents
+        return hidden_states.view(*output_shape), presents, attn_probs_list
 
 
 class GPT2LMHeadModel(GPT2PreTrainedModel):

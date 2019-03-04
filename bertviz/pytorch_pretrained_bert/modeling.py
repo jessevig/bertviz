@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Changes made by Jesse Vig on 12/12/18:
-# - Return attention weights from BertModel
+# Changes made by Jesse Vig on 2/23/19:
+# - Return attention weights
 #
 
 """PyTorch BERT model."""
