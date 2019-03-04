@@ -4,7 +4,11 @@ Tool for visualizing BERT's attention layers. Extends  [Tensor2Tensor](https://g
 
 ## Jupyter Notebooks
 
-"Map" of BERT [new]:
+OpenAI GPT-2 visualization [new]:
+ * [Notebook](https://github.com/jessevig/bertviz/blob/master/bertviz_map_gpt2.ipynb)
+* [Colab](https://colab.research.google.com/drive/1RL5JYIUaVrSsyPDxyn6wBZn6W4JRnNoH)
+
+"Map" of BERT:
  * [Notebook](https://github.com/jessevig/bertviz/blob/master/bertviz_map.ipynb)
 * [Colab](https://colab.research.google.com/drive/1OmKa1PHPt5fzGmxstDObn5acUrdvjA_j)
 
