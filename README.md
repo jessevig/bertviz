@@ -7,6 +7,9 @@ Tool for visualizing attention in BERT and OpenAI GPT-2. Extends  [Tensor2Tensor
 OpenAI GPT-2 visualization [new]:
  * [Notebook](https://github.com/jessevig/bertviz/blob/master/bertviz_map_gpt2.ipynb)
 * [Colab](https://colab.research.google.com/drive/1RL5JYIUaVrSsyPDxyn6wBZn6W4JRnNoH)
+* [Article](https://towardsdatascience.com/openai-gpt-2-understanding-language-generation-through-visualization-8252f683b2f8
+)
+
 
 "Map" of BERT:
  * [Notebook](https://github.com/jessevig/bertviz/blob/master/bertviz_map.ipynb)
