@@ -1,6 +1,6 @@
 # BertViz
 
-Tool for visualizing attention in BERT and OpenAI GPT-2. Extends  [Tensor2Tensor](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) visualization tool.
+Tool for visualizing attention in BERT and OpenAI GPT-2. Extends [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization)  and [pytorch-pretrained-BERT](https://github.com/huggingface/pytorch-pretrained-BERT).
 
 ## Jupyter Notebooks
 
