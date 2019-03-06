@@ -38,8 +38,8 @@ class AttentionGPT2Data:
 
     def get_data(self, text):
         tokens_tensor, tokens = self._get_inputs(text)
-        _, _, attn_probs_list = self.model(tokens_tensor)
-        attn_tensor = torch.stack([attn_probs for attn_probs in attn_probs_list])
+        _, _, attn_data_list = self.model(tokens_tensor)
+        attn_tensor = torch.stack([attn_data['attn_probs'] for attn_data in attn_data_list])
         return tokens, attn_tensor.data.numpy()
 
     def _get_inputs(self, text):

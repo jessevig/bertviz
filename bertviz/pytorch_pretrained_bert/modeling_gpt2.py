@@ -246,10 +246,15 @@ class Attention(nn.Module):
             key = torch.cat((past_key, key), dim=-1)
             value = torch.cat((past_value, value), dim=-2)
         present = torch.stack((key.transpose(-2, -1), value))  # transpose to have same shapes for stacking
-        a, attn_probs = self._attn(query, key, value)
+        a, attention_probs = self._attn(query, key, value)
         a = self.merge_heads(a)
         a = self.c_proj(a)
-        return a, present, attn_probs
+        attn_data = {
+            'attn_probs': attention_probs,
+            'query': query,
+            'key': key
+        }
+        return a, present, attn_data
 
 
 class MLP(nn.Module):
@@ -276,11 +281,11 @@ class Block(nn.Module):
         self.mlp = MLP(4 * nx, config)
 
     def forward(self, x, layer_past=None):
-        a, present, attn_probs = self.attn(self.ln_1(x), layer_past=layer_past)
+        a, present, attn_data = self.attn(self.ln_1(x), layer_past=layer_past)
         x = x + a
         m = self.mlp(self.ln_2(x))
         x = x + m
-        return x, present, attn_probs
+        return x, present, attn_data
 
 
 class GPT2LMHead(nn.Module):
@@ -547,14 +552,14 @@ class GPT2Model(GPT2PreTrainedModel):
             token_type_embeds = 0
         hidden_states = inputs_embeds + position_embeds + token_type_embeds
         presents = []
-        attn_probs_list = []
+        attn_data_list = []
         for block, layer_past in zip(self.h, past):
-            hidden_states, present, attn_probs = block(hidden_states, layer_past)
+            hidden_states, present, attn_data = block(hidden_states, layer_past)
             presents.append(present)
-            attn_probs_list.append(attn_probs)
+            attn_data_list.append(attn_data)
         hidden_states = self.ln_f(hidden_states)
         output_shape = input_shape + (hidden_states.size(-1),)
-        return hidden_states.view(*output_shape), presents, attn_probs_list
+        return hidden_states.view(*output_shape), presents, attn_data_list
 
 
 class GPT2LMHeadModel(GPT2PreTrainedModel):
