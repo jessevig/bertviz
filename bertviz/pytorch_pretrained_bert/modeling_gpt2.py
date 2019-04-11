@@ -252,7 +252,7 @@ class Attention(nn.Module):
         attn_data = {
             'attn_probs': attention_probs,
             'query': query,
-            'key': key
+            'key': key.transpose(-1, -2)
         }
         return a, present, attn_data
 
