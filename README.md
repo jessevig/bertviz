@@ -21,6 +21,7 @@ Paper:
   
  OpenAI GPT-2:
   [[Notebook]](https://github.com/jessevig/bertviz/blob/master/bertviz_summary_gpt2.ipynb)
+[[Colab]](https://colab.research.google.com/drive/1AcE98QfdpHK47YkYvzNeY0BO2nx5CEpc)
 
 ### Model view 
 ![Model view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/model_thumbnail.png)
@@ -42,6 +43,7 @@ BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/bertviz_detai
 
 OpenAI GPT-2
 [[Notebook]](https://github.com/jessevig/bertviz/blob/master/bertviz_detail_gpt2.ipynb) 
+[[Colab]](https://colab.research.google.com/drive/12qHRVqfefS8kdmZ605q1SULQ6z3q2lF-)
 
 
 
