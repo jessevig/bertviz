@@ -12,7 +12,7 @@ Paper:
 
 ## Attention-head view
 
-The *attention-head view* visualizes the attention patterns produced by one or more attention heads in a given transformer layer, 
+The *attention-head view* visualizes the attention patterns produced by one or more attention heads in a given transformer layer.
 
 ![Attention-head view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/attention_head_thumbnail.jpeg)
 
