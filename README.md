@@ -10,9 +10,10 @@ Blog posts:
 Paper:
 * [Visualizing Attention in Transformer-Based Language Representation Models](https://arxiv.org/pdf/1904.02679.pdf)
 
-## Notebooks
+## Attention-head view
 
-### Attention-head view
+The *attention-head view* visualizes the attention patterns produced by one or more attention heads in a given transformer layer, 
+
 ![Attention-head view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/attention_head_thumbnail.jpeg)
 
  BERT:
@@ -23,7 +24,10 @@ Paper:
   [[Notebook]](https://github.com/jessevig/bertviz/blob/master/bertviz_summary_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1AcE98QfdpHK47YkYvzNeY0BO2nx5CEpc)
 
-### Model view 
+## Model view 
+
+The *model view* provides a birds-eye view of attention across all of the model’s layers  and heads.
+
 ![Model view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/model_thumbnail.png)
 
 BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/bertviz_map.ipynb)
@@ -34,8 +38,10 @@ OpenAI GPT-2
 [[Colab]](https://colab.research.google.com/drive/1RL5JYIUaVrSsyPDxyn6wBZn6W4JRnNoH)
 
 
-### Neuron view 
-![Model view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/neuron_thumbnail.png)
+## Neuron view 
+The *neuron view* visualizes the individual neurons in the query and key vectors and shows how they are used to compute attention.
+
+![Neuron view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/neuron_thumbnail.png)
 
 BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/bertviz_detail.ipynb) 
 [[Colab]](https://colab.research.google.com/drive/1Nlhh2vwlQdKleNMqpmLDBsAwrv_7NnrB)
