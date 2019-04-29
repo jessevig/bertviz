@@ -511,6 +511,7 @@ requirejs(['jquery', 'd3'],
           showComputation(svg, index);
         });
         tokenContainer.on("mouseleave", function () {
+          config.index = null;
           unhighlightSelection(svg);
           hideComputation(svg)
         });
