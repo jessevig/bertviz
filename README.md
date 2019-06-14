@@ -8,7 +8,7 @@ Blog posts:
 * [OpenAI GPT-2: Understanding Language Generation through Visualization](https://towardsdatascience.com/openai-gpt-2-understanding-language-generation-through-visualization-8252f683b2f8)
 
 Paper:
-* [Visualizing Attention in Transformer-Based Language Representation Models](https://arxiv.org/pdf/1904.02679.pdf)
+* [A Multiscale Visualization of Attention in the Transformer Model](https://arxiv.org/pdf/1906.05714.pdf)
 
 ## Attention-head view
 
@@ -58,15 +58,15 @@ OpenAI GPT-2
 
 ## Citation
 
-When referencing BertViz, please cite [this paper](https://arxiv.org/abs/1904.02679).
+When referencing BertViz, please cite [this paper](https://arxiv.org/abs/1906.05714).
 
 ```
 @article{vig2019transformervis,
   author    = {Jesse Vig},
-  title     = {Visualizing Attention in Transformer-Based Language Representation Models},
-  journal   = {arXiv preprint arXiv:1904.02679},
+  title     = {A Multiscale Visualization of Attention in the Transformer Model},
+  journal   = {arXiv preprint arXiv:1906.05714},
   year      = {2019},
-  url       = {https://arxiv.org/abs/1904.02679}
+  url       = {https://arxiv.org/abs/1906.05714}
 }
 ```
 
