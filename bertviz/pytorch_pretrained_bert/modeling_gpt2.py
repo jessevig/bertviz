@@ -250,9 +250,9 @@ class Attention(nn.Module):
         a = self.merge_heads(a)
         a = self.c_proj(a)
         attn_data = {
-            'attn_probs': attention_probs,
-            'query': query,
-            'key': key.transpose(-1, -2)
+            'attn': attention_probs,
+            'queries': query,
+            'keys': key.transpose(-1, -2)
         }
         return a, present, attn_data
 

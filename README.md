@@ -17,11 +17,11 @@ The *attention-head view* visualizes the attention patterns produced by one or m
 ![Attention-head view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/attention_head_thumbnail.jpeg)
 
  BERT:
- [[Notebook]](https://github.com/jessevig/bertviz/blob/master/bertviz_summary.ipynb)
+ [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_bert.ipynb)
   [[Colab]](https://colab.research.google.com/drive/1vlOJ1lhdujVjfH857hvYKIdKPTD9Kid8)
   
  OpenAI GPT-2:
-  [[Notebook]](https://github.com/jessevig/bertviz/blob/master/bertviz_summary_gpt2.ipynb)
+  [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1AcE98QfdpHK47YkYvzNeY0BO2nx5CEpc)
 
 ## Model view 
@@ -30,11 +30,11 @@ The *model view* provides a birds-eye view of attention across all of the modelâ
 
 ![Model view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/model_thumbnail.png)
 
-BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/bertviz_map.ipynb)
+BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_bert.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1OmKa1PHPt5fzGmxstDObn5acUrdvjA_j)
 
 OpenAI GPT-2
-[[Notebook]](https://github.com/jessevig/bertviz/blob/master/bertviz_map_gpt2.ipynb)
+[[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1RL5JYIUaVrSsyPDxyn6wBZn6W4JRnNoH)
 
 
@@ -43,12 +43,12 @@ The *neuron view* visualizes the individual neurons in the query and key vectors
 
 ![Neuron view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/neuron_thumbnail.png)
 
-BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/bertviz_detail.ipynb) 
+BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_bert.ipynb) 
 [[Colab]](https://colab.research.google.com/drive/1Nlhh2vwlQdKleNMqpmLDBsAwrv_7NnrB)
 
 
 OpenAI GPT-2
-[[Notebook]](https://github.com/jessevig/bertviz/blob/master/bertviz_detail_gpt2.ipynb) 
+[[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_gpt2.ipynb) 
 [[Colab]](https://colab.research.google.com/drive/12qHRVqfefS8kdmZ605q1SULQ6z3q2lF-)
 
 

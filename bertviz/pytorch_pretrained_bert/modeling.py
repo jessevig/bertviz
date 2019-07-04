@@ -319,9 +319,9 @@ class BertSelfAttention(nn.Module):
         context_layer = context_layer.view(*new_context_layer_shape)
 
         attn_data = {
-            'attn_probs': attention_probs,
-            'query_layer': query_layer,
-            'key_layer': key_layer
+            'attn': attention_probs,
+            'queries': query_layer,
+            'keys': key_layer
         }
         return context_layer, attn_data
 
