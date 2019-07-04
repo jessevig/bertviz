@@ -1,6 +1,6 @@
 # BertViz
 
-Tool for visualizing attention in BERT and OpenAI GPT-2. Extends [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization)  and [pytorch-pretrained-BERT](https://github.com/huggingface/pytorch-pretrained-BERT).
+Tool for visualizing attention in BERT and OpenAI GPT-2. Extends [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj) and [pytorch-pretrained-BERT](https://github.com/huggingface/pytorch-pretrained-BERT).
 
 Blog posts:
 * [Deconstructing BERT: Distilling 6 Patterns from 100 Million Parameters](https://towardsdatascience.com/deconstructing-bert-distilling-6-patterns-from-100-million-parameters-b49113672f77)
