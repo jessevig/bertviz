@@ -18,11 +18,9 @@ The *attention-head view* visualizes the attention patterns produced by one or m
 
  BERT:
  [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_bert.ipynb)
-  [[Colab]](https://colab.research.google.com/drive/1g2nhY9vZG-PLC3w3dcHGqwsHBAXnD9EY)
   
  OpenAI GPT-2:
   [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_gpt2.ipynb)
-[[Colab]](https://colab.research.google.com/drive/1kgcQlzDuVKvoqv_-MXJaleAQ8ZfZZ8aP)
 
 ## Model view 
 
@@ -31,11 +29,9 @@ The *model view* provides a birds-eye view of attention across all of the modelâ
 ![Model view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/model_thumbnail.png)
 
 BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_bert.ipynb)
-[[Colab]](https://colab.research.google.com/drive/16_fS8H7tTNLWBdGL4NcYMO5xnV9EUsdL)
 
 OpenAI GPT-2
 [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_gpt2.ipynb)
-[[Colab]](https://colab.research.google.com/drive/13_SWsQGFoUKNCZsNSP2JkxrXjT_9LCl4)
 
 
 ## Neuron view 
@@ -44,12 +40,9 @@ The *neuron view* visualizes the individual neurons in the query and key vectors
 ![Neuron view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/neuron_thumbnail.png)
 
 BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_bert.ipynb) 
-[[Colab]](https://colab.research.google.com/drive/1aiEETps5JW-yjnIkD4BO0ElKwULnf1ik)
-
 
 OpenAI GPT-2
 [[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_gpt2.ipynb) 
-[[Colab]](https://colab.research.google.com/drive/1ZdTA-cO6rSRDHYrP-Lmd-MN7SRkj3sYs)
 
 
 ## Authors
