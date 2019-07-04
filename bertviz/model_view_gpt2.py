@@ -26,13 +26,16 @@ This module is designed to be called from an ipython notebook.
 import json
 from bertviz.attention import get_attention_gpt2
 from IPython.core.display import display, HTML, Javascript
+import os
 
 def show(model, tokenizer, text):
     vis_html = """
       <div id='vis'></div>
     """
     display(HTML(vis_html))
-    vis_js = open('bertviz/model_view_gpt2.js').read()
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    vis_js = open(os.path.join(__location__, 'model_view_gpt2.js')).read()
     attn_data = get_attention_gpt2(model, tokenizer, text)
     att_json = json.dumps(attn_data)
     display(Javascript('window.attention = %s' % att_json))
