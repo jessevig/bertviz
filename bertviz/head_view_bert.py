@@ -26,6 +26,7 @@ This module is designed to be called from an ipython notebook.
 import json
 from bertviz.attention import get_attention_bert
 from IPython.core.display import display, HTML, Javascript
+import os
 
 def show(model, tokenizer, sentence_a, sentence_b):
     vis_html = """
@@ -42,7 +43,10 @@ def show(model, tokenizer, sentence_a, sentence_b):
       <div id='vis'></div>
     """
     display(HTML(vis_html))
-    vis_js = open('bertviz/head_view_bert.js').read()
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    vis_js = open(os.path.join(__location__, 'head_view_bert.js')).read()
+    # vis_js = open('bertviz/head_view_bert.js').read()
     attn_data = get_attention_bert(model, tokenizer, sentence_a, sentence_b)
     att_json = json.dumps(attn_data)
     display(Javascript('window.attention = %s' % att_json))
