@@ -52,6 +52,17 @@ OpenAI GPT-2
 [[Colab]](https://colab.research.google.com/drive/1ZdTA-cO6rSRDHYrP-Lmd-MN7SRkj3sYs)
 
 
+## Requirements
+
+* [PyTorch](https://pytorch.org/) >=0.4.1
+* [Jupyter](https://jupyter.org/install)
+* [tqdm](https://pypi.org/project/tqdm/)
+* [boto3](https://pypi.org/project/boto3/)
+* [IPython](https://pypi.org/project/ipython/)
+* [requests](https://pypi.org/project/requests/)
+* [regex](https://pypi.org/project/regex/)
+
+(See requirements.txt)
 ## Authors
 
 * [Jesse Vig](https://github.com/jessevig)
