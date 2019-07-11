@@ -39,8 +39,12 @@ def show(model, tokenizer, text):
     display(HTML(vis_html))
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    vis_js = open(os.path.join(__location__, 'neuron_view_gpt2.js')).read()
+    vis_js = open(os.path.join(__location__, 'neuron_view.js')).read()
     attn_data = get_attention_gpt2(model, tokenizer, text, include_queries_and_keys=True)
-    att_json = json.dumps(attn_data)
-    display(Javascript('window.attention = %s' % att_json))
+    params = {
+        'attention': attn_data,
+        'default_filter': "all",
+        'bidirectional': False
+    }
+    display(Javascript('window.params = %s' % json.dumps(params)))
     display(Javascript(vis_js))

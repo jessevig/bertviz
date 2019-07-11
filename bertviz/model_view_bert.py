@@ -31,7 +31,7 @@ import os
 def show(model, tokenizer, sentence_a, sentence_b):
     vis_html = """
       <span style="user-select:none">
-        Attention: <select id="attType">
+        Attention: <select id="filter">
           <option value="all">All</option>
           <option value="aa">Sentence A -> Sentence A</option>
           <option value="bb">Sentence B -> Sentence B</option>
@@ -44,9 +44,12 @@ def show(model, tokenizer, sentence_a, sentence_b):
     display(HTML(vis_html))
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    vis_js = open(os.path.join(__location__, 'model_view_bert.js')).read()
+    vis_js = open(os.path.join(__location__, 'model_view.js')).read()
     attn_data = get_attention_bert(model, tokenizer, sentence_a, sentence_b)
-    att_json = json.dumps(attn_data)
-    display(Javascript('window.attention = %s' % att_json))
+    params = {
+        'attention': attn_data,
+        'default_filter': "all"
+    }
+    display(Javascript('window.params = %s' % json.dumps(params)))
     display(Javascript(vis_js))
 

@@ -170,4 +170,4 @@ def get_attention_gpt2(model, tokenizer, text, include_queries_and_keys=False):
             'queries': all_queries,
             'keys': all_keys,
         })
-    return results
+    return {'all': results}

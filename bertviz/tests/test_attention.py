@@ -54,7 +54,7 @@ class TestAttention(unittest.TestCase):
         model = GPT2Model.from_pretrained('gpt2')
         tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
         text = 'Bert is a yellow muppet character'
-        attn_data = get_attention_gpt2(model, tokenizer, text, include_queries_and_keys=False)
+        attn_data = get_attention_gpt2(model, tokenizer, text, include_queries_and_keys=False)['all']
         tokens = ['B', 'ert', 'is', 'a', 'yellow', 'm', 'uppet', 'character']
         self.assertEqual(attn_data['left_text'], tokens)
         self.assertEqual(attn_data['right_text'], tokens)
