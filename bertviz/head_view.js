@@ -23,6 +23,7 @@ const CHECKBOX_SIZE = 20;
 
 var params = window.params;
 var config = {};
+initialize();
 
 function lighten(color) {
   var c = d3.hsl(color);
@@ -334,6 +335,9 @@ function drawCheckboxes(top, svg, attentionHeads) {
 function initialize() {
   config.attention = params['attention'];
   config.filter = params['default_filter'];
+  config.nLayers = config.attention[config.filter]['attn'].length;
+  console.log('num layers')
+  console.log(config.nLayers)
   config.nHeads = config.attention[config.filter]['attn'][0].length;
   config.headVis  = new Array(config.nHeads).fill(true);
   config.layer = 0;
@@ -341,7 +345,7 @@ function initialize() {
 }
 
 $("#layer").empty();
-for(var i=0; i<12; i++) {
+for(var i=0; i<config.nLayers; i++) {
   $("#layer").append($("<option />").val(i).text(i));
 }
 
@@ -355,7 +359,6 @@ $("#filter").on('change', function(e) {
   render();
 });
 
-initialize();
 render();
 
 });
