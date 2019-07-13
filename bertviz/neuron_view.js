@@ -14,6 +14,7 @@ requirejs(['jquery', 'd3'],
 
     var params = window.params;
     var config = {};
+    initialize();
 
     const TEXT_SIZE = 15;
     const MATRIX_WIDTH = 200;
@@ -908,6 +909,7 @@ requirejs(['jquery', 'd3'],
       config.attention = params['attention'];
       config.filter = params['default_filter'];
       var attentionFilter = config.attention[config.filter];
+      config.nLayers = attentionFilter['attn'].length;
       config.nHeads = attentionFilter['attn'][0].length;
       config.vectorSize = attentionFilter['queries'][0][0][0].length; // Layer 0, head 0, position 0 length
       config.headVis  = new Array(config.nHeads).fill(true);
@@ -919,7 +921,7 @@ requirejs(['jquery', 'd3'],
     }
 
     $("#layer").empty();
-    for (var i = 0; i < 12; i++) {
+    for (var i = 0; i < config.nLayers; i++) {
       $("#layer").append($("<option />").val(i).text(i));
     }
 
@@ -929,7 +931,7 @@ requirejs(['jquery', 'd3'],
     });
 
     $("#att_head").empty();
-    for (var i = 0; i < 12; i++) {
+    for (var i = 0; i < config.nHeads; i++) {
       $("#att_head").append($("<option />").val(i).text(i));
     }
 
@@ -943,7 +945,6 @@ requirejs(['jquery', 'd3'],
       render();
     });
 
-    initialize();
     render();
 
   });
