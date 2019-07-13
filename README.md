@@ -62,7 +62,16 @@ OpenAI GPT-2
 * [requests](https://pypi.org/project/requests/)
 * [regex](https://pypi.org/project/regex/)
 
-(See requirements.txt)
+(See [requirements.txt](https://github.com/jessevig/bertviz/blob/master/requirements.txt))
+
+## Execution
+
+```
+git clone https://github.com/jessevig/bertviz.git
+cd bertviz
+jupyter notebook
+```
+
 ## Authors
 
 * [Jesse Vig](https://github.com/jessevig)
