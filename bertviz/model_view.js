@@ -17,9 +17,8 @@ requirejs(['jquery', 'd3'], function($, d3) {
         const MIN_X = 0;
         const MIN_Y = 0;
 
-        const THUMBNAIL_WIDTH = 79;
-        const THUMBNAIL_BOX_HEIGHT = 7;
-        const THUMBNAIL_ATTENTION_WIDTH = 65;
+        const DIV_WIDTH = 970;
+
         const THUMBNAIL_PADDING = 5;
 
         const DETAIL_WIDTH = 300;
@@ -43,15 +42,17 @@ requirejs(['jquery', 'd3'], function($, d3) {
             config.attn = attData.attn;
             config.numLayers = config.attn.length;
             config.numHeads = config.attn[0].length;
-            config.thumbnailHeight = Math.max(config.leftText.length, config.rightText.length) * THUMBNAIL_BOX_HEIGHT + 2 * THUMBNAIL_PADDING;
+            config.thumbnailBoxHeight = 7 * (12 / config.numHeads);
+            config.thumbnailHeight = Math.max(config.leftText.length, config.rightText.length) * config.thumbnailBoxHeight + 2 * THUMBNAIL_PADDING;
+            config.thumbnailWidth = DIV_WIDTH / config.numHeads;
             config.detailHeight = Math.max(config.leftText.length, config.rightText.length) * DETAIL_BOX_HEIGHT + 2 * DETAIL_PADDING + DETAIL_HEADING_HEIGHT;
             config.divHeight = config.numLayers * config.thumbnailHeight;
-            config.divWidth = config.numHeads * THUMBNAIL_WIDTH;
 
             $("#vis").empty();
+            $("#vis").attr("height", config.divHeight);
             config.svg = d3.select("#vis")
                 .append('svg')
-                .attr("width", config.divWidth)
+                .attr("width", DIV_WIDTH)
                 .attr("height", config.divHeight)
               .attr("fill", "black");
 
@@ -65,25 +66,26 @@ requirejs(['jquery', 'd3'], function($, d3) {
         }
 
         function renderThumbnail(layerIndex, headIndex) {
-            var x = headIndex * THUMBNAIL_WIDTH;
+            var x = headIndex * config.thumbnailWidth;
             var y = layerIndex * config.thumbnailHeight;
             renderThumbnailAttn(x, y, config.attn[layerIndex][headIndex], layerIndex, headIndex);
         }
 
         function renderDetail(att, layerIndex, headIndex) {
             var xOffset = 64;
-            var maxX = config.divWidth;
+            var maxX = DIV_WIDTH;
             var maxY = config.divHeight;
-            var x = headIndex * THUMBNAIL_WIDTH + THUMBNAIL_PADDING + xOffset;
+            var leftPos = (headIndex / config.numHeads) * DIV_WIDTH
+            var x = leftPos + THUMBNAIL_PADDING + xOffset;
             if (x < MIN_X) {
                 x = MIN_X;
             } else if (x + DETAIL_WIDTH > maxX) {
-                x = headIndex * THUMBNAIL_WIDTH + THUMBNAIL_PADDING - DETAIL_WIDTH + 8;
+                x = leftPos + THUMBNAIL_PADDING - DETAIL_WIDTH + 8;
             }
             var posLeftText = x;
             var posAttention = posLeftText + DETAIL_BOX_WIDTH;
             var posRightText = posAttention + DETAIL_ATTENTION_WIDTH;
-            var thumbnailHeight = Math.max(config.leftText.length, config.rightText.length) * THUMBNAIL_BOX_HEIGHT + 2 * THUMBNAIL_PADDING;
+            var thumbnailHeight = Math.max(config.leftText.length, config.rightText.length) * config.thumbnailBoxHeight + 2 * THUMBNAIL_PADDING;
             var yOffset = 20;
             var y = layerIndex * thumbnailHeight + THUMBNAIL_PADDING + yOffset;
             if (y < MIN_Y) {
@@ -194,12 +196,12 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .attr("x", x)
                 .attr("y", y)
                 .attr("height", config.thumbnailHeight)
-                .attr("width", THUMBNAIL_WIDTH)
+                .attr("width", config.thumbnailWidth)
                 .attr("stroke-width", 2)
                 .attr("stroke", LAYER_COLORS(layerIndex % 10))
                 .attr("stroke-opacity", 0);
             var x1 = x + THUMBNAIL_PADDING;
-            var x2 = x1 + THUMBNAIL_ATTENTION_WIDTH;
+            var x2 = x1 + config.thumbnailWidth - 14;
             var y1 = y + THUMBNAIL_PADDING;
 
             attnContainer.selectAll("g")
@@ -218,11 +220,11 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .attr("x1", x1)
                 .attr("y1", function (d) {
                     var sourceIndex = +this.parentNode.getAttribute("source-index");
-                    return y1 + (sourceIndex + .5) * THUMBNAIL_BOX_HEIGHT;
+                    return y1 + (sourceIndex + .5) * config.thumbnailBoxHeight;
                 })
                 .attr("x2", x2)
                 .attr("y2", function (d, targetIndex) {
-                    return y1 + (targetIndex + .5) * THUMBNAIL_BOX_HEIGHT;
+                    return y1 + (targetIndex + .5) * config.thumbnailBoxHeight;
                 })
                 .attr("stroke-width", 3)
                 .attr("stroke", LAYER_COLORS(layerIndex % 10))
@@ -234,7 +236,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .attr("x", x)
                 .attr("y", y)
                 .attr("height", config.thumbnailHeight)
-                .attr("width", THUMBNAIL_WIDTH)
+                .attr("width", config.thumbnailWidth)
                 .style("opacity", 0);
 
             clickRegion.on("click", function (d, index) {
