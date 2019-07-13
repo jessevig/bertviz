@@ -72,7 +72,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
         }
 
         function renderDetail(att, layerIndex, headIndex) {
-            var xOffset = 64;
+            var xOffset = .8 * config.thumbnailWidth;
             var maxX = DIV_WIDTH;
             var maxY = config.divHeight;
             var leftPos = (headIndex / config.numHeads) * DIV_WIDTH
