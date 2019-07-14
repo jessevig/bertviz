@@ -1,5 +1,7 @@
-from bertviz.attention import get_attention_bert, get_attention_gpt2
-from bertviz.pytorch_pretrained_bert import BertTokenizer, BertModel, BertConfig, GPT2Model, GPT2Tokenizer
+from bertviz.attention import get_attention_bert, get_attention_gpt2, get_attention_xlnet
+from bertviz.pytorch_transformers_attn import BertTokenizer, BertModel, BertConfig, GPT2Model, GPT2Tokenizer,\
+    XLNetModel, XLNetTokenizer
+
 import unittest
 import torch
 
@@ -12,7 +14,6 @@ class TestAttention(unittest.TestCase):
         sentence1 = 'The quickest brown fox jumped over the lazy dog'
         sentence2 = "the quick brown fox jumped over the laziest elmo"
         attn_data = get_attention_bert(self.model, self.tokenizer, sentence1, sentence2, include_queries_and_keys=False)
-
         tokens_1 = ['[CLS]', 'the', 'quick', '##est', 'brown', 'fox', 'jumped', 'over', 'the', 'lazy', 'dog', '[SEP]']
         tokens_2 = ['the', 'quick', 'brown', 'fox', 'jumped', 'over', 'the', 'la', '##zie', '##st', '[UNK]', '[SEP]']
         self.assertEqual(attn_data['all']['left_text'], tokens_1 + tokens_2)
@@ -68,6 +69,22 @@ class TestAttention(unittest.TestCase):
                     self.assertNotEqual(att_matrix[i][j], 0)
                 else:
                     self.assertEqual(att_matrix[i][j], 0)
+            sum_probs = sum(att_matrix[i])
+            self.assertAlmostEqual(sum_probs, 1, 4)
+
+    def test_xlnet_attn(self):
+        tokenizer = XLNetTokenizer.from_pretrained('xlnet-large-cased')
+        model = XLNetModel.from_pretrained('xlnet-large-cased')
+        text = 'Bert is a yellow muppet character'
+        attn_data = get_attention_xlnet(model, tokenizer, text)['all']
+        tokens =['▁Bert', '▁is', '▁a', '▁yellow', '▁', 'm', 'up', 'pet', '▁character', '<sep>', '<cls>']
+        self.assertEqual(attn_data['left_text'], tokens)
+        self.assertEqual(attn_data['right_text'], tokens)
+        seq_len = len(tokens)
+        layer = 0
+        head = 0
+        att_matrix = attn_data['attn'][layer][head]
+        for i in range(seq_len):
             sum_probs = sum(att_matrix[i])
             self.assertAlmostEqual(sum_probs, 1, 4)
 
