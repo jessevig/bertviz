@@ -1,6 +1,6 @@
 # BertViz
 
-Tool for visualizing attention in BERT and OpenAI GPT-2. Extends [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj) and [pytorch-pretrained-BERT](https://github.com/huggingface/pytorch-pretrained-BERT) from [HuggingFace](https://github.com/huggingface).
+Tool for visualizing attention in BERT and OpenAI GPT-2. Extends [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj) and [pytorch-transformers](https://github.com/huggingface/pytorch-transformers) from [HuggingFace](https://github.com/huggingface).
 
 Blog posts:
 * [OpenAI GPT-2: Understanding Language Generation through Visualization](https://towardsdatascience.com/openai-gpt-2-understanding-language-generation-through-visualization-8252f683b2f8)
@@ -18,12 +18,13 @@ The *attention-head view* visualizes the attention patterns produced by one or m
 
  BERT:
  [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_bert.ipynb)
-  [[Colab]](https://colab.research.google.com/drive/1g2nhY9vZG-PLC3w3dcHGqwsHBAXnD9EY)<br>
+  [[Colab]](https://colab.research.google.com/drive/18cHLnifWDO-fPXzySfZfi_2tZfzOGj0I)<br>
  GPT-2:
   [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_gpt2.ipynb)
-[[Colab]](https://colab.research.google.com/drive/1kgcQlzDuVKvoqv_-MXJaleAQ8ZfZZ8aP)<br>
+[[Colab]](https://colab.research.google.com/drive/1YY8I0TY-l6s5i7IJ8Us2OJ8O6o6gb_1H)<br>
  XLNet: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlnet.ipynb)
-[[Colab]](https://colab.research.google.com/drive/16IIiEZSux5WKl_dIdDgbSDwWDauaY-Yl)
+[[Colab]](https://colab.research.google.com/drive/16IIiEZSux5WKl_dIdDgbSDwWDauaY-Yl) <br>
+XLM: Coming soon!
 
 ## Model view 
 
@@ -32,22 +33,24 @@ The *model view* provides a birds-eye view of attention across all of the modelâ
 ![Model view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/model_thumbnail.png)
 
 BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_bert.ipynb)
-[[Colab]](https://colab.research.google.com/drive/16_fS8H7tTNLWBdGL4NcYMO5xnV9EUsdL)<br>
+[[Colab]](https://colab.research.google.com/drive/1XztAoiWCALh1Gda8VxrA4R5_IfrwCvRu)<br>
 GPT-2
 [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_gpt2.ipynb)
-[[Colab]](https://colab.research.google.com/drive/13_SWsQGFoUKNCZsNSP2JkxrXjT_9LCl4)<br>
+[[Colab]](https://colab.research.google.com/drive/1ul6VNBv156m33ZgFbrKB6RdqEJ7-pfbo)<br>
  XLNet: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlnet.ipynb)
- [[Colab]](https://colab.research.google.com/drive/1N8WuZtrSWyaJ_UpfM1vvJZf0rufJtaXL)
+ [[Colab]](https://colab.research.google.com/drive/1N8WuZtrSWyaJ_UpfM1vvJZf0rufJtaXL) <br>
+ XLM: Coming soon!
+
 ## Neuron view 
 The *neuron view* visualizes the individual neurons in the query and key vectors and shows how they are used to compute attention.
 
 ![Neuron view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/neuron_thumbnail.png)
 
 BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_bert.ipynb) 
-[[Colab]](https://colab.research.google.com/drive/1aiEETps5JW-yjnIkD4BO0ElKwULnf1ik)<br>
+[[Colab]](https://colab.research.google.com/drive/1VnmBBpZgKat1rxJhKALNIBJkSogOFH-V)<br>
 GPT-2
 [[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_gpt2.ipynb) 
-[[Colab]](https://colab.research.google.com/drive/1ZdTA-cO6rSRDHYrP-Lmd-MN7SRkj3sYs)
+[[Colab]](https://colab.research.google.com/drive/10l_0rZ3lQWPIyqzasPwzGGJTn898aD4d)
 
 
 ## Requirements
