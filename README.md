@@ -23,8 +23,7 @@ The *attention-head view* visualizes the attention patterns produced by one or m
   [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1YY8I0TY-l6s5i7IJ8Us2OJ8O6o6gb_1H)<br>
  XLNet: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlnet.ipynb)
-[[Colab]](https://colab.research.google.com/drive/16IIiEZSux5WKl_dIdDgbSDwWDauaY-Yl) <br>
-XLM: Coming soon!
+[[Colab]](https://colab.research.google.com/drive/16IIiEZSux5WKl_dIdDgbSDwWDauaY-Yl)
 
 ## Model view 
 
@@ -38,8 +37,7 @@ GPT-2
 [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1ul6VNBv156m33ZgFbrKB6RdqEJ7-pfbo)<br>
  XLNet: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlnet.ipynb)
- [[Colab]](https://colab.research.google.com/drive/1N8WuZtrSWyaJ_UpfM1vvJZf0rufJtaXL) <br>
- XLM: Coming soon!
+ [[Colab]](https://colab.research.google.com/drive/1N8WuZtrSWyaJ_UpfM1vvJZf0rufJtaXL)
 
 ## Neuron view 
 The *neuron view* visualizes the individual neurons in the query and key vectors and shows how they are used to compute attention.
