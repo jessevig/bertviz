@@ -59,6 +59,13 @@ PRETRAINED_VOCAB_FILES_MAP = {
 
 PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES = {
     'xlm-mlm-en-2048': 512,
+    'xlm-mlm-ende-1024': 512,
+    'xlm-mlm-enfr-1024': 512,
+    'xlm-mlm-enro-1024': 512,
+    'xlm-mlm-tlm-xnli15-1024': 512,
+    'xlm-mlm-xnli15-1024': 512,
+    'xlm-clm-enfr-1024': 512,
+    'xlm-clm-ende-1024': 512,
 }
 
 def get_pairs(word):
@@ -202,9 +209,9 @@ class XLMTokenizer(PreTrainedTokenizer):
         """Converts an index (integer) in a token (string/unicode) using the vocab."""
         return self.decoder.get(index, self.unk_token)
 
-    def _convert_ids_to_string(self, tokens_ids):
-        """Converts a sequence of ids in a string."""
-        out_string = ''.join(tokens_ids).replace('</w>', ' ').strip()
+    def convert_tokens_to_string(self, tokens):
+        """ Converts a sequence of tokens (string) in a single string. """
+        out_string = ''.join(tokens).replace('</w>', ' ').strip()
         return out_string
 
     def save_vocabulary(self, save_directory):

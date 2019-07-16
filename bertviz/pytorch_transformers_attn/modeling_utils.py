@@ -13,19 +13,26 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# Change log
+# 7/14/19  Jesse Vig   Adapted for use in visualization
+
 """PyTorch BERT model."""
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 
+import copy
+import json
 import logging
 import os
-import json
-import copy
 from io import open
 
+import six
 import torch
 from torch import nn
-from torch.nn import CrossEntropyLoss, functional as F
+from torch.nn import CrossEntropyLoss
+from torch.nn import functional as F
 
 from .file_utils import cached_path
 
@@ -36,8 +43,23 @@ WEIGHTS_NAME = "pytorch_model.bin"
 TF_WEIGHTS_NAME = 'model.ckpt'
 
 
+if not six.PY2:
+    def add_start_docstrings(*docstr):
+        def docstring_decorator(fn):
+            fn.__doc__ = ''.join(docstr) + fn.__doc__
+            return fn
+        return docstring_decorator
+else:
+    # Not possible to update class docstrings on python2
+    def add_start_docstrings(*docstr):
+        def docstring_decorator(fn):
+            return fn
+        return docstring_decorator
+
+
 class PretrainedConfig(object):
-    """ An abstract class to handle dowloading a model pretrained config.
+    """ Base class for all configuration classes.
+        Handle a few common parameters and methods for loading/downloading/saving configurations.
     """
     pretrained_config_archive_map = {}
 
@@ -49,7 +71,7 @@ class PretrainedConfig(object):
         self.torchscript = kwargs.pop('torchscript', False)
 
     def save_pretrained(self, save_directory):
-        """ Save a configuration file to a directory, so that it
+        """ Save a configuration object to a directory, so that it
             can be re-loaded using the `from_pretrained(save_directory)` class method.
         """
         assert os.path.isdir(save_directory), "Saving path should be a directory where the model and configuration can be saved"
@@ -61,16 +83,30 @@ class PretrainedConfig(object):
 
     @classmethod
     def from_pretrained(cls, pretrained_model_name_or_path, *input, **kwargs):
-        """
-        Instantiate a PretrainedConfig from a pre-trained model configuration.
+        r""" Instantiate a PretrainedConfig from a pre-trained model configuration.
 
         Params:
-            pretrained_model_name_or_path: either:
-                - a str with the name of a pre-trained model to load selected in the list of:
-                    . `xlnet-large-cased`
-                - a path or url to a directory containing a configuration file `config.json` for the model,
-                - a path or url to a configuration file for the model.
-            cache_dir: an optional path to a folder in which the pre-trained model configuration will be cached.
+            **pretrained_model_name_or_path**: either:
+                - a string with the `shortcut name` of a pre-trained model configuration to load from cache
+                    or download and cache if not already stored in cache (e.g. 'bert-base-uncased').
+                - a path to a `directory` containing a configuration file saved
+                    using the `save_pretrained(save_directory)` method.
+                - a path or url to a saved configuration `file`.
+            **cache_dir**: (`optional`) string:
+                Path to a directory in which a downloaded pre-trained model
+                configuration should be cached if the standard cache should not be used.
+            **kwargs**: (`optional`) dict:
+                Dictionnary of key, values to update the configuration object after loading.
+                Can be used to override selected configuration parameters.
+
+        Examples::
+
+            >>> config = BertConfig.from_pretrained('bert-base-uncased')    # Download configuration from S3 and cache.
+            >>> config = BertConfig.from_pretrained('./test/saved_model/')  # E.g. config (or model) was saved using `save_pretrained('./test/saved_model/')`
+            >>> config = BertConfig.from_pretrained('./test/saved_model/my_configuration.json')
+            >>> config = BertConfig.from_pretrained('bert-base-uncased', output_attention=True)
+            >>> assert config.output_attention == True
+
         """
         cache_dir = kwargs.pop('cache_dir', None)
 
@@ -155,7 +191,7 @@ class PretrainedConfig(object):
 
 
 class PreTrainedModel(nn.Module):
-    """ An abstract class to handle storing model config and
+    """ Base class for all models. Handle loading/storing model config and
         a simple interface for dowloading and loading pretrained models.
     """
     config_class = PretrainedConfig
@@ -182,11 +218,12 @@ class PreTrainedModel(nn.Module):
             Reducing the size will remove vectors from the end
 
         Args:
-            new_num_tokens: (Optional) New number of tokens in the embedding matrix.
+            new_num_tokens: (`optional`) int
+                New number of tokens in the embedding matrix.
                 Increasing the size will add newly initialized vectors at the end
                 Reducing the size will remove vectors from the end
                 If not provided or None: return the provided token Embedding Module.
-        Return:
+        Return: ``torch.nn.Embeddings``
             Pointer to the resized Embedding Module or the old Embedding Module if new_num_tokens is None
         """
         if new_num_tokens is None:
@@ -219,13 +256,16 @@ class PreTrainedModel(nn.Module):
 
     def resize_token_embeddings(self, new_num_tokens=None):
         """ Resize input token embeddings matrix of the model if new_num_tokens != config.vocab_size.
+            Take care of tying weights embeddings afterwards if the model class has a `tie_weights()` method.
 
         Args:
-            new_num_tokens: (Optional) New number of tokens in the embedding matrix.
+            new_num_tokens: (`optional`) int
+                New number of tokens in the embedding matrix.
                 Increasing the size will add newly initialized vectors at the end
                 Reducing the size will remove vectors from the end
-                If not provided or None: does nothing.
-        Return:
+                If not provided or None: does nothing and just returns a pointer to the input tokens Embedding Module of the model.
+
+        Return: ``torch.nn.Embeddings``
             Pointer to the input tokens Embedding Module of the model
         """
         base_model = getattr(self, self.base_model_prefix, self)  # get the base model if needed
@@ -246,7 +286,8 @@ class PreTrainedModel(nn.Module):
     def prune_heads(self, heads_to_prune):
         raise NotImplementedError("Not supported in this fork")
         """ Prunes heads of the base model.
-            heads_to_prune: dict of {layer_num: list of heads to prune in this layer}
+            Args:
+                heads_to_prune: dict of {layer_num (int): list of heads to prune in this layer (list of int)}
         """
         base_model = getattr(self, self.base_model_prefix, self)  # get the base model if needed
         base_model._prune_heads(heads_to_prune)
@@ -270,26 +311,50 @@ class PreTrainedModel(nn.Module):
 
     @classmethod
     def from_pretrained(cls, pretrained_model_name_or_path, *inputs, **kwargs):
-        """
-        Instantiate a PreTrainedModel from a pre-trained model file or a pytorch state dict.
-        Download and cache the pre-trained model file if needed.
+        r"""Instantiate a pretrained pytorch model from a pre-trained model configuration.
+
+            The model is set in evaluation mode by default using `model.eval()` (Dropout modules are desactivated)
+            To train the model, you should first set it back in training mode with `model.train()`
 
         Params:
-            pretrained_model_name_or_path: either:
-                - a str with the name of a pre-trained model to load, or
-                - a path or url to a pretrained model archive containing:
-                    . `config.json` a configuration file for the model
-                    . `pytorch_model.bin` a PyTorch dump of a XLNetForPreTraining instance
-                - a path or url to a tensorflow pretrained model checkpoint containing:
-                    . `config.json` a configuration file for the model
-                    . `model.chkpt` a TensorFlow checkpoint
-            config: an optional configuration for the model
-            from_tf: should we load the weights from a locally saved TensorFlow checkpoint
-            cache_dir: an optional path to a folder in which the pre-trained models will be cached.
-            state_dict: an optional state dictionnary (collections.OrderedDict object) to use
-                instead of Google pre-trained models
-            *inputs, **kwargs: additional input for the specific XLNet class
-                (ex: num_labels for XLNetForSequenceClassification)
+            **pretrained_model_name_or_path**: either:
+                - a string with the `shortcut name` of a pre-trained model to load from cache
+                    or download and cache if not already stored in cache (e.g. 'bert-base-uncased').
+                - a path to a `directory` containing a configuration file saved
+                    using the `save_pretrained(save_directory)` method.
+                - a path or url to a tensorflow index checkpoint `file` (e.g. `./tf_model/model.ckpt.index`).
+                    In this case, ``from_tf`` should be set to True and a configuration object should be
+                    provided as `config` argument. This loading option is slower than converting the TensorFlow
+                    checkpoint in a PyTorch model using the provided conversion scripts and loading
+                    the PyTorch model afterwards.
+            **config**: an optional configuration for the model to use instead of an automatically loaded configuation.
+                Configuration can be automatically loaded when:
+                - the model is a model provided by the library (loaded with a `shortcut name` of a pre-trained model), or
+                - the model was saved using the `save_pretrained(save_directory)` (loaded by suppling the save directory).
+            **state_dict**: an optional state dictionnary for the model to use instead of a state dictionary loaded
+                from saved weights file.
+                This option can be used if you want to create a model from a pretrained configuraton but load your own weights.
+                In this case though, you should check if using `save_pretrained(dir)` and `from_pretrained(save_directory)` is not
+                a simpler option.
+            **cache_dir**: (`optional`) string:
+                Path to a directory in which a downloaded pre-trained model
+                configuration should be cached if the standard cache should not be used.
+            **output_loading_info**: (`optional`) boolean:
+                Set to ``True`` to also return a dictionnary containing missing keys, unexpected keys and error messages.
+            **kwargs**: (`optional`) dict:
+                Dictionnary of key, values to update the configuration object after loading.
+                Can be used to override selected configuration parameters. E.g. ``output_attention=True``
+
+        Examples::
+
+            >>> model = BertModel.from_pretrained('bert-base-uncased')    # Download model and configuration from S3 and cache.
+            >>> model = BertModel.from_pretrained('./test/saved_model/')  # E.g. model was saved using `save_pretrained('./test/saved_model/')`
+            >>> model = BertModel.from_pretrained('bert-base-uncased', output_attention=True)  # Update configuration during loading
+            >>> assert model.config.output_attention == True
+            >>> # Loading from a TF checkpoint file instead of a PyTorch model (slower)
+            >>> config = BertConfig.from_json_file('./tf_model/my_tf_model_config.json')
+            >>> model = BertModel.from_pretrained('./tf_model/my_tf_checkpoint.ckpt.index', from_tf=True, config=config)
+
         """
         config = kwargs.pop('config', None)
         state_dict = kwargs.pop('state_dict', None)
@@ -403,6 +468,9 @@ class PreTrainedModel(nn.Module):
         if hasattr(model, 'tie_weights'):
             model.tie_weights()  # make sure word embedding weights are still tied
 
+        # Set model in evaluation mode to desactivate DropOut modules by default
+        model.eval()
+
         if output_loading_info:
             loading_info = {"missing_keys": missing_keys, "unexpected_keys": unexpected_keys, "error_msgs": error_msgs}
             return model, loading_info
@@ -412,7 +480,7 @@ class PreTrainedModel(nn.Module):
 
 class Conv1D(nn.Module):
     def __init__(self, nf, nx):
-        """ Conv1D layer as defined by Alec for GPT (and also used in GPT-2)
+        """ Conv1D layer as defined by Radford et al. for OpenAI GPT (and also used in GPT-2)
             Basically works like a Linear layer but the weights are transposed
         """
         super(Conv1D, self).__init__()
@@ -437,8 +505,9 @@ class PoolerStartLogits(nn.Module):
 
     def forward(self, hidden_states, p_mask=None):
         """ Args:
-            `p_mask`: [optional] invalid position mask such as query and special symbols (PAD, SEP, CLS)
-                shape [batch_size, seq_len]. 1.0 means token should be masked.
+            **p_mask**: (`optional`) ``torch.FloatTensor`` of shape `(batch_size, seq_len)`
+                invalid position mask such as query and special symbols (PAD, SEP, CLS)
+                1.0 means token should be masked.
         """
         x = self.dense(hidden_states).squeeze(-1)
 
@@ -460,15 +529,20 @@ class PoolerEndLogits(nn.Module):
 
     def forward(self, hidden_states, start_states=None, start_positions=None, p_mask=None):
         """ Args:
-            One of start_states, start_positions should be not None. If both are set, start_positions overrides start_states.
-            `start_states`: hidden states of the first tokens for the labeled span: torch.LongTensor of shape identical to hidden_states.
-            `start_positions`: position of the first token for the labeled span: torch.LongTensor of shape [batch_size].
-            `p_mask`: [optional] invalid position mask such as query and special symbols (PAD, SEP, CLS)
-                shape [batch_size, seq_len]. 1.0 means token should be masked.
+            One of ``start_states``, ``start_positions`` should be not None.
+            If both are set, ``start_positions`` overrides ``start_states``.
+
+            **start_states**: ``torch.LongTensor`` of shape identical to hidden_states
+                hidden states of the first tokens for the labeled span.
+            **start_positions**: ``torch.LongTensor`` of shape ``(batch_size,)``
+                position of the first token for the labeled span: 
+            **p_mask**: (`optional`) ``torch.FloatTensor`` of shape ``(batch_size, seq_len)``
+                Mask of invalid position such as query and special symbols (PAD, SEP, CLS)
+                1.0 means token should be masked.
         """
-        slen, hsz = hidden_states.shape[-2:]
         assert start_states is not None or start_positions is not None, "One of start_states, start_positions should be not None"
         if start_positions is not None:
+            slen, hsz = hidden_states.shape[-2:]
             start_positions = start_positions[:, None, None].expand(-1, -1, hsz) # shape (bsz, 1, hsz)
             start_states = hidden_states.gather(-2, start_positions) # shape (bsz, 1, hsz)
             start_states = start_states.expand(-1, slen, -1) # shape (bsz, slen, hsz)
@@ -493,15 +567,23 @@ class PoolerAnswerClass(nn.Module):
         self.dense_1 = nn.Linear(config.hidden_size, 1, bias=False)
 
     def forward(self, hidden_states, start_states=None, start_positions=None, cls_index=None):
-        """ Args:
-            One of start_states, start_positions should be not None. If both are set, start_positions overrides start_states.
-            `start_states`: hidden states of the first tokens for the labeled span: torch.LongTensor of shape identical to hidden_states.
-            `start_positions`: position of the first token for the labeled span: torch.LongTensor of shape [batch_size].
-            `cls_index`: position of the CLS token: torch.LongTensor of shape [batch_size]. If None, take the last token.
-
-            # note(zhiliny): no dependency on end_feature so that we can obtain one single `cls_logits` for each sample
         """
-        slen, hsz = hidden_states.shape[-2:]
+        Args:
+            One of ``start_states``, ``start_positions`` should be not None.
+            If both are set, ``start_positions`` overrides ``start_states``.
+
+            **start_states**: ``torch.LongTensor`` of shape identical to ``hidden_states``.
+                hidden states of the first tokens for the labeled span.
+            **start_positions**: ``torch.LongTensor`` of shape ``(batch_size,)``
+                position of the first token for the labeled span.
+            **cls_index**: torch.LongTensor of shape ``(batch_size,)``
+                position of the CLS token. If None, take the last token.
+
+            note(Original repo):
+                no dependency on end_feature so that we can obtain one single `cls_logits`
+                for each sample
+        """
+        hsz = hidden_states.shape[-1]
         assert start_states is not None or start_positions is not None, "One of start_states, start_positions should be not None"
         if start_positions is not None:
             start_positions = start_positions[:, None, None].expand(-1, -1, hsz) # shape (bsz, 1, hsz)
@@ -521,8 +603,44 @@ class PoolerAnswerClass(nn.Module):
 
 
 class SQuADHead(nn.Module):
-    """ A SQuAD head inspired by XLNet.
-        Compute
+    r""" A SQuAD head inspired by XLNet.
+
+    Parameters:
+        config (:class:`~pytorch_transformers.XLNetConfig`): Model configuration class with all the parameters of the model.
+
+    Inputs:
+        **hidden_states**: ``torch.FloatTensor`` of shape ``(batch_size, seq_len, hidden_size)``
+            hidden states of sequence tokens
+        **start_positions**: ``torch.LongTensor`` of shape ``(batch_size,)``
+            position of the first token for the labeled span.
+        **end_positions**: ``torch.LongTensor`` of shape ``(batch_size,)``
+            position of the last token for the labeled span.
+        **cls_index**: torch.LongTensor of shape ``(batch_size,)``
+            position of the CLS token. If None, take the last token.
+        **is_impossible**: ``torch.LongTensor`` of shape ``(batch_size,)``
+            Whether the question has a possible answer in the paragraph or not.
+        **p_mask**: (`optional`) ``torch.FloatTensor`` of shape ``(batch_size, seq_len)``
+            Mask of invalid position such as query and special symbols (PAD, SEP, CLS)
+            1.0 means token should be masked.
+
+    Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
+        **loss**: (`optional`, returned if both ``start_positions`` and ``end_positions`` are provided) ``torch.FloatTensor`` of shape ``(1,)``:
+            Classification loss as the sum of start token, end token (and is_impossible if provided) classification losses.
+        **start_top_log_probs**: (`optional`, returned if ``start_positions`` or ``end_positions`` is not provided)
+            ``torch.FloatTensor`` of shape ``(batch_size, config.start_n_top)``
+            Log probabilities for the top config.start_n_top start token possibilities (beam-search).
+        **start_top_index**: (`optional`, returned if ``start_positions`` or ``end_positions`` is not provided)
+            ``torch.LongTensor`` of shape ``(batch_size, config.start_n_top)``
+            Indices for the top config.start_n_top start token possibilities (beam-search).
+        **end_top_log_probs**: (`optional`, returned if ``start_positions`` or ``end_positions`` is not provided)
+            ``torch.FloatTensor`` of shape ``(batch_size, config.start_n_top * config.end_n_top)``
+            Log probabilities for the top ``config.start_n_top * config.end_n_top`` end token possibilities (beam-search).
+        **end_top_index**: (`optional`, returned if ``start_positions`` or ``end_positions`` is not provided)
+            ``torch.LongTensor`` of shape ``(batch_size, config.start_n_top * config.end_n_top)``
+            Indices for the top ``config.start_n_top * config.end_n_top`` end token possibilities (beam-search).
+        **cls_logits**: (`optional`, returned if ``start_positions`` or ``end_positions`` is not provided)
+            ``torch.FloatTensor`` of shape ``(batch_size,)``
+            Log probabilities for the ``is_impossible`` label of the answers.
     """
     def __init__(self, config):
         super(SQuADHead, self).__init__()
@@ -535,11 +653,9 @@ class SQuADHead(nn.Module):
 
     def forward(self, hidden_states, start_positions=None, end_positions=None,
                 cls_index=None, is_impossible=None, p_mask=None):
-        """ hidden_states: float Tensor in shape [bsz, seq_len, hidden_size], the hidden-states of the last layer.
-        """
         outputs = ()
 
-        start_logits = self.start_logits(hidden_states, p_mask)
+        start_logits = self.start_logits(hidden_states, p_mask=p_mask)
 
         if start_positions is not None and end_positions is not None:
             # If we are on multi-GPU, let's remove the dimension added by batch splitting
@@ -563,9 +679,8 @@ class SQuADHead(nn.Module):
 
                 # note(zhiliny): by default multiply the loss by 0.5 so that the scale is comparable to start_loss and end_loss
                 total_loss += cls_loss * 0.5
-                outputs = (total_loss, start_logits, end_logits, cls_logits) + outputs
-            else:
-                outputs = (total_loss, start_logits, end_logits) + outputs
+
+            outputs = (total_loss,) + outputs
 
         else:
             # during inference, compute the end logits based on beam search
@@ -573,8 +688,8 @@ class SQuADHead(nn.Module):
             start_log_probs = F.softmax(start_logits, dim=-1) # shape (bsz, slen)
 
             start_top_log_probs, start_top_index = torch.topk(start_log_probs, self.start_n_top, dim=-1) # shape (bsz, start_n_top)
-            start_top_index = start_top_index.unsqueeze(-1).expand(-1, -1, hsz) # shape (bsz, start_n_top, hsz)
-            start_states = torch.gather(hidden_states, -2, start_top_index) # shape (bsz, start_n_top, hsz)
+            start_top_index_exp = start_top_index.unsqueeze(-1).expand(-1, -1, hsz) # shape (bsz, start_n_top, hsz)
+            start_states = torch.gather(hidden_states, -2, start_top_index_exp) # shape (bsz, start_n_top, hsz)
             start_states = start_states.unsqueeze(1).expand(-1, slen, -1, -1) # shape (bsz, slen, start_n_top, hsz)
 
             hidden_states_expanded = hidden_states.unsqueeze(2).expand_as(start_states) # shape (bsz, slen, start_n_top, hsz)
@@ -592,12 +707,12 @@ class SQuADHead(nn.Module):
             outputs = (start_top_log_probs, start_top_index, end_top_log_probs, end_top_index, cls_logits) + outputs
 
         # return start_top_log_probs, start_top_index, end_top_log_probs, end_top_index, cls_logits
-        # or (if labels are provided) total_loss, start_logits, end_logits, (cls_logits)
+        # or (if labels are provided) (total_loss,)
         return outputs
 
 
 class SequenceSummary(nn.Module):
-    """ Compute a single vector summary of a sequence hidden states according to various possibilities:
+    r""" Compute a single vector summary of a sequence hidden states according to various possibilities:
         Args of the config class:
             summary_type:
                 - 'last' => [default] take the last token hidden state (like XLNet)

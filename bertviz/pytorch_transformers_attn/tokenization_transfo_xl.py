@@ -50,7 +50,7 @@ PRETRAINED_VOCAB_FILES_MAP = {
 }
 
 PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES = {
-    'transfo-xl-wt103': 512,
+    'transfo-xl-wt103': None,
 }
 
 PRETRAINED_CORPUS_ARCHIVE_MAP = {
@@ -138,7 +138,6 @@ class TransfoXLTokenizer(PreTrainedTokenizer):
 
     def save_vocabulary(self, vocab_path):
         """Save the tokenizer vocabulary to a directory or file."""
-        index = 0
         if os.path.isdir(vocab_path):
             vocab_file = os.path.join(vocab_path, VOCAB_FILES_NAMES['pretrained_vocab_file'])
         torch.save(self.__dict__, vocab_file)
@@ -229,9 +228,9 @@ class TransfoXLTokenizer(PreTrainedTokenizer):
             else:
                 raise ValueError('Token not in vocabulary and no <unk> token in vocabulary for replacement')
 
-    def _convert_ids_to_string(self, tokens_ids):
-        """Converts a sequence of ids in a string."""
-        out_string = ' '.join(tokens_ids).strip()
+    def convert_tokens_to_string(self, tokens):
+        """ Converts a sequence of tokens (string) in a single string. """
+        out_string = ' '.join(tokens).strip()
         return out_string
 
     def convert_to_tensor(self, symbols):

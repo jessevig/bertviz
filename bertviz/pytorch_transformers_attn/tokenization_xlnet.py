@@ -32,12 +32,14 @@ VOCAB_FILES_NAMES = {'vocab_file': 'spiece.model'}
 PRETRAINED_VOCAB_FILES_MAP = {
     'vocab_file':
     {
+    'xlnet-base-cased': "https://s3.amazonaws.com/models.huggingface.co/bert/xlnet-base-cased-spiece.model",
     'xlnet-large-cased': "https://s3.amazonaws.com/models.huggingface.co/bert/xlnet-large-cased-spiece.model",
     }
 }
 
 PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES = {
-    'xlnet-large-cased': 512,
+    'xlnet-base-cased': None,
+    'xlnet-large-cased': None,
 }
 
 SPIECE_UNDERLINE = u'▁'
@@ -170,9 +172,9 @@ class XLNetTokenizer(PreTrainedTokenizer):
             token = token.decode('utf-8')
         return token
 
-    def _convert_ids_to_string(self, tokens_ids):
-        """Converts a sequence of ids in a string."""
-        out_string = ''.join(tokens_ids).replace(SPIECE_UNDERLINE, ' ')
+    def convert_tokens_to_string(self, tokens):
+        """Converts a sequence of tokens (strings for sub-words) in a single string."""
+        out_string = ''.join(tokens).replace(SPIECE_UNDERLINE, ' ').strip()
         return out_string
 
     def save_vocabulary(self, save_directory):
@@ -184,6 +186,7 @@ class XLNetTokenizer(PreTrainedTokenizer):
             return
         out_vocab_file = os.path.join(save_directory, VOCAB_FILES_NAMES['vocab_file'])
 
-        copyfile(self.vocab_file, out_vocab_file)
+        if os.path.abspath(self.vocab_file) != os.path.abspath(out_vocab_file):
+            copyfile(self.vocab_file, out_vocab_file)
 
         return (out_vocab_file,)
