@@ -30,7 +30,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
         const DETAIL_HEADING_TEXT_SIZE = 17;
         const TEXT_SIZE = 13;
 
-        const LAYER_COLORS = d3.scaleOrdinal(d3.schemeCategory10);
+        const LAYER_COLORS = d3.schemeCategory10;
 
         function render() {
 
@@ -101,7 +101,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
         }
 
         function renderDetailHeading(x, y, layerIndex, headIndex) {
-            var fillColor = LAYER_COLORS(layerIndex % 10);
+            var fillColor = getColor(layerIndex);
             config.svg.append("text")
                 .classed("detail", true)
                 .text('Layer ' + layerIndex + ", Head " + headIndex)
@@ -124,7 +124,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .enter()
                 .append("g");
 
-            var fillColor = LAYER_COLORS(layerIndex % 10);
+            var fillColor = getColor(layerIndex);
 
             tokenContainer.append("rect")
                 .classed("highlight", true)
@@ -198,7 +198,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .attr("height", config.thumbnailHeight)
                 .attr("width", config.thumbnailWidth)
                 .attr("stroke-width", 2)
-                .attr("stroke", LAYER_COLORS(layerIndex % 10))
+                .attr("stroke", getColor(layerIndex))
                 .attr("stroke-opacity", 0);
             var x1 = x + THUMBNAIL_PADDING;
             var x2 = x1 + config.thumbnailWidth - 14;
@@ -227,7 +227,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                     return y1 + (targetIndex + .5) * config.thumbnailBoxHeight;
                 })
                 .attr("stroke-width", 3)
-                .attr("stroke", LAYER_COLORS(layerIndex % 10))
+                .attr("stroke", getColor(layerIndex))
                 .attr("stroke-opacity", function (d) {
                     return d;
                 });
@@ -275,7 +275,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .attr("fill", "white")
                 .attr("stroke-width", 2)
                 .attr("stroke-opacity", 0.7)
-                .attr("stroke", LAYER_COLORS(layerIndex % 10));
+                .attr("stroke", getColor(layerIndex));
         }
 
         function renderDetailAttn(x, y, att, layerIndex) {
@@ -306,10 +306,14 @@ requirejs(['jquery', 'd3'], function($, d3) {
                     return y + (targetIndex + .5) * DETAIL_BOX_HEIGHT;
                 })
                 .attr("stroke-width", 2)
-                .attr("stroke", LAYER_COLORS(layerIndex % 10))
+                .attr("stroke", getColor(layerIndex))
                 .attr("stroke-opacity", function (d) {
                     return d;
                 });
+        }
+        
+        function getColor(layer) {
+          return LAYER_COLORS[layer % 10];
         }
 
         function initialize() {
