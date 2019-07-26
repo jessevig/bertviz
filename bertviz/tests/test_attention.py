@@ -1,4 +1,4 @@
-from bertviz.attention import get_attention_bert, get_attention_gpt2, get_attention_xlnet
+from bertviz.attention import get_attention_bert, get_attention
 from bertviz.pytorch_transformers_attn import BertTokenizer, BertModel, BertConfig, GPT2Model, GPT2Tokenizer,\
     XLNetModel, XLNetTokenizer
 
@@ -55,7 +55,7 @@ class TestAttention(unittest.TestCase):
         model = GPT2Model.from_pretrained('gpt2')
         tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
         text = 'Bert is a yellow muppet character'
-        attn_data = get_attention_gpt2(model, tokenizer, text, include_queries_and_keys=False)['all']
+        attn_data = get_attention(model, tokenizer, text, include_queries_and_keys=False)['all']
         tokens = ['B', 'ert', 'is', 'a', 'yellow', 'm', 'uppet', 'character']
         self.assertEqual(attn_data['left_text'], tokens)
         self.assertEqual(attn_data['right_text'], tokens)
@@ -76,8 +76,8 @@ class TestAttention(unittest.TestCase):
         tokenizer = XLNetTokenizer.from_pretrained('xlnet-large-cased')
         model = XLNetModel.from_pretrained('xlnet-large-cased')
         text = 'Bert is a yellow muppet character'
-        attn_data = get_attention_xlnet(model, tokenizer, text)['all']
-        tokens =['▁Bert', '▁is', '▁a', '▁yellow', '▁', 'm', 'up', 'pet', '▁character', '<sep>', '<cls>']
+        attn_data = get_attention(model, tokenizer, text, include_queries_and_keys=False)['all']
+        tokens =['Bert', 'is', 'a', 'yellow', '', 'm', 'up', 'pet', 'character']
         self.assertEqual(attn_data['left_text'], tokens)
         self.assertEqual(attn_data['right_text'], tokens)
         seq_len = len(tokens)

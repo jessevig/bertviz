@@ -1,14 +1,15 @@
 import torch
 from collections import defaultdict
 
-def get_attention_xlnet(model, tokenizer, text):
+def get_attention(model, tokenizer, text, include_queries_and_keys=False):
 
-    """Compute representation of the attention from xlnet to pass to the d3 visualization
+    """Compute representation of the attention to pass to the d3 visualization
 
     Args:
-      model: xlnet model
-      tokenizer: xlnet tokenizer
+      model: pytorch_transformers model
+      tokenizer: pytorch_transformers tokenizer
       text: Input text
+      include_queries_and_keys: Indicates whether to include queries/keys in results
 
     Returns:
       Dictionary of attn representations with the structure:
@@ -22,43 +23,38 @@ def get_attention_xlnet(model, tokenizer, text):
     """
 
     # Prepare inputs to model
-
-    # From https://github.com/zihangdai/xlnet/blob/master/classifier_utils.py
-    seg_id_a = 0
-    seg_id_cls = 2
-    seg_id_sep = 3
-
-    # Based on https://github.com/zihangdai/xlnet/blob/master/data_utils.py
-    cls_token = '<cls>'
-    sep_token = '<sep>'
-    tokens = []
-    segment_ids = []
-    for token in tokenizer.tokenize(text):
-        tokens.append(token)
-        segment_ids.append(seg_id_a)
-    tokens.append(sep_token)
-    segment_ids.append(seg_id_sep)
-    tokens.append(cls_token)
-    segment_ids.append(seg_id_cls)
-    token_ids = tokenizer.convert_tokens_to_ids(tokens)
-    tokens_tensor = torch.tensor([token_ids])
-    token_type_tensor = torch.LongTensor([segment_ids])
+    token_ids = tokenizer.encode(text)
+    tokens = [tokenizer.decode([t]).strip() for t in token_ids]
+    tokens_tensor = torch.tensor(token_ids).unsqueeze(0)
 
     # Call model to get attention data
     model.eval()
-    _, _, attn_data_list = model(tokens_tensor, token_type_tensor)
+    _, _, attn_data_list = model(tokens_tensor)
 
     # Format attention data for visualization
     all_attns = []
+    all_queries = []
+    all_keys = []
     for layer, attn_data in enumerate(attn_data_list):
         attn = attn_data['attn'][0]  # assume batch_size=1; output shape = (num_heads, seq_len, seq_len)
         all_attns.append(attn.tolist())
+        if include_queries_and_keys:
+            queries = attn_data['queries'][0]  # assume batch_size=1; output shape = (num_heads, seq_len, vector_size)
+            all_queries.append(queries.tolist())
+            keys = attn_data['keys'][0]  # assume batch_size=1; output shape = (num_heads, seq_len, vector_size)
+            all_keys.append(keys.tolist())
     results = {
         'attn': all_attns,
         'left_text': tokens,
         'right_text': tokens
     }
+    if include_queries_and_keys:
+        results.update({
+            'queries': all_queries,
+            'keys': all_keys,
+        })
     return {'all': results}
+
 
 def get_attention_bert(model, tokenizer, sentence_a, sentence_b, include_queries_and_keys=False):
 
@@ -176,56 +172,4 @@ def get_attention_bert(model, tokenizer, sentence_a, sentence_b, include_queries
         })
     return results
 
-def get_attention_gpt2(model, tokenizer, text, include_queries_and_keys=False):
 
-    """Compute representation of the attention from GPT-2 to pass to the d3 visualization
-
-    Args:
-      model: GPT-2 model
-      tokenizer: GPT-2 tokenizer
-      text: Input text
-      include_queries_and_keys: Indicates whether to include queries/keys in results
-
-    Returns:
-      Dictionary of attn representations with the structure:
-      {
-        'left_text': list of source tokens, to be displayed on the left of the vis
-        'right_text': list of target tokens, to be displayed on the right of the vis
-        'attn': list of attention matrices, one for each layer. Each has shape (num_heads, source_seq_len, target_seq_len)
-        'queries' (optional): list of query vector arrays, one for each layer. Each has shape (num_heads, source_seq_len, vector_size)
-        'keys' (optional): list of key vector arrays, one for each layer. Each has shape (num_heads, target_seq_len, vector_size)
-      }
-    """
-
-    # Prepare inputs to model
-    token_ids = tokenizer.encode(text)
-    tokens = [tokenizer.decode([t]).strip() for t in token_ids]
-    tokens_tensor = torch.tensor([token_ids])
-
-    # Call model to get attention data
-    model.eval()
-    _, _, attn_data_list = model(tokens_tensor)
-
-    # Format attention data for visualization
-    all_attns = []
-    all_queries = []
-    all_keys = []
-    for layer, attn_data in enumerate(attn_data_list):
-        attn = attn_data['attn'][0]  # assume batch_size=1; output shape = (num_heads, seq_len, seq_len)
-        all_attns.append(attn.tolist())
-        if include_queries_and_keys:
-            queries = attn_data['queries'][0]  # assume batch_size=1; output shape = (num_heads, seq_len, vector_size)
-            all_queries.append(queries.tolist())
-            keys = attn_data['keys'][0]  # assume batch_size=1; output shape = (num_heads, seq_len, vector_size)
-            all_keys.append(keys.tolist())
-    results = {
-        'attn': all_attns,
-        'left_text': tokens,
-        'right_text': tokens
-    }
-    if include_queries_and_keys:
-        results.update({
-            'queries': all_queries,
-            'keys': all_keys,
-        })
-    return {'all': results}
