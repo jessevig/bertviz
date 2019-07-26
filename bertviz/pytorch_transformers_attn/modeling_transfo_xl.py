@@ -977,6 +977,7 @@ class TransfoXLModel(TransfoXLPreTrainedModel):
 
     """
     def __init__(self, config):
+        raise NotImplementedError("BertViz does not currently support Transformer-XL")
         super(TransfoXLModel, self).__init__(config)
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states

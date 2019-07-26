@@ -486,6 +486,7 @@ class XLMModel(XLMPreTrainedModel):
                   'asm_cutoffs', 'asm_div_value']
 
     def __init__(self, config):  #, dico, is_encoder, with_output):
+        raise NotImplementedError("BertViz does not currently support XLM")
         super(XLMModel, self).__init__(config)
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states
