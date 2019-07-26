@@ -24,7 +24,7 @@ This module is designed to be called from an ipython notebook.
 """
 
 import json
-from bertviz.attention import get_attention_gpt2
+from bertviz.attention import get_attention
 from IPython.core.display import display, HTML, Javascript
 import os
 
@@ -40,7 +40,7 @@ def show(model, tokenizer, text):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
     vis_js = open(os.path.join(__location__, 'neuron_view.js')).read()
-    attn_data = get_attention_gpt2(model, tokenizer, text, include_queries_and_keys=True)
+    attn_data = get_attention(model, tokenizer, text, include_queries_and_keys=True)
     params = {
         'attention': attn_data,
         'default_filter': "all",
