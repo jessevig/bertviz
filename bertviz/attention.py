@@ -95,7 +95,8 @@ def get_attention_bert(model, tokenizer, sentence_a, sentence_b, include_queries
 
     # Call model to get attention data
     model.eval()
-    _, _, attn_data_list = model(tokens_tensor, token_type_ids=token_type_tensor)
+    output = model(tokens_tensor, token_type_ids=token_type_tensor)
+    attn_data_list = output[-1]
 
     # Populate map with attn data and, optionally, query, key data
     keys_dict = defaultdict(list)
