@@ -87,9 +87,9 @@ def get_attention_bert(model, tokenizer, sentence_a, sentence_b=None, include_qu
     """
 
     # Prepare inputs to model
-    tokens_a = ['[CLS]'] + tokenizer.tokenize(sentence_a)  + ['[SEP]']
+    tokens_a = [tokenizer.cls_token] + tokenizer.tokenize(sentence_a)  + [tokenizer.sep_token]
     if sentence_b:
-        tokens_b = tokenizer.tokenize(sentence_b) + ['[SEP]']
+        tokens_b = tokenizer.tokenize(sentence_b) + [tokenizer.sep_token]
     else:
         tokens_b = []
     token_ids = tokenizer.convert_tokens_to_ids(tokens_a + tokens_b)
