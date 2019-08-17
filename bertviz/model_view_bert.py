@@ -28,19 +28,26 @@ from bertviz.attention import get_attention_bert
 from IPython.core.display import display, HTML, Javascript
 import os
 
-def show(model, tokenizer, sentence_a, sentence_b):
-    vis_html = """
-      <span style="user-select:none">
-        Attention: <select id="filter">
-        <option value="all">All</option>
-          <option value="aa">Sentence A -> Sentence A</option>
-          <option value="ab">Sentence A -> Sentence B</option>
-          <option value="ba">Sentence B -> Sentence A</option>
-          <option value="bb">Sentence B -> Sentence B</option>
-        </select>
-      </span>
-      <div id='vis'></div>
-    """
+def show(model, tokenizer, sentence_a, sentence_b=None):
+
+    if sentence_b:
+        vis_html = """
+          <span style="user-select:none">
+            Attention: <select id="filter">
+              <option value="all">All</option>
+              <option value="aa">Sentence A -> Sentence A</option>
+              <option value="ab">Sentence A -> Sentence B</option>
+              <option value="ba">Sentence B -> Sentence A</option>
+              <option value="bb">Sentence B -> Sentence B</option>
+            </select>
+          </span>
+          <div id='vis'></div> 
+        """
+    else:
+        vis_html = """
+          <div id='vis'></div> 
+        """
+
     display(HTML(vis_html))
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))

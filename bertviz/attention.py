@@ -56,7 +56,7 @@ def get_attention(model, tokenizer, text, include_queries_and_keys=False):
     return {'all': results}
 
 
-def get_attention_bert(model, tokenizer, sentence_a, sentence_b, include_queries_and_keys=False):
+def get_attention_bert(model, tokenizer, sentence_a, sentence_b=None, include_queries_and_keys=False):
 
     """Compute representation of the attention for BERT to pass to the d3 visualization
 
@@ -71,10 +71,10 @@ def get_attention_bert(model, tokenizer, sentence_a, sentence_b, include_queries
       Dictionary of attn representations with the structure:
       {
         'all': All attention (source = AB, target = AB)
-        'aa': Sentence A self-attention (source = A, target = A)
-        'bb': Sentence B self-attention (source = B, target = B)
-        'ab': Sentence A -> Sentence B attention (source = A, target = B)
-        'ba': Sentence B -> Sentence A attention (source = B, target = A)
+        'aa': Sentence A self-attention (source = A, target = A) (if sentence_b is not None)
+        'bb': Sentence B self-attention (source = B, target = B) (if sentence_b is not None)
+        'ab': Sentence A -> Sentence B attention (source = A, target = B) (if sentence_b is not None)
+        'ba': Sentence B -> Sentence A attention (source = B, target = A) (if sentence_b is not None)
       }
       where each value is a dictionary:
       {
@@ -88,7 +88,10 @@ def get_attention_bert(model, tokenizer, sentence_a, sentence_b, include_queries
 
     # Prepare inputs to model
     tokens_a = ['[CLS]'] + tokenizer.tokenize(sentence_a)  + ['[SEP]']
-    tokens_b = tokenizer.tokenize(sentence_b) + ['[SEP]']
+    if sentence_b:
+        tokens_b = tokenizer.tokenize(sentence_b) + ['[SEP]']
+    else:
+        tokens_b = []
     token_ids = tokenizer.convert_tokens_to_ids(tokens_a + tokens_b)
     tokens_tensor = torch.tensor([token_ids])
     token_type_tensor = torch.LongTensor([[0] * len(tokens_a) + [1] * len(tokens_b)])
@@ -108,69 +111,75 @@ def get_attention_bert(model, tokenizer, sentence_a, sentence_b, include_queries
         # Process attention
         attn = attn_data['attn'][0]  # assume batch_size=1; shape = [num_heads, source_seq_len, target_seq_len]
         attn_dict['all'].append(attn.tolist())
-        attn_dict['aa'].append(attn[:, slice_a, slice_a].tolist())  # Append A->A attention for layer, across all heads
-        attn_dict['bb'].append(attn[:, slice_b, slice_b].tolist())  # Append B->B attention for layer, across all heads
-        attn_dict['ab'].append(attn[:, slice_a, slice_b].tolist())  # Append A->B attention for layer, across all heads
-        attn_dict['ba'].append(attn[:, slice_b, slice_a].tolist())  # Append B->A attention for layer, across all heads
+        if sentence_b:
+            attn_dict['aa'].append(attn[:, slice_a, slice_a].tolist())  # Append A->A attention for layer, across all heads
+            attn_dict['bb'].append(attn[:, slice_b, slice_b].tolist())  # Append B->B attention for layer, across all heads
+            attn_dict['ab'].append(attn[:, slice_a, slice_b].tolist())  # Append A->B attention for layer, across all heads
+            attn_dict['ba'].append(attn[:, slice_b, slice_a].tolist())  # Append B->A attention for layer, across all heads
         # Process queries and keys
         if include_queries_and_keys:
             queries = attn_data['queries'][0]  # assume batch_size=1; shape = [num_heads, seq_len, vector_size]
             keys = attn_data['keys'][0]  # assume batch_size=1; shape = [num_heads, seq_len, vector_size]
             queries_dict['all'].append(queries.tolist())
             keys_dict['all'].append(keys.tolist())
-            queries_dict['a'].append(queries[:, slice_a, :].tolist())
-            keys_dict['a'].append(keys[:, slice_a, :].tolist())
-            queries_dict['b'].append(queries[:, slice_b, :].tolist())
-            keys_dict['b'].append(keys[:, slice_b, :].tolist())
+            if sentence_b:
+                queries_dict['a'].append(queries[:, slice_a, :].tolist())
+                keys_dict['a'].append(keys[:, slice_a, :].tolist())
+                queries_dict['b'].append(queries[:, slice_b, :].tolist())
+                keys_dict['b'].append(keys[:, slice_b, :].tolist())
 
     results = {
         'all': {
             'attn': attn_dict['all'],
             'left_text': tokens_a + tokens_b,
             'right_text': tokens_a + tokens_b
-        },
-        'aa': {
-            'attn': attn_dict['aa'],
-            'left_text': tokens_a,
-            'right_text': tokens_a
-        },
-        'bb': {
-            'attn': attn_dict['bb'],
-            'left_text': tokens_b,
-            'right_text': tokens_b
-        },
-        'ab': {
-            'attn': attn_dict['ab'],
-            'left_text': tokens_a,
-            'right_text': tokens_b
-        },
-        'ba': {
-            'attn': attn_dict['ba'],
-            'left_text': tokens_b,
-            'right_text': tokens_a
         }
     }
+    if sentence_b:
+        results.update({
+            'aa': {
+                'attn': attn_dict['aa'],
+                'left_text': tokens_a,
+                'right_text': tokens_a
+            },
+            'bb': {
+                'attn': attn_dict['bb'],
+                'left_text': tokens_b,
+                'right_text': tokens_b
+            },
+            'ab': {
+                'attn': attn_dict['ab'],
+                'left_text': tokens_a,
+                'right_text': tokens_b
+            },
+            'ba': {
+                'attn': attn_dict['ba'],
+                'left_text': tokens_b,
+                'right_text': tokens_a
+            }
+        })
     if include_queries_and_keys:
         results['all'].update({
             'queries': queries_dict['all'],
             'keys': keys_dict['all'],
         })
-        results['aa'].update({
-            'queries': queries_dict['a'],
-            'keys': keys_dict['a'],
-        })
-        results['bb'].update({
-            'queries': queries_dict['b'],
-            'keys': keys_dict['b'],
-        })
-        results['ab'].update({
-            'queries': queries_dict['a'],
-            'keys': keys_dict['b'],
-        })
-        results['ba'].update({
-            'queries': queries_dict['b'],
-            'keys': keys_dict['a'],
-        })
+        if sentence_b:
+            results['aa'].update({
+                'queries': queries_dict['a'],
+                'keys': keys_dict['a'],
+            })
+            results['bb'].update({
+                'queries': queries_dict['b'],
+                'keys': keys_dict['b'],
+            })
+            results['ab'].update({
+                'queries': queries_dict['a'],
+                'keys': keys_dict['b'],
+            })
+            results['ba'].update({
+                'queries': queries_dict['b'],
+                'keys': keys_dict['a'],
+            })
     return results
 
 
