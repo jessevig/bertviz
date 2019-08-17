@@ -54,7 +54,7 @@ def load_tf_weights_in_gpt2(model, config, gpt2_checkpoint_path):
         import numpy as np
         import tensorflow as tf
     except ImportError:
-        logger.error("Loading a TensorFlow models in PyTorch, requires TensorFlow to be installed. Please see "
+        logger.error("Loading a TensorFlow model in PyTorch, requires TensorFlow to be installed. Please see "
             "https://www.tensorflow.org/install/ for installation instructions.")
         raise
     tf_path = os.path.abspath(gpt2_checkpoint_path)
@@ -141,7 +141,7 @@ class GPT2Config(PretrainedConfig):
         initializer_range=0.02,
 
         num_labels=1,
-        summary_type='token_ids',
+        summary_type='cls_index',
         summary_use_proj=True,
         summary_activation=None,
         summary_proj_to_labels=True,
@@ -407,7 +407,7 @@ GPT2_INPUTS_DOCSTRING = r"""    Inputs:
             :func:`pytorch_transformers.PreTrainedTokenizer.convert_tokens_to_ids` for details.
         **position_ids**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size, sequence_length)``:
             Indices of positions of each input sequence tokens in the position embeddings.
-            Selected in the range ``[0, config.max_position_embeddings - 1[``.
+            Selected in the range ``[0, config.max_position_embeddings - 1]``.
         **token_type_ids**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size, sequence_length)``:
             A parallel sequence of tokens (can be used to indicate various portions of the inputs).
             The embeddings from these tokens will be summed with the respective token embeddings.
@@ -416,11 +416,11 @@ GPT2_INPUTS_DOCSTRING = r"""    Inputs:
             list of ``torch.FloatTensor`` (one for each layer):
             that contains pre-computed hidden-states (key and values in the attention blocks) as computed by the model
             (see `past` output below). Can be used to speed up sequential decoding.
-        **attention_mask**: (`optional`) ``torch.Tensor`` of shape ``(batch_size, sequence_length)``:
+        **attention_mask**: (`optional`) ``torch.FloatTensor`` of shape ``(batch_size, sequence_length)``:
             Mask to avoid performing attention on padding token indices.
             Mask values selected in ``[0, 1]``:
             ``1`` for tokens that are NOT MASKED, ``0`` for MASKED tokens.
-        **head_mask**: (`optional`) ``torch.Tensor`` of shape ``(num_heads,)`` or ``(num_layers, num_heads)``:
+        **head_mask**: (`optional`) ``torch.FloatTensor`` of shape ``(num_heads,)`` or ``(num_layers, num_heads)``:
             Mask to nullify selected heads of the self-attention modules.
             Mask values selected in ``[0, 1]``:
             ``1`` indicates the head is **not masked**, ``0`` indicates the head is **masked**.
@@ -447,12 +447,11 @@ class GPT2Model(GPT2PreTrainedModel):
 
     Examples::
 
-        >>> config = GPT2Config.from_pretrained('gpt2')
-        >>> tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-        >>> model = GPT2Model(config)
-        >>> input_ids = torch.tensor(tokenizer.encode("Hello, my dog is cute")).unsqueeze(0)  # Batch size 1
-        >>> outputs = model(input_ids)
-        >>> last_hidden_states = outputs[0]  # The last hidden-state is the first element of the output tuple
+        tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+        model = GPT2Model.from_pretrained('gpt2')
+        input_ids = torch.tensor(tokenizer.encode("Hello, my dog is cute")).unsqueeze(0)  # Batch size 1
+        outputs = model(input_ids)
+        last_hidden_states = outputs[0]  # The last hidden-state is the first element of the output tuple
 
     """
     def __init__(self, config):
@@ -582,12 +581,11 @@ class GPT2LMHeadModel(GPT2PreTrainedModel):
 
     Examples::
 
-        >>> config = GPT2Config.from_pretrained('gpt2')
-        >>> tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-        >>> model = GPT2LMHeadModel(config)
-        >>> input_ids = torch.tensor(tokenizer.encode("Hello, my dog is cute")).unsqueeze(0)  # Batch size 1
-        >>> outputs = model(input_ids, labels=input_ids)
-        >>> loss, logits = outputs[:2]
+        tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+        model = GPT2LMHeadModel.from_pretrained('gpt2')
+        input_ids = torch.tensor(tokenizer.encode("Hello, my dog is cute")).unsqueeze(0)  # Batch size 1
+        outputs = model(input_ids, labels=input_ids)
+        loss, logits = outputs[:2]
 
     """
     def __init__(self, config):
@@ -644,7 +642,7 @@ class GPT2DoubleHeadsModel(GPT2PreTrainedModel):
             Selected in the range ``[0, input_ids.size(-1) - 1[``.
         **position_ids**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size, num_choices, sequence_length)``:
             Indices of positions of each input sequence tokens in the position embeddings.
-            Selected in the range ``[0, config.max_position_embeddings - 1[``.
+            Selected in the range ``[0, config.max_position_embeddings - 1]``.
         **token_type_ids**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size, num_choices, sequence_length)``:
             A parallel sequence of tokens (can be used to indicate various portions of the inputs).
             The embeddings from these tokens will be summed with the respective token embeddings.
@@ -653,11 +651,11 @@ class GPT2DoubleHeadsModel(GPT2PreTrainedModel):
             list of ``torch.FloatTensor`` (one for each layer):
             that contains pre-computed hidden-states (key and values in the attention blocks) as computed by the model
             (see `past` output below). Can be used to speed up sequential decoding.
-        **attention_mask**: (`optional`) ``torch.Tensor`` of shape ``(batch_size, num_choices, sequence_length)``:
+        **attention_mask**: (`optional`) ``torch.FloatTensor`` of shape ``(batch_size, num_choices, sequence_length)``:
             Mask to avoid performing attention on padding token indices.
             Mask values selected in ``[0, 1]``:
             ``1`` for tokens that are NOT MASKED, ``0`` for MASKED tokens.
-        **head_mask**: (`optional`) ``torch.Tensor`` of shape ``(num_heads,)`` or ``(num_layers, num_heads)``:
+        **head_mask**: (`optional`) ``torch.FloatTensor`` of shape ``(num_heads,)`` or ``(num_layers, num_heads)``:
             Mask to nullify selected heads of the self-attention modules.
             Mask values selected in ``[0, 1]``:
             ``1`` indicates the head is **not masked**, ``0`` indicates the head is **masked**.
@@ -698,14 +696,14 @@ class GPT2DoubleHeadsModel(GPT2PreTrainedModel):
 
     Examples::
 
-        >>> config = GPT2Config.from_pretrained('gpt2')
-        >>> tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-        >>> model = GPT2DoubleHeadsModel(config)
-        >>> choices = ["Hello, my dog is cute [CLS]", "Hello, my cat is cute [CLS]"]  # Assume you've added [CLS] to the vocabulary
-        >>> input_ids = torch.tensor([tokenizer.encode(s) for s in choices]).unsqueeze(0)  # Batch size 1, 2 choices
-        >>> mc_token_ids = torch.tensor([-1, -1]).unsqueeze(0)  # Batch size 1
-        >>> outputs = model(input_ids, mc_token_ids)
-        >>> lm_prediction_scores, mc_prediction_scores = outputs[:2]
+        tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+        model = GPT2DoubleHeadsModel.from_pretrained('gpt2')
+        tokenizer.add_special_tokens({'cls_token': '[CLS]'})  # Add a [CLS] to the vocabulary (we should train it also!)
+        choices = ["Hello, my dog is cute [CLS]", "Hello, my cat is cute [CLS]"]
+        input_ids = torch.tensor([tokenizer.encode(s) for s in choices]).unsqueeze(0)  # Batch size 1, 2 choices
+        mc_token_ids = torch.tensor([input_ids.size(-1), input_ids.size(-1)]).unsqueeze(0)  # Batch size 1
+        outputs = model(input_ids, mc_token_ids)
+        lm_prediction_scores, mc_prediction_scores = outputs[:2]
 
     """
     def __init__(self, config):

@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Tokenization classes for OpenAI GPT."""
+"""Tokenization classes for RoBERTa."""
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
@@ -23,6 +23,9 @@ import os
 import regex as re
 from io import open
 
+from .tokenization_gpt2 import bytes_to_unicode, get_pairs
+from .tokenization_utils import PreTrainedTokenizer
+
 try:
     from functools import lru_cache
 except ImportError:
@@ -30,8 +33,6 @@ except ImportError:
     # because honestly I don't want to support a byte-level unicode BPE tokenizer on python 2 right now.
     def lru_cache():
         return lambda func: func
-
-from .tokenization_utils import PreTrainedTokenizer
 
 logger = logging.getLogger(__name__)
 
@@ -43,74 +44,44 @@ VOCAB_FILES_NAMES = {
 PRETRAINED_VOCAB_FILES_MAP = {
     'vocab_file':
     {
-        'gpt2': "https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-vocab.json",
-        'gpt2-medium': "https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-medium-vocab.json",
+        'roberta-base': "https://s3.amazonaws.com/models.huggingface.co/bert/roberta-base-vocab.json",
+        'roberta-large': "https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-vocab.json",
+        'roberta-large-mnli': "https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-mnli-vocab.json",
     },
     'merges_file':
     {
-        'gpt2': "https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-merges.txt",
-        'gpt2-medium': "https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-medium-merges.txt",
+        'roberta-base': "https://s3.amazonaws.com/models.huggingface.co/bert/roberta-base-merges.txt",
+        'roberta-large': "https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-merges.txt",
+        'roberta-large-mnli': "https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-mnli-merges.txt",
     },
 }
 
 PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES = {
-    'gpt2': 1024,
-    'gpt2-medium': 1024,
+    'roberta-base': 512,
+    'roberta-large': 512,
+    'roberta-large-mnli': 512,
 }
 
-@lru_cache()
-def bytes_to_unicode():
-    """
-    Returns list of utf-8 byte and a corresponding list of unicode strings.
-    The reversible bpe codes work on unicode strings.
-    This means you need a large # of unicode characters in your vocab if you want to avoid UNKs.
-    When you're at something like a 10B token dataset you end up needing around 5K for decent coverage.
-    This is a signficant percentage of your normal, say, 32K bpe vocab.
-    To avoid that, we want lookup tables between utf-8 bytes and unicode strings.
-    And avoids mapping to whitespace/control characters the bpe code barfs on.
-    """
-    _chr = unichr if sys.version_info[0] == 2 else chr
-    bs = list(range(ord("!"), ord("~")+1))+list(range(ord("¡"), ord("¬")+1))+list(range(ord("®"), ord("ÿ")+1))
-    cs = bs[:]
-    n = 0
-    for b in range(2**8):
-        if b not in bs:
-            bs.append(b)
-            cs.append(2**8+n)
-            n += 1
-    cs = [_chr(n) for n in cs]
-    return dict(zip(bs, cs))
 
-def get_pairs(word):
-    """Return set of symbol pairs in a word.
-
-    Word is represented as tuple of symbols (symbols being variable-length strings).
+class RobertaTokenizer(PreTrainedTokenizer):
     """
-    pairs = set()
-    prev_char = word[0]
-    for char in word[1:]:
-        pairs.add((prev_char, char))
-        prev_char = char
-    return pairs
-
-class GPT2Tokenizer(PreTrainedTokenizer):
-    """
-    GPT-2 BPE tokenizer. Peculiarities:
-        - Byte-level BPE
+    RoBERTa BPE tokenizer, derived from the GPT-2 tokenizer. Peculiarities: Byte-level BPE
     """
     vocab_files_names = VOCAB_FILES_NAMES
     pretrained_vocab_files_map = PRETRAINED_VOCAB_FILES_MAP
     max_model_input_sizes = PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES
 
-    def __init__(self, vocab_file, merges_file, errors='replace', unk_token="<|endoftext|>",
-                 bos_token="<|endoftext|>", eos_token="<|endoftext|>", **kwargs):
-        super(GPT2Tokenizer, self).__init__(bos_token=bos_token, eos_token=eos_token, unk_token=unk_token, **kwargs)
+    def __init__(self, vocab_file, merges_file, errors='replace', bos_token="<s>", eos_token="</s>", sep_token="</s>",
+                 cls_token="<s>", unk_token="<unk>", pad_token='<pad>', mask_token='<mask>', **kwargs):
+        super(RobertaTokenizer, self).__init__(bos_token=bos_token, eos_token=eos_token, unk_token=unk_token,
+                                               sep_token=sep_token, cls_token=cls_token, pad_token=pad_token,
+                                               mask_token=mask_token, **kwargs)
 
-        self.encoder = json.load(open(vocab_file))
-        self.decoder = {v:k for k,v in self.encoder.items()}
-        self.errors = errors # how to handle errors in decoding
+        self.encoder = json.load(open(vocab_file, encoding="utf-8"))
+        self.decoder = {v: k for k, v in self.encoder.items()}
+        self.errors = errors  # how to handle errors in decoding
         self.byte_encoder = bytes_to_unicode()
-        self.byte_decoder = {v:k for k, v in self.byte_encoder.items()}
+        self.byte_decoder = {v: k for k, v in self.byte_encoder.items()}
         bpe_data = open(merges_file, encoding='utf-8').read().split('\n')[1:-1]
         bpe_merges = [tuple(merge.split()) for merge in bpe_data]
         self.bpe_ranks = dict(zip(bpe_merges, range(len(bpe_merges))))
@@ -188,6 +159,22 @@ class GPT2Tokenizer(PreTrainedTokenizer):
         text = ''.join(tokens)
         text = bytearray([self.byte_decoder[c] for c in text]).decode('utf-8', errors=self.errors)
         return text
+
+    def add_special_tokens_single_sentence(self, token_ids):
+        """
+        Adds special tokens to a sequence for sequence classification tasks.
+        A RoBERTa sequence has the following format: [CLS] X [SEP]
+        """
+        return [self._convert_token_to_id(self.cls_token)] + token_ids + [self._convert_token_to_id(self.sep_token)]
+
+    def add_special_tokens_sentences_pair(self, token_ids_0, token_ids_1):
+        """
+        Adds special tokens to a sequence pair for sequence classification tasks.
+        A RoBERTa sequence pair has the following format: [CLS] A [SEP][SEP] B [SEP]
+        """
+        sep = [self._convert_token_to_id(self.sep_token)]
+        cls = [self._convert_token_to_id(self.cls_token)]
+        return cls + token_ids_0 + sep + sep + token_ids_1 + sep
 
     def save_vocabulary(self, save_directory):
         """Save the tokenizer vocabulary and merge files to a directory."""
