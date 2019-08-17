@@ -9,13 +9,13 @@ import torch
 class TestAttention(unittest.TestCase):
 
     def test_bert_attn(self):
-        self.config = BertConfig.from_json_file('fixtures/config.json')
-        self.tokenizer = BertTokenizer('fixtures/vocab.txt')
+        config = BertConfig.from_json_file('fixtures/config.json')
+        tokenizer = BertTokenizer('fixtures/vocab.txt')
         for model_class in (BertModel, BertForSequenceClassification, BertForQuestionAnswering):
-            self.model = model_class(self.config)
+            model = model_class(config)
             sentence1 = 'The quickest brown fox jumped over the lazy dog'
             sentence2 = "the quick brown fox jumped over the laziest elmo"
-            attn_data = get_attention_bert(self.model, self.tokenizer, sentence1, sentence2,
+            attn_data = get_attention_bert(model, tokenizer, sentence1, sentence2,
                                            include_queries_and_keys=False)
             tokens_1 = ['[CLS]', 'the', 'quick', '##est', 'brown', 'fox', 'jumped', 'over', 'the', 'lazy', 'dog',
                         '[SEP]']
@@ -56,10 +56,10 @@ class TestAttention(unittest.TestCase):
                 # assert self.assertAlmostEqual(torch.sum(torch.abs(whole - attn_all[layer])), 0)
                 self.assertTrue(torch.allclose(whole, attn_all_layer))
         for model_class in (BertModel, BertForSequenceClassification, BertForQuestionAnswering):
-            self.model = model_class(self.config)
+            model = model_class(config)
             sentence1 = 'The quickest brown fox jumped over the lazy dog'
             sentence2 = None
-            attn_data = get_attention_bert(self.model, self.tokenizer, sentence1, sentence2,
+            attn_data = get_attention_bert(model, tokenizer, sentence1, sentence2,
                                            include_queries_and_keys=False)
             tokens_1 = ['[CLS]', 'the', 'quick', '##est', 'brown', 'fox', 'jumped', 'over', 'the', 'lazy', 'dog',
                         '[SEP]']
