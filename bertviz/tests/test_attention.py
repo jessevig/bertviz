@@ -12,7 +12,6 @@ class TestAttention(unittest.TestCase):
         self.config = BertConfig.from_json_file('fixtures/config.json')
         self.tokenizer = BertTokenizer('fixtures/vocab.txt')
         for model_class in (BertModel, BertForSequenceClassification, BertForQuestionAnswering):
-            print("Model:", model_class)
             self.model = model_class(self.config)
             sentence1 = 'The quickest brown fox jumped over the lazy dog'
             sentence2 = "the quick brown fox jumped over the laziest elmo"
@@ -56,6 +55,29 @@ class TestAttention(unittest.TestCase):
                 whole = torch.cat((top_half, bottom_half), dim=-2)
                 # assert self.assertAlmostEqual(torch.sum(torch.abs(whole - attn_all[layer])), 0)
                 self.assertTrue(torch.allclose(whole, attn_all_layer))
+        for model_class in (BertModel, BertForSequenceClassification, BertForQuestionAnswering):
+            self.model = model_class(self.config)
+            sentence1 = 'The quickest brown fox jumped over the lazy dog'
+            sentence2 = None
+            attn_data = get_attention_bert(self.model, self.tokenizer, sentence1, sentence2,
+                                           include_queries_and_keys=False)
+            tokens_1 = ['[CLS]', 'the', 'quick', '##est', 'brown', 'fox', 'jumped', 'over', 'the', 'lazy', 'dog',
+                        '[SEP]']
+            tokens_2 = []
+            self.assertEqual(attn_data['all']['left_text'], tokens_1 + tokens_2)
+            self.assertEqual(attn_data['all']['right_text'], tokens_1 + tokens_2)
+            self.assertTrue('aa' not in attn_data)
+
+            attn_all = attn_data['all']['attn']
+            num_layers = len(attn_all)
+            for layer in range(num_layers):
+                attn_all_layer = torch.tensor(attn_all[layer])
+                num_heads, seq_len, _ = attn_all_layer.size()
+                # Check that probabilities sum to one
+                sum_probs = attn_all_layer.sum(dim=-1)
+                expected = torch.ones(num_heads, seq_len, dtype=torch.float32)
+                self.assertTrue(torch.allclose(sum_probs, expected))
+
 
     def test_gpt2_attn(self):
         model = GPT2Model.from_pretrained('gpt2')
