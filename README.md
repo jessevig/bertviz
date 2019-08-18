@@ -23,7 +23,9 @@ The *attention-head view* visualizes the attention patterns produced by one or m
   [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1YY8I0TY-l6s5i7IJ8Us2OJ8O6o6gb_1H)<br>
  XLNet: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlnet.ipynb)
-[[Colab]](https://colab.research.google.com/drive/16IIiEZSux5WKl_dIdDgbSDwWDauaY-Yl)
+[[Colab]](https://colab.research.google.com/drive/16IIiEZSux5WKl_dIdDgbSDwWDauaY-Yl)<br>
+RoBERTa: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_roberta.ipynb)
+[[Colab]](https://colab.research.google.com/drive/1nk72i9cwaYNujpzKoqoEoaWtB76f9a0i)
 
 ## Model view 
 
@@ -36,8 +38,10 @@ BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_be
 GPT-2
 [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1ul6VNBv156m33ZgFbrKB6RdqEJ7-pfbo)<br>
- XLNet: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlnet.ipynb)
- [[Colab]](https://colab.research.google.com/drive/1N8WuZtrSWyaJ_UpfM1vvJZf0rufJtaXL)
+ XLNet: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_xlnet.ipynb)
+ [[Colab]](https://colab.research.google.com/drive/1N8WuZtrSWyaJ_UpfM1vvJZf0rufJtaXL)<br>
+ RoBERTa: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_roberta.ipynb)
+ [[Colab]](https://colab.research.google.com/drive/190BnK5UPeoVrRA9VkmQxWng2-K2RhfyH)
 
 ## Neuron view 
 The *neuron view* visualizes the individual neurons in the query and key vectors and shows how they are used to compute attention.
@@ -48,7 +52,10 @@ BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_b
 [[Colab]](https://colab.research.google.com/drive/1VnmBBpZgKat1rxJhKALNIBJkSogOFH-V)<br>
 GPT-2
 [[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_gpt2.ipynb) 
-[[Colab]](https://colab.research.google.com/drive/10l_0rZ3lQWPIyqzasPwzGGJTn898aD4d)
+[[Colab]](https://colab.research.google.com/drive/10l_0rZ3lQWPIyqzasPwzGGJTn898aD4d)<br>
+RoBERTa
+[[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_roberta.ipynb) 
+[[Colab]](https://colab.research.google.com/drive/1rsHzCWXibhp4sgfVlqE39W3UB5NnongL)
 
 
 ## Requirements
