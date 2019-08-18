@@ -1,6 +1,6 @@
 # BertViz
 
-Tool for visualizing attention in BERT, GPT-2, and XLNet. Extends [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj) and [pytorch-transformers](https://github.com/huggingface/pytorch-transformers) from [HuggingFace](https://github.com/huggingface).
+Tool for visualizing attention in BERT, GPT-2, XLNet, and RoBERTa. Extends [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj) and [pytorch-transformers](https://github.com/huggingface/pytorch-transformers) from [HuggingFace](https://github.com/huggingface).
 
 Blog posts:
 * [OpenAI GPT-2: Understanding Language Generation through Visualization](https://towardsdatascience.com/openai-gpt-2-understanding-language-generation-through-visualization-8252f683b2f8)
