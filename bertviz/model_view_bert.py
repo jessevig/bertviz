@@ -28,7 +28,7 @@ from bertviz.attention import get_attention_bert
 from IPython.core.display import display, HTML, Javascript
 import os
 
-def show(model, tokenizer, sentence_a, sentence_b=None):
+def show(model, tokenizer, sentence_a, sentence_b=None, bert_type='bert'):
 
     if sentence_b:
         vis_html = """
@@ -52,7 +52,7 @@ def show(model, tokenizer, sentence_a, sentence_b=None):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
     vis_js = open(os.path.join(__location__, 'model_view.js')).read()
-    attn_data = get_attention_bert(model, tokenizer, sentence_a, sentence_b)
+    attn_data = get_attention_bert(model, tokenizer, sentence_a, sentence_b, bert_type=bert_type)
     params = {
         'attention': attn_data,
         'default_filter': "all"

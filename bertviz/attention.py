@@ -56,13 +56,13 @@ def get_attention(model, tokenizer, text, include_queries_and_keys=False):
     return {'all': results}
 
 
-def get_attention_bert(model, tokenizer, sentence_a, sentence_b=None, include_queries_and_keys=False):
+def get_attention_bert(model, tokenizer, sentence_a, sentence_b=None, include_queries_and_keys=False, bert_type='bert'):
 
-    """Compute representation of the attention for BERT to pass to the d3 visualization
+    """Compute representation of the attention for BERT / RoBERTa to pass to the d3 visualization
 
     Args:
-      model: BERT model
-      tokenizer: BERT tokenizer
+      model: BERT/RoBERTa model
+      tokenizer: BERT/RoBERTa tokenizer
       sentence_a: Sentence A string
       sentence_b: Sentence B string
       include_queries_and_keys: Indicates whether to include queries/keys in results
@@ -86,19 +86,31 @@ def get_attention_bert(model, tokenizer, sentence_a, sentence_b=None, include_qu
       }
     """
 
+    assert bert_type in ('bert', 'roberta')
+
     # Prepare inputs to model
-    tokens_a = [tokenizer.cls_token] + tokenizer.tokenize(sentence_a)  + [tokenizer.sep_token]
+    tokens_a = [tokenizer.cls_token] + tokenizer.tokenize(sentence_a) + [tokenizer.sep_token]
     if sentence_b:
-        tokens_b = tokenizer.tokenize(sentence_b) + [tokenizer.sep_token]
+        tokens_b = ([tokenizer.sep_token] if bert_type == 'roberta' else []) + tokenizer.tokenize(sentence_b) + [tokenizer.sep_token]
     else:
         tokens_b = []
     token_ids = tokenizer.convert_tokens_to_ids(tokens_a + tokens_b)
-    tokens_tensor = torch.tensor([token_ids])
-    token_type_tensor = torch.LongTensor([[0] * len(tokens_a) + [1] * len(tokens_b)])
+    tokens_tensor = torch.tensor(token_ids).unsqueeze(0)
 
     # Call model to get attention data
     model.eval()
-    output = model(tokens_tensor, token_type_ids=token_type_tensor)
+    if sentence_b and bert_type != 'roberta': # Roberta doesn't use token type embeddings per https://github.com/huggingface/pytorch-transformers/blob/master/pytorch_transformers/convert_roberta_checkpoint_to_pytorch.py
+        try:
+            num_token_type_embeddings = model.embeddings.token_type_embeddings.num_embeddings
+        except:
+            pass
+        else:
+            if num_token_type_embeddings != 2:
+                raise Exception("Model must have two token type embeddings to support sentence pair inputs")
+        token_type_tensor = torch.LongTensor([[0] * len(tokens_a) + [1] * len(tokens_b)])
+        output = model(tokens_tensor, token_type_ids=token_type_tensor)
+    else:
+        output = model(tokens_tensor)
     attn_data_list = output[-1]
 
     # Populate map with attn data and, optionally, query, key data
@@ -127,6 +139,11 @@ def get_attention_bert(model, tokenizer, sentence_a, sentence_b=None, include_qu
                 keys_dict['a'].append(keys[:, slice_a, :].tolist())
                 queries_dict['b'].append(queries[:, slice_b, :].tolist())
                 keys_dict['b'].append(keys[:, slice_b, :].tolist())
+
+
+    # Format tokens
+    tokens_a = [t.replace('Ġ', ' ') for t in tokens_a]
+    tokens_b = [t.replace('Ġ', ' ') for t in tokens_b]
 
     results = {
         'all': {
