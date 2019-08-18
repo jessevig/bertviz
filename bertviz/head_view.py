@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 # Change log
-# 12/12/18  Jesse Vig   Adapted to GPT-2 model
+# 12/12/18  Jesse Vig   Adapted to BERT model
 # 12/19/18  Jesse Vig   Assorted cleanup. Changed orientation of attention matrices. Updated comments.
 
 
@@ -28,18 +28,35 @@ from bertviz.attention import get_attention
 from IPython.core.display import display, HTML, Javascript
 import os
 
-def show(model, tokenizer, text):
-    vis_html = """
-      <span style="user-select:none">
-        Layer: <select id="layer"></select>
-      </span>
-      <div id='vis'></div>
-    """
+def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
+
+    if sentence_b:
+        vis_html = """
+          <span style="user-select:none">
+            Layer: <select id="layer"></select>
+            Attention: <select id="filter">
+              <option value="all">All</option>
+              <option value="aa">Sentence A -> Sentence A</option>
+              <option value="ab">Sentence A -> Sentence B</option>
+              <option value="ba">Sentence B -> Sentence A</option>
+              <option value="bb">Sentence B -> Sentence B</option>
+            </select>
+          </span>
+          <div id='vis'></div> 
+        """
+    else:
+        vis_html = """
+          <span style="user-select:none">
+            Layer: <select id="layer"></select>
+          </span>
+          <div id='vis'></div> 
+        """
+
     display(HTML(vis_html))
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
     vis_js = open(os.path.join(__location__, 'head_view.js')).read()
-    attn_data = get_attention(model, tokenizer, text)
+    attn_data = get_attention(model, model_type, tokenizer, sentence_a, sentence_b)
     params = {
         'attention': attn_data,
         'default_filter': "all"

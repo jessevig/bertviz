@@ -1,4 +1,4 @@
-from bertviz.attention import get_attention_bert, get_attention
+from bertviz.attention import get_attention
 from bertviz.pytorch_transformers_attn import BertTokenizer, BertModel, BertConfig, GPT2Model, GPT2Tokenizer, \
     XLNetModel, XLNetTokenizer, BertForSequenceClassification, BertForQuestionAnswering, RobertaModel, RobertaTokenizer
 
@@ -21,7 +21,7 @@ class TestAttention(unittest.TestCase):
             model = model_class(config)
             sentence1 = 'The quickest brown fox jumped over the lazy dog'
             sentence2 = "the quick brown fox jumped over the laziest elmo"
-            attn_data = get_attention_bert(model, tokenizer, sentence1, sentence2,
+            attn_data = get_attention(model, 'bert', tokenizer, sentence1, sentence2,
                                            include_queries_and_keys=False)
             tokens_1 = ['[CLS]', 'the', 'quick', '##est', 'brown', 'fox', 'jumped', 'over', 'the', 'lazy', 'dog',
                         '[SEP]']
@@ -65,7 +65,7 @@ class TestAttention(unittest.TestCase):
             model = model_class(config)
             sentence1 = 'The quickest brown fox jumped over the lazy dog'
             sentence2 = None
-            attn_data = get_attention_bert(model, tokenizer, sentence1, sentence2,
+            attn_data = get_attention(model, 'bert', tokenizer, sentence1, sentence2,
                                            include_queries_and_keys=False)
             tokens_1 = ['[CLS]', 'the', 'quick', '##est', 'brown', 'fox', 'jumped', 'over', 'the', 'lazy', 'dog',
                         '[SEP]']
@@ -89,8 +89,8 @@ class TestAttention(unittest.TestCase):
         tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
         sentence1 = 'The quickest brown fox jumped over the lazy dog'
         sentence2 = "the quick brown fox jumped over the laziest dog"
-        attn_data = get_attention_bert(model, tokenizer, sentence1, sentence2,
-                                       include_queries_and_keys=False, bert_type='roberta')
+        attn_data = get_attention(model, 'roberta', tokenizer, sentence1, sentence2,
+                                       include_queries_and_keys=False)
         tokens_1 = ['[CLS]', 'The', ' quickest', ' brown', ' fox', ' jumped', ' over', ' the', ' lazy', ' dog',
                     '[SEP]']
         tokens_2 = ['[SEP]', 'the', ' quick', ' brown', ' fox', ' jumped', ' over', ' the', ' laz', 'iest', ' dog',
@@ -132,8 +132,8 @@ class TestAttention(unittest.TestCase):
 
         sentence1 = 'The quickest brown fox jumped over the lazy dog'
         sentence2 = None
-        attn_data = get_attention_bert(model, tokenizer, sentence1, sentence2,
-                                       include_queries_and_keys=False, bert_type='roberta')
+        attn_data = get_attention(model, 'roberta', tokenizer, sentence1, sentence2,
+                                       include_queries_and_keys=False)
         tokens_1 = ['[CLS]', 'The', ' quickest', ' brown', ' fox', ' jumped', ' over', ' the', ' lazy', ' dog',
                     '[SEP]']
         tokens_2 = []
@@ -155,8 +155,8 @@ class TestAttention(unittest.TestCase):
         model = GPT2Model.from_pretrained('gpt2')
         tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
         text = 'Bert is a yellow muppet character'
-        attn_data = get_attention(model, tokenizer, text, include_queries_and_keys=False)['all']
-        tokens = ['B', 'ert', 'is', 'a', 'yellow', 'm', 'uppet', 'character']
+        attn_data = get_attention(model, 'gpt2', tokenizer, text, include_queries_and_keys=False)['all']
+        tokens = ['B', 'ert', ' is', ' a', ' yellow', ' m', 'uppet', ' character']
         self.assertEqual(attn_data['left_text'], tokens)
         self.assertEqual(attn_data['right_text'], tokens)
         seq_len = len(tokens)
@@ -176,8 +176,8 @@ class TestAttention(unittest.TestCase):
         tokenizer = XLNetTokenizer.from_pretrained('xlnet-large-cased')
         model = XLNetModel.from_pretrained('xlnet-large-cased')
         text = 'Bert is a yellow muppet character'
-        attn_data = get_attention(model, tokenizer, text, include_queries_and_keys=False)['all']
-        tokens = ['Bert', 'is', 'a', 'yellow', '', 'm', 'up', 'pet', 'character']
+        attn_data = get_attention(model, 'xlnet', tokenizer, text, include_queries_and_keys=False)['all']
+        tokens = [' Bert', ' is', ' a', ' yellow', ' ', 'm', 'up', 'pet', ' character', '[SEP]', '[CLS]']
         self.assertEqual(attn_data['left_text'], tokens)
         self.assertEqual(attn_data['right_text'], tokens)
         seq_len = len(tokens)
