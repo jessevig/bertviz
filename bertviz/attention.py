@@ -58,13 +58,6 @@ def get_attention(model, model_type, tokenizer, sentence_a, sentence_b=None, inc
         if model_type == 'bert':
             tokens_a = [tokenizer.cls_token] + tokenizer.tokenize(sentence_a) + [tokenizer.sep_token]
             tokens_b = tokenizer.tokenize(sentence_b) + [tokenizer.sep_token]
-            try:
-                num_token_type_embeddings = model.embeddings.token_type_embeddings.num_embeddings
-            except:
-                pass # TODO: Support this check for more models
-            else:
-                if num_token_type_embeddings != 2:
-                    raise Exception("Model must have two token type embeddings to support sentence pair inputs")
             token_type_ids = torch.LongTensor([[0] * len(tokens_a) + [1] * len(tokens_b)])
         elif model_type == 'roberta':
             tokens_a = [tokenizer.cls_token] + tokenizer.tokenize(sentence_a) + [tokenizer.sep_token]
