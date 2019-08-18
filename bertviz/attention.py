@@ -140,10 +140,8 @@ def get_attention_bert(model, tokenizer, sentence_a, sentence_b=None, include_qu
                 queries_dict['b'].append(queries[:, slice_b, :].tolist())
                 keys_dict['b'].append(keys[:, slice_b, :].tolist())
 
-
-    # Format tokens
-    tokens_a = [t.replace('Ġ', ' ') for t in tokens_a]
-    tokens_b = [t.replace('Ġ', ' ') for t in tokens_b]
+    tokens_a = format_tokens(tokens_a, tokenizer)
+    tokens_b = format_tokens(tokens_b, tokenizer)
 
     results = {
         'all': {
@@ -200,3 +198,5 @@ def get_attention_bert(model, tokenizer, sentence_a, sentence_b=None, include_qu
     return results
 
 
+def format_tokens(tokens, tokenizer):
+    return [t.replace('Ġ', ' ').replace(tokenizer.sep_token, '[SEP]').replace(tokenizer.cls_token, '[CLS]') for t in tokens]

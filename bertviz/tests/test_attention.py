@@ -91,10 +91,10 @@ class TestAttention(unittest.TestCase):
         sentence2 = "the quick brown fox jumped over the laziest dog"
         attn_data = get_attention_bert(model, tokenizer, sentence1, sentence2,
                                        include_queries_and_keys=False, bert_type='roberta')
-        tokens_1 = ['<s>', 'The', ' quickest', ' brown', ' fox', ' jumped', ' over', ' the', ' lazy', ' dog',
-                    '</s>']
-        tokens_2 = ['</s>', 'the', ' quick', ' brown', ' fox', ' jumped', ' over', ' the', ' laz', 'iest', ' dog',
-                    '</s>']
+        tokens_1 = ['[CLS]', 'The', ' quickest', ' brown', ' fox', ' jumped', ' over', ' the', ' lazy', ' dog',
+                    '[SEP]']
+        tokens_2 = ['[SEP]', 'the', ' quick', ' brown', ' fox', ' jumped', ' over', ' the', ' laz', 'iest', ' dog',
+                    '[SEP]']
         self.assertEqual(attn_data['all']['left_text'], tokens_1 + tokens_2)
         self.assertEqual(attn_data['all']['right_text'], tokens_1 + tokens_2)
         self.assertEqual(attn_data['aa']['left_text'], tokens_1)
@@ -134,8 +134,8 @@ class TestAttention(unittest.TestCase):
         sentence2 = None
         attn_data = get_attention_bert(model, tokenizer, sentence1, sentence2,
                                        include_queries_and_keys=False, bert_type='roberta')
-        tokens_1 = ['<s>', 'The', ' quickest', ' brown', ' fox', ' jumped', ' over', ' the', ' lazy', ' dog',
-                    '</s>']
+        tokens_1 = ['[CLS]', 'The', ' quickest', ' brown', ' fox', ' jumped', ' over', ' the', ' lazy', ' dog',
+                    '[SEP]']
         tokens_2 = []
         self.assertEqual(attn_data['all']['left_text'], tokens_1 + tokens_2)
         self.assertEqual(attn_data['all']['right_text'], tokens_1 + tokens_2)
