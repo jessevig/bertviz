@@ -27,7 +27,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
         const DETAIL_BOX_HEIGHT = 20;
         const DETAIL_PADDING = 5;
         const DETAIL_HEADING_HEIGHT = 47;
-        const DETAIL_HEADING_TEXT_SIZE = 17;
+        const DETAIL_HEADING_TEXT_SIZE = 15;
         const TEXT_SIZE = 13;
 
         const LAYER_COLORS = d3.schemeCategory10;
@@ -108,8 +108,9 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .attr("font-size", DETAIL_HEADING_TEXT_SIZE + "px")
                 .style("cursor", "default")
                 .style("-webkit-user-select", "none")
+                .style("font-weight", "bold")
                 .attr("fill", fillColor)
-                .attr("x", x + 88)
+                .attr("x", x + 87)
                 .attr("y", y + 16)
                 .attr("height", DETAIL_HEADING_HEIGHT)
                 .attr("width", DETAIL_WIDTH)
