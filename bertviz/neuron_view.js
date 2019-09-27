@@ -500,9 +500,9 @@ requirejs(['jquery', 'd3'],
 
       var offset;
       if (id == "leftText") {
-        offset = -10;
+        offset = -8;
       } else {
-        offset = 10;
+        offset = 8;
       }
 
       var textContainer = tokenContainer.append("text")

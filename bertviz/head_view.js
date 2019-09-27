@@ -140,11 +140,11 @@ function renderText(svg, text, isLeft, attData, leftPos) {
 
   if (isLeft) {
     textEl.style("text-anchor", "end")
-           .attr("dx", BOXWIDTH - TEXT_SIZE)
+           .attr("dx", BOXWIDTH - 0.5 * TEXT_SIZE)
            .attr("dy", TEXT_SIZE);
   } else {
     textEl.style("text-anchor", "start")
-           .attr("dx", + TEXT_SIZE)
+           .attr("dx", + 0.5 * TEXT_SIZE)
            .attr("dy", TEXT_SIZE);
   }
 
