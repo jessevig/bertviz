@@ -16,6 +16,9 @@ requirejs(['jquery', 'd3'],
     var config = {};
     initialize();
 
+    const HEADING_TEXT_SIZE = 16;
+    const HEADING_TEXT_COLOR = "#000000";
+    const TEXT_COLOR = "#202020"
     const TEXT_SIZE = 15;
     const MATRIX_WIDTH = 200;
     const BOXWIDTH = TEXT_SIZE * 8;
@@ -25,11 +28,13 @@ requirejs(['jquery', 'd3'],
     const PADDING_WIDTH = 25;
     const DOT_WIDTH = 70;
     const SOFTMAX_WIDTH = 70;
-    const HEADING_HEIGHT = 55;
+    const HEADING_HEIGHT = 60;
     const ATTENTION_WIDTH = 175;
     const POS_COLOR = '#0c36d8';
     const NEG_COLOR = '#ff6318';
-    const HEADING_COLOR = "#6e6e6e";
+    const TEXT_HIGHLIGHT_COLOR_LEFT = "#e5e5e5";
+    const TEXT_HIGHLIGHT_COLOR_RIGHT = '#478be8';
+    const DOT_PRODUCT_BORDER_COLOR = "#5d5d5d";
 
     function render() {
 
@@ -104,89 +109,80 @@ requirejs(['jquery', 'd3'],
 
     function renderHeadingsExpanded(svg, posQueries, posKeys, posProduct, posDotProduct, posSoftmax) {
       var headingContainer = svg.append("svg:g")
-        .attr("id", "heading");
+        .attr("id", "heading")
 
       var queryHeadingContainer = headingContainer.append("text")
         .attr("x", posQueries + 68)
-        .attr("y", HEADING_HEIGHT - 10)
+        .attr("y", HEADING_HEIGHT - 12)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
-        .attr("font-size", TEXT_SIZE + "px")
-        .style('fill', HEADING_COLOR)
-        .style("font-weight", "bolder");
+        .style('fill', HEADING_TEXT_COLOR);
 
       queryHeadingContainer.append('tspan')
         .text('Query ')
-        .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10);
+        .attr("y", HEADING_HEIGHT - 12);
 
       queryHeadingContainer.append('tspan')
         .text('q')
-        .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10);
+        .attr("y", HEADING_HEIGHT - 12);
 
       var keyHeadingContainer = headingContainer.append("text")
         .attr("x", posKeys + 73)
-        .attr("y", HEADING_HEIGHT - 10)
+        .attr("y", HEADING_HEIGHT - 12)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
-        .attr("font-size", TEXT_SIZE + "px")
-        .style('fill', HEADING_COLOR)
-        .style("font-weight", "bolder");
+        .attr("font-size", HEADING_TEXT_SIZE + "px")
+        .style('fill', HEADING_TEXT_COLOR);
 
       keyHeadingContainer.append('tspan')
         .text('Key ')
-        .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10);
+        .style('font-size', HEADING_TEXT_SIZE + "px")
+        .attr("y", HEADING_HEIGHT - 12);
 
       keyHeadingContainer.append('tspan')
         .text('k ')
-        .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10);
+        .style('font-size', HEADING_TEXT_SIZE + "px")
+        .attr("y", HEADING_HEIGHT - 12);
 
       var productHeadingContainer = headingContainer.append("text")
         .attr("x", posProduct + 28)
-        .attr("y", HEADING_HEIGHT - 10)
+        .attr("y", HEADING_HEIGHT - 12)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
-        .attr("font-size", TEXT_SIZE + "px")
-        .style('fill', HEADING_COLOR)
-        .style("font-weight", "bolder");
+        .attr("font-size", HEADING_TEXT_SIZE + "px")
+        .style('fill', HEADING_TEXT_COLOR);
 
       productHeadingContainer.append('tspan')
-        .text('q \u00D7 k (element-wise)')
-        .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10);
+        .text('q \u00D7 k (elementwise)')
+        .style('font-size', HEADING_TEXT_SIZE + "px")
+        .attr("y", HEADING_HEIGHT - 12);
 
       var dotProductHeadingContainer = headingContainer.append("text")
         .attr("x", posDotProduct - 6)
-        .attr("y", HEADING_HEIGHT - 10)
+        .attr("y", HEADING_HEIGHT - 12)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
-        .attr("font-size", TEXT_SIZE + "px")
-        .style('fill', HEADING_COLOR)
-        .style("font-weight", "bolder");
+        .attr("font-size", HEADING_TEXT_SIZE + "px")
+        .style('fill', HEADING_TEXT_COLOR);
 
       dotProductHeadingContainer.append('tspan')
         .text('q')
-        .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10);
+        .style('font-size', HEADING_TEXT_SIZE + "px")
+        .attr("y", HEADING_HEIGHT - 12);
 
       dotProductHeadingContainer.append('tspan')
         .text(' \u2219 k')
-        .style('font-size', TEXT_SIZE + "px")
-        .attr("y", HEADING_HEIGHT - 10)
-        .style('fill', HEADING_COLOR);
+        .style('font-size', HEADING_TEXT_SIZE + "px")
+        .attr("y", HEADING_HEIGHT - 12);
 
       headingContainer.append("text")
         .attr("x", posSoftmax + 9)
-        .attr("y", HEADING_HEIGHT - 10)
+        .attr("y", HEADING_HEIGHT - 12)
         .attr("height", BOXHEIGHT)
         .attr("width", SOFTMAX_WIDTH)
-        .attr("font-size", TEXT_SIZE + "px")
+        .attr("font-size", HEADING_TEXT_SIZE + "px")
         .style("text-anchor", "start")
-        .style('fill', HEADING_COLOR)
-        .style("font-weight", "bolder")
+        .style('fill', HEADING_TEXT_COLOR)
         .text("Softmax");
 
       headingContainer.append("text")
@@ -197,7 +193,7 @@ requirejs(['jquery', 'd3'],
         .attr("width", SOFTMAX_WIDTH + MATRIX_WIDTH + DOT_WIDTH)
         .attr("font-size", 20 + "px")
         .text("No token selected")
-        .attr("fill", "darkgray")
+        .attr("fill", TEXT_HIGHLIGHT_COLOR_LEFT);
     }
 
     function renderHorizLines(svg, id, start_pos, end_pos) {
@@ -484,10 +480,10 @@ requirejs(['jquery', 'd3'],
       if (id == "leftText" || id == "rightText") {
         var fillColor;
         if (id == "rightText") {
-          fillColor = '#1f77b4';
+          fillColor = TEXT_HIGHLIGHT_COLOR_RIGHT;
         }
         if (id == "leftText") {
-          fillColor = 'lightgray';
+          fillColor = TEXT_HIGHLIGHT_COLOR_LEFT;
         }
 
         tokenContainer.append("rect")
@@ -515,6 +511,7 @@ requirejs(['jquery', 'd3'],
           return d;
         })
         .attr("font-size", TEXT_SIZE + "px")
+          .style("fill", TEXT_COLOR)
         .style("cursor", "default")
         .style("-webkit-user-select", "none")
         .attr("x", leftPos + offset)
@@ -637,7 +634,7 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT - 4)
         .attr("width", BOXHEIGHT - 4)
         .style("stroke-width", 1)
-        .style("stroke", "#a2b4d5")
+        .style("stroke", DOT_PRODUCT_BORDER_COLOR)
         .style("stroke-opacity", 1)
         .style("fill-opacity", 0)
         .attr("rx", 2)
@@ -656,9 +653,18 @@ requirejs(['jquery', 'd3'],
           }
         })
         .style("fill-opacity", function (d) {
-          return Math.tanh(Math.abs(d) / 64);
+          return Math.tanh(Math.abs(d) / 54);
         })
-
+        .style("stroke", function (d) {
+          if (d >= 0) {
+            return POS_COLOR;
+          } else {
+            return NEG_COLOR;
+          }
+        })
+        .style("stroke-opacity", function (d) {
+          return Math.max(Math.tanh(Math.abs(d) / 24), .15);
+        })
         .attr("data-value", function (d) {
           return d
         })
