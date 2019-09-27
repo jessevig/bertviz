@@ -14,7 +14,7 @@ Paper:
 
 The *attention-head view* visualizes the attention patterns produced by one or more attention heads in a given transformer layer.
 
-![Attention-head view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/attention_head_thumbnail.jpeg)
+![Attention-head view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/head_thumbnail_left.png) ![Attention-head view animated](https://raw.githubusercontent.com/jessevig/bertviz/master/images/head_thumbnail_right.gif)
 
  BERT:
  [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_bert.ipynb)
