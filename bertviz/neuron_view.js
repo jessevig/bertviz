@@ -17,6 +17,7 @@ requirejs(['jquery', 'd3'],
     initialize();
 
     const HEADING_TEXT_SIZE = 16;
+    const HEADING_HEIGHT = 42;
     const HEADING_TEXT_COLOR = "#000000";
     const TEXT_COLOR = "#202020"
     const TEXT_SIZE = 15;
@@ -28,8 +29,7 @@ requirejs(['jquery', 'd3'],
     const PADDING_WIDTH = 25;
     const DOT_WIDTH = 70;
     const SOFTMAX_WIDTH = 70;
-    const HEADING_HEIGHT = 60;
-    const ATTENTION_WIDTH = 175;
+    const ATTENTION_WIDTH = 150;
     const POS_COLOR = '#0c36d8';
     const NEG_COLOR = '#ff6318';
     const TEXT_HIGHLIGHT_COLOR_LEFT = "#e5e5e5";
@@ -120,11 +120,14 @@ requirejs(['jquery', 'd3'],
 
       queryHeadingContainer.append('tspan')
         .text('Query ')
-        .attr("y", HEADING_HEIGHT - 12);
+        .attr("y", HEADING_HEIGHT - 12)
+        .attr("font-size", HEADING_TEXT_SIZE + "px");
 
       queryHeadingContainer.append('tspan')
         .text('q')
-        .attr("y", HEADING_HEIGHT - 12);
+        .attr("y", HEADING_HEIGHT - 12)
+        .attr("font-size", HEADING_TEXT_SIZE + "px");
+
 
       var keyHeadingContainer = headingContainer.append("text")
         .attr("x", posKeys + 73)

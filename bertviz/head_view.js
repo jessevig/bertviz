@@ -2,7 +2,6 @@
  * @fileoverview Transformer Visualization D3 javascript code.
  *
  *
-
  *  Based on: https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/visualization/attention.js
  *
  * Change log:
@@ -13,13 +12,12 @@
 requirejs(['jquery', 'd3'], function($, d3) {
 
 const TEXT_SIZE = 15;
-const BOXWIDTH = TEXT_SIZE * 8;
-const BOXHEIGHT = TEXT_SIZE * 1.5;
-const WIDTH = 2000;
-const HEIGHT_PADDING = 100;
-const MATRIX_WIDTH = 150;
-const HEAD_COLORS = d3.scale.category10();
+const BOXWIDTH = 110;
+const BOXHEIGHT = 22.5;
+const MATRIX_WIDTH = 115;
 const CHECKBOX_SIZE = 20;
+const TEXT_TOP = 30;
+const HEAD_COLORS = d3.scale.category10();
 
 var params = window.params;
 var config = {};
@@ -57,11 +55,11 @@ function render() {
   $("#vis svg").empty();
   $("#vis").empty();
 
-  var height = config.initialTextLength * BOXHEIGHT * 2 + HEIGHT_PADDING;
+  var height = config.initialTextLength * BOXHEIGHT + TEXT_TOP;
   var svg = d3.select("#vis")
             .append('svg')
-            .attr("width", WIDTH)
-            .attr("height", height);
+            .attr("width", "100%")
+            .attr("height", height + "px");
 
   var attData = [];
   for (var i=0; i < config.nHeads; i++) {
@@ -123,7 +121,7 @@ function renderText(svg, text, isLeft, attData, leftPos) {
                 .attr("fill", "lightgray")
                 .attr("x", leftPos)
                 .attr("y", function(d, i) {
-                  return (i+1) * BOXHEIGHT;
+                  return TEXT_TOP + i * BOXHEIGHT;
                 })
                 .attr("width", BOXWIDTH)
                 .attr("height", BOXHEIGHT);
@@ -135,7 +133,7 @@ function renderText(svg, text, isLeft, attData, leftPos) {
                               .style("-webkit-user-select", "none")
                               .attr("x", leftPos)
                               .attr("y", function(d, i) {
-                                return (i+1) * BOXHEIGHT;
+                                return TEXT_TOP + i * BOXHEIGHT;
                               });
 
   if (isLeft) {
@@ -163,17 +161,17 @@ function renderText(svg, text, isLeft, attData, leftPos) {
         })
        .attr("y1", function(d, i) {
         if (isLeft) {
-          return (index+1) * BOXHEIGHT + (BOXHEIGHT/2);
+          return TEXT_TOP + index * BOXHEIGHT + (BOXHEIGHT/2);
         } else {
-          return (i+1) * BOXHEIGHT + (BOXHEIGHT/2);
+          return TEXT_TOP + i * BOXHEIGHT + (BOXHEIGHT/2);
         }
      })
      .attr("x1", BOXWIDTH)
      .attr("y2", function(d, i) {
        if (isLeft) {
-          return (i+1) * BOXHEIGHT + (BOXHEIGHT/2);
+          return TEXT_TOP + i * BOXHEIGHT + (BOXHEIGHT/2);
         } else {
-          return (index+1) * BOXHEIGHT + (BOXHEIGHT/2);
+          return TEXT_TOP + index * BOXHEIGHT + (BOXHEIGHT/2);
         }
      })
      .attr("x2", BOXWIDTH + MATRIX_WIDTH)
@@ -202,7 +200,7 @@ function renderText(svg, text, isLeft, attData, leftPos) {
          .selectAll("g")
          .selectAll("rect")
          .attr("x", function(d, i, j) { return leftPos + boxOffsets(j); })
-         .attr("y", function(d, i) { return (i+1) * BOXHEIGHT; })
+         .attr("y", function(d, i) { return TEXT_TOP + i * BOXHEIGHT; })
          .attr("width", BOXWIDTH/activeHeads())
          .attr("height", function() { return BOXHEIGHT; })
          .style("opacity", function(d, i, j) {
@@ -253,9 +251,9 @@ function renderAttention(svg, attentionHeads) {
     for(var s=0; s<attentionHeads[h].length; s++) {
       for(var a=0; a<attentionHeads[h][s].length; a++) {
         line_container.append("line")
-        .attr("y1", (s+1) * BOXHEIGHT + (BOXHEIGHT/2))
+        .attr("y1", TEXT_TOP + s * BOXHEIGHT + (BOXHEIGHT/2))
         .attr("x1", BOXWIDTH)
-        .attr("y2", (a+1) * BOXHEIGHT + (BOXHEIGHT/2))
+        .attr("y2", TEXT_TOP + a * BOXHEIGHT + (BOXHEIGHT/2))
         .attr("x2", BOXWIDTH + MATRIX_WIDTH)
         .attr("stroke-width", 2)
         .attr("stroke", HEAD_COLORS(h))
@@ -294,7 +292,7 @@ function drawCheckboxes(top, svg, attentionHeads) {
                                     return HEAD_COLORS(i);
                                   })
                                   .attr("x", function(d, i) {
-                                    return (i+1) * CHECKBOX_SIZE;
+                                    return i * CHECKBOX_SIZE;
                                   })
                                   .attr("y", top)
                                   .attr("width", CHECKBOX_SIZE)
@@ -341,7 +339,9 @@ function initialize() {
   config.nHeads = config.attention[config.filter]['attn'][0].length;
   config.headVis  = new Array(config.nHeads).fill(true);
   config.layer = 0;
-  config.initialTextLength = config.attention[config.filter].right_text.length
+  config.initialTextLength = config.attention[config.filter].right_text.length;
+  console.log('initial text length')
+  console.log(config.initialTextLength)
 }
 
 $("#layer").empty();

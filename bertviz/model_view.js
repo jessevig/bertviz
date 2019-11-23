@@ -16,20 +16,17 @@ requirejs(['jquery', 'd3'], function($, d3) {
 
         const MIN_X = 0;
         const MIN_Y = 0;
-
         const DIV_WIDTH = 970;
-
         const THUMBNAIL_PADDING = 5;
-
         const DETAIL_WIDTH = 300;
         const DETAIL_ATTENTION_WIDTH = 140;
         const DETAIL_BOX_WIDTH = 80;
         const DETAIL_BOX_HEIGHT = 20;
         const DETAIL_PADDING = 5;
+        const ATTN_PADDING = 0;
         const DETAIL_HEADING_HEIGHT = 47;
         const DETAIL_HEADING_TEXT_SIZE = 15;
         const TEXT_SIZE = 13;
-
         const LAYER_COLORS = d3.schemeCategory10;
 
         function render() {
@@ -227,7 +224,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .attr("y2", function (d, targetIndex) {
                     return y1 + (targetIndex + .5) * config.thumbnailBoxHeight;
                 })
-                .attr("stroke-width", 3)
+                .attr("stroke-width", 2)
                 .attr("stroke", getColor(layerIndex))
                 .attr("stroke-opacity", function (d) {
                     return d;
@@ -297,12 +294,12 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 })
                 .enter()
                 .append("line")
-                .attr("x1", x + DETAIL_PADDING)
+                .attr("x1", x + ATTN_PADDING)
                 .attr("y1", function (d) {
                     var sourceIndex = +this.parentNode.getAttribute("source-index");
                     return y + (sourceIndex + .5) * DETAIL_BOX_HEIGHT;
                 })
-                .attr("x2", x + DETAIL_ATTENTION_WIDTH - DETAIL_PADDING)
+                .attr("x2", x + DETAIL_ATTENTION_WIDTH - ATTN_PADDING)
                 .attr("y2", function (d, targetIndex) {
                     return y + (targetIndex + .5) * DETAIL_BOX_HEIGHT;
                 })
