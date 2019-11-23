@@ -32,7 +32,7 @@ RoBERTa: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_
 
 The *model view* provides a birds-eye view of attention across all of the model’s layers  and heads.
 
-![Model view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/model_thumbnail.png)
+![Model view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/model_thumbnail.jpg)
 
 BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_bert.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1A6xDAwAY-8MGHs3sCmy1QKUjC5O9f-4K)<br>

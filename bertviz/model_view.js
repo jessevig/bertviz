@@ -224,7 +224,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .attr("y2", function (d, targetIndex) {
                     return y1 + (targetIndex + .5) * config.thumbnailBoxHeight;
                 })
-                .attr("stroke-width", 2)
+                .attr("stroke-width", 2.2)
                 .attr("stroke", getColor(layerIndex))
                 .attr("stroke-opacity", function (d) {
                     return d;
