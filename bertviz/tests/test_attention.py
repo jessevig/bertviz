@@ -1,5 +1,5 @@
-from bertviz.attention import get_attention
-from bertviz.pytorch_transformers_attn import BertTokenizer, BertModel, BertConfig, GPT2Model, GPT2Tokenizer, \
+from bertviz.neuron_view import get_attention
+from bertviz.transformers_neuron_view import BertTokenizer, BertModel, BertConfig, GPT2Model, GPT2Tokenizer, \
     XLNetModel, XLNetTokenizer, BertForSequenceClassification, BertForQuestionAnswering, RobertaModel, RobertaTokenizer
 
 import unittest
