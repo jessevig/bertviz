@@ -1,6 +1,6 @@
 # BertViz
 
-Tool for visualizing attention in all models from the [Transformers library]((https://github.com/transformers)) (BERT, GPT-2, XLNet, RoBERTa, XLM, CTRL, etc.). Extends [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj) and [pytorch-transformers](https://github.com/huggingface/pytorch-transformers) from [HuggingFace](https://github.com/huggingface).
+Tool for visualizing attention in the Transformer model. Supports all all models from the [transformers](https://github.com/huggingface/transformers) library (BERT, GPT-2, XLNet, RoBERTa, XLM, CTRL, etc.). Extends [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj) and the [transformers](https://github.com/huggingface/transformers) library from [HuggingFace](https://github.com/huggingface).
 
 Blog posts:
 * [Deconstructing BERT, Part 2: Visualizing the Inner Workings of Attention](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1)
@@ -20,10 +20,10 @@ The *attention-head view* visualizes the attention patterns produced by one or m
 The attention view supports all models from the Transformers library, including:<br>
  BERT:
  [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_bert.ipynb)
-  [[Colab]](https://colab.research.google.com/drive/1pS-eegmUz9EqXJw22VbVIHlHoXjNaYuc)<br>
+  [[Colab]](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)<br>
  GPT-2:
   [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_gpt2.ipynb)
-[[Colab]](https://colab.research.google.com/drive/1qEJ4HiKy9XUKgu0t5SBNurkPAdEPnzke)<br>
+[[Colab]](https://colab.research.google.com/drive/1c9kBsbvSqpKkmd62u7nfqVhvWr0W8_Lx)<br>
  XLNet: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlnet.ipynb)<br>
 RoBERTa: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_roberta.ipynb)<br>
 XLM: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlm.ipynb)
@@ -36,7 +36,9 @@ The *model view* provides a birds-eye view of attention across all of the modelâ
 
 The model view supports all models from the Transformers library, including:<br>
 BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_bert.ipynb)
-[[Colab]](https://colab.research.google.com/drive/1A6xDAwAY-8MGHs3sCmy1QKUjC5O9f-4K)<br>
+[[Colab]](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS)<br>
+GPT2: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_gpt2.ipynb)
+[[Colab]](https://colab.research.google.com/drive/1y-wfC95Z0aASawYqA34LQeV0_qC9mOto)<br>
 (For other models, see examples from head view, above)
 
 
