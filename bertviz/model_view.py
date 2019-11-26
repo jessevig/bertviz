@@ -23,13 +23,13 @@ def model_view(attention, tokens, prettify_tokens=True):
 
     if prettify_tokens:
         tokens = format_special_chars(tokens)
-    formatted_attention = format_attention(attention)
-    attn_seq_len = len(formatted_attention[0][0])
+    attn = format_attention(attention).tolist()
+    attn_seq_len = len(attn[0][0])
     if attn_seq_len != len(tokens):
         raise ValueError(f"Attention has {attn_seq_len} positions, while number of tokens is {len(tokens)}")
     attn_data = {
         'all': {
-            'attn': formatted_attention,
+            'attn': attn,
             'left_text': tokens,
             'right_text': tokens
         }
