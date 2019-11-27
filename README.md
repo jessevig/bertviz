@@ -29,7 +29,7 @@ RoBERTa: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_
 XLM: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlm.ipynb)<br>
 Albert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_albert.ipynb)<br>
 DistilBert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_distilbert.ipynb)<br>
-and more!
+(and others)
 
 ## Model view 
 
@@ -42,8 +42,12 @@ BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_be
 [[Colab]](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS)<br>
 GPT2: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1y-wfC95Z0aASawYqA34LQeV0_qC9mOto)<br>
-(For other models, see examples from head view, above)
-
+ XLNet: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_xlnet.ipynb)<br>
+RoBERTa: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_roberta.ipynb)<br>
+XLM: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_xlm.ipynb)<br>
+Albert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_albert.ipynb)<br>
+DistilBert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_distilbert.ipynb)<br>
+(and others)
 
 ## Neuron view 
 The *neuron view* visualizes the individual neurons in the query and key vectors and shows how they are used to compute attention.

@@ -9,4 +9,4 @@ def format_attention(attention):
     return torch.stack(squeezed)
 
 def format_special_chars(tokens):
-    return [t.replace('Ġ', ' ').replace('▁', ' ') for t in tokens]
+    return [t.replace('Ġ', ' ').replace('▁', ' ').replace('</w>', '') for t in tokens]
