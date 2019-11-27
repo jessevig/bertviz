@@ -26,7 +26,10 @@ The attention view supports all models from the Transformers library, including:
 [[Colab]](https://colab.research.google.com/drive/1c9kBsbvSqpKkmd62u7nfqVhvWr0W8_Lx)<br>
  XLNet: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlnet.ipynb)<br>
 RoBERTa: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_roberta.ipynb)<br>
-XLM: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlm.ipynb)
+XLM: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlm.ipynb)<br>
+Albert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_albert.ipynb)<br>
+DistilBert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_distilbert.ipynb)<br>
+and more!
 
 ## Model view 
 
@@ -58,8 +61,8 @@ RoBERTa
 
 
 ## Requirements
-* [Transformers](https://pypi.org/project/transformers/)
-* [PyTorch](https://pytorch.org/) >=1.0.0
+* [Transformers](https://pypi.org/project/transformers/) (version required depends on models used)
+* [PyTorch](https://pytorch.org/) >=1.0.0 
 * [Jupyter](https://jupyter.org/install)
 * [tqdm](https://pypi.org/project/tqdm/)
 * [boto3](https://pypi.org/project/boto3/)
