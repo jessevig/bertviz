@@ -84,6 +84,7 @@ git clone https://github.com/jessevig/bertviz.git
 cd bertviz
 jupyter notebook
 ```
+NOTE: If you with to run BertViz using Colab, please refer to the example Colab scripts above, as there are some differences with the Jupyter notebook versions.
 
 ## Authors
 
