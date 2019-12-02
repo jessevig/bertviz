@@ -88,7 +88,7 @@ NOTE: If you wish to run BertViz using Colab, please see the example Colab scrip
 
 ## Authors
 
-* [Jesse Vig](https://github.com/jessevig)
+[Jesse Vig](https://twitter.com/jesse_vig)
 
 ## Citation
 
