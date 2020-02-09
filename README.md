@@ -78,13 +78,13 @@ RoBERTa
 (See [requirements.txt](https://github.com/jessevig/bertviz/blob/master/requirements.txt))
 
 ## Execution
-#####Running locally:
+##### Running locally:
 ```
 git clone https://github.com/jessevig/bertviz.git
 cd bertviz
 jupyter notebook
 ```
-#####Running from Colab:
+##### Running from Colab:
 
 See the example Colab scripts above, as the code differs slightly from the local notebook versions.
 
