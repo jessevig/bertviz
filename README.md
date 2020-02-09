@@ -84,7 +84,7 @@ git clone https://github.com/jessevig/bertviz.git
 cd bertviz
 jupyter notebook
 ```
-Click on any of the sample notebooks. Note that they do not cover all Huggingface models, but the execution code should be similar for those not included. 
+Click on any of the sample notebooks. Note that the sample notebooks do not cover all Huggingface models, but the execution code should be similar for those not included. 
 ##### Running from Colab:
 
 See the example Colab scripts above, as the code differs slightly from the local notebook versions.
