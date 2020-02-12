@@ -88,7 +88,7 @@ Click on any of the sample notebooks. Note that the sample notebooks do not cove
 ##### Running from Colab:
 Click on any of the Colab links above, and scroll to the bottom of the page. It should be pre-loaded with the visualization, so you don't need to actually run anything.
  
-If you write your own code for executing BertViz in Colab, note that some additional steps are required as shown in the linked Colabs.
+If you write your own code for executing BertViz in Colab, note that some of the steps are different from those in the Jupyter notebooks (see Colab examples above).
 
 ## Authors
 
