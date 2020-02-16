@@ -14,3 +14,5 @@ requests
 regex
 # For XLNet
 sentencepiece
+
+jupyter
