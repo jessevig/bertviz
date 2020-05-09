@@ -95,7 +95,7 @@ If you write your own code for executing BertViz in Colab, note that some of the
 
 ##### Current limitations
 
-The tool works best with shorter sentences and may fail if the input text is very long. Some elements may not render properly if multiple visualizations are combined in a single notebook.
+The visualizations works best with shorter sentences and may fail if the input text is very long. The tool is designed such that only one visualization should be included per notebook. 
 
 ## Authors
 
