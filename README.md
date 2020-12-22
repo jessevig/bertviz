@@ -80,7 +80,7 @@ RoBERTa
 (See [requirements.txt](https://github.com/jessevig/bertviz/blob/master/requirements.txt))
 
 ## Execution
-##### Running locally:
+### Running locally:
 ```
 git clone https://github.com/jessevig/bertviz.git
 cd bertviz
@@ -88,14 +88,16 @@ jupyter notebook
 ```
 Click on any of the sample notebooks. Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
 
-##### Running from Colab:
+### Running from Colab:
 Click on any of the Colab links above, and scroll to the bottom of the page. It should be pre-loaded with the visualization, so you don't need to actually run anything.
  
 If you write your own code for executing BertViz in Colab, note that some of the steps are different from those in the Jupyter notebooks (see Colab examples above).
 
-##### Current limitations
+### Current limitations
 
-The visualizations works best with shorter sentences and may fail if the input text is very long. The tool is designed such that only one visualization should be included per notebook. 
+The visualizations works best with shorter sentences and may fail if the input text is very long. The tool is designed
+ such that only one visualization should be included per notebook. If you have issues running the tool in Jupyter Lab,
+ try running with a plain Jupyter notebook.
 
 ## Authors
 
