@@ -66,16 +66,20 @@ RoBERTa
 
 ## Execution
 ### Running locally
+
 ```
 git clone https://github.com/jessevig/bertviz.git
 cd bertviz
+<Install from requirements.txt as needed>
 jupyter notebook
 ```
-Click on any of the sample notebooks. Be sure to first install any necessary dependencies from [requirements.txt](https://github.com/jessevig/bertviz/blob/master/requirements.txt) (not required for viewing cached visualizations, described below). 
+
+###
+Click on any of the sample notebooks. 
 Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
 
 #### Viewing cached visualizations
-If you wish to view the cached visualization output in a notebook without running the code yourself, run the following commands prior to viewing the notebook:
+If you wish to view the cached visualization output in a notebook without running the code yourself, run the following commands prior to viewing the notebook (no install required):
 ```
 cd bertviz
 jupyter trust <Notebook Name>.ipynb
