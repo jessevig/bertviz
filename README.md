@@ -81,7 +81,7 @@ cd bertviz
 jupyter trust <Notebook Name>.ipynb
 ```
 
-### Running from Colab:
+### Running from Colab
 Click on any of the Colab links above, and scroll to the bottom of the page. It should be pre-loaded with the visualization.
  
 If you write your own code for executing BertViz in Colab, note that some of the steps are different from those in the Jupyter notebooks (see Colab examples above).
