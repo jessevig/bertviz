@@ -6,12 +6,11 @@ Blog post:
 * [Deconstructing BERT, Part 2: Visualizing the Inner Workings of Attention](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) (Part 1 is not a prerequisite)
 
 Paper:
-* [A Multiscale Visualization of Attention in the Transformer Model](https://arxiv.org/pdf/1906.05714.pdf)
+* [A Multiscale Visualization of Attention in the Transformer Model](https://www.aclweb.org/anthology/P19-3007.pdf)
 
 Related blog posts:
 * [OpenAI GPT-2: Understanding Language Generation through Visualization](https://towardsdatascience.com/openai-gpt-2-understanding-language-generation-through-visualization-8252f683b2f8)
 * [Deconstructing BERT: Distilling 6 Patterns from 100 Million Parameters](https://towardsdatascience.com/deconstructing-bert-distilling-6-patterns-from-100-million-parameters-b49113672f77)
-
 
 ## Attention-head view
 
@@ -58,42 +57,36 @@ The *neuron view* visualizes the individual neurons in the query and key vectors
 
 The neuron view supports the following three models:<br>
 BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_bert.ipynb) 
-[[Colab (view only)]](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)<br>
+[[Colab]](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)<br>
 GPT-2
 [[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_gpt2.ipynb) 
-[[Colab (view only)]](https://colab.research.google.com/drive/1s8XCCyxsKvNRWNzjWi5Nl8ZAYZ5YkLm_)<br>
+[[Colab]](https://colab.research.google.com/drive/1s8XCCyxsKvNRWNzjWi5Nl8ZAYZ5YkLm_)<br>
 RoBERTa
 [[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_roberta.ipynb) 
 
-
-## Requirements
-* [Transformers](https://pypi.org/project/transformers/) (version required depends on models used)
-* [PyTorch](https://pytorch.org/) >=1.0.0 
-* [Jupyter](https://jupyter.org/install)
-* [tqdm](https://pypi.org/project/tqdm/)
-* [boto3](https://pypi.org/project/boto3/)
-* [IPython](https://pypi.org/project/ipython/)
-* [requests](https://pypi.org/project/requests/)
-* [regex](https://pypi.org/project/regex/)
-* [sentencepiece](https://pypi.org/project/sentencepiece/)
-
-(See [requirements.txt](https://github.com/jessevig/bertviz/blob/master/requirements.txt))
-
 ## Execution
-### Running locally:
+### Running locally
 ```
 git clone https://github.com/jessevig/bertviz.git
 cd bertviz
 jupyter notebook
 ```
-Click on any of the sample notebooks. Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
+Click on any of the sample notebooks. Be sure to first install any necessary dependencies from [requirements.txt](https://github.com/jessevig/bertviz/blob/master/requirements.txt) (not required for viewing cached visualizations, described below). 
+Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
+
+#### Viewing cached visualizations
+If you wish to view the cached visualization output in a notebook without running the code yourself, run the following commands prior to viewing the notebook:
+```
+cd bertviz
+jupyter trust <Notebook Name>.ipynb
+```
 
 ### Running from Colab:
-Click on any of the Colab links above, and scroll to the bottom of the page. It should be pre-loaded with the visualization, so you don't need to actually run anything.
+Click on any of the Colab links above, and scroll to the bottom of the page. It should be pre-loaded with the visualization.
  
 If you write your own code for executing BertViz in Colab, note that some of the steps are different from those in the Jupyter notebooks (see Colab examples above).
 
-### Current limitations
+## Current limitations
 
 The visualizations works best with shorter sentences and may fail if the input text is very long. The tool is designed
  such that only one visualization should be included per notebook. If you have issues running the tool in Jupyter Lab,
@@ -105,15 +98,20 @@ The visualizations works best with shorter sentences and may fail if the input t
 
 ## Citation
 
-When referencing BertViz, please cite [this paper](https://arxiv.org/abs/1906.05714).
+When referencing BertViz, please cite [this paper](https://www.aclweb.org/anthology/P19-3007.pdf).
 
 ```
-@article{vig2019transformervis,
-  author    = {Jesse Vig},
-  title     = {A Multiscale Visualization of Attention in the Transformer Model},
-  journal   = {arXiv preprint arXiv:1906.05714},
-  year      = {2019},
-  url       = {https://arxiv.org/abs/1906.05714}
+@inproceedings{vig-2019-multiscale,
+    title = "A Multiscale Visualization of Attention in the Transformer Model",
+    author = "Vig, Jesse",
+    booktitle = "Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics: System Demonstrations",
+    month = jul,
+    year = "2019",
+    address = "Florence, Italy",
+    publisher = "Association for Computational Linguistics",
+    url = "https://www.aclweb.org/anthology/P19-3007",
+    doi = "10.18653/v1/P19-3007",
+    pages = "37--42",
 }
 ```
 
@@ -122,7 +120,6 @@ When referencing BertViz, please cite [this paper](https://arxiv.org/abs/1906.05
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
-
-This project incorporates code from the following repos:
+We thank the authors of the following projects, which are incorporated into this repo:
 * https://github.com/tensorflow/tensor2tensor
 * https://github.com/huggingface/pytorch-pretrained-BERT
