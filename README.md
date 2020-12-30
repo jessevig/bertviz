@@ -75,15 +75,8 @@ jupyter notebook
 ```
 
 ###
-Click on any of the sample notebooks. 
-Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
-
-#### Viewing cached visualizations
-If you wish to view the cached visualization output in a notebook without running the code yourself, run the following commands prior to viewing the notebook (no install required):
-```
-cd bertviz
-jupyter trust <Notebook Name>.ipynb
-```
+Click on any of the sample notebooks. You can view a notebook's cached output visualizations by selecting `File > Trust Notebook` (and confirming in dialog)
+or you can run the notebook yourself. Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
 
 ### Running from Colab
 Click on any of the Colab links above, and scroll to the bottom of the page. It should be pre-loaded with the visualization.
