@@ -7,358 +7,350 @@
  * Change log:
  *
  * 12/19/18  Jesse Vig   Assorted cleanup. Changed orientation of attention matrices.
- */
+ * 12/29/20  Jesse Vig   Significant refactor.
+ **/
 
-requirejs(['jquery', 'd3'], function($, d3) {
 
-const TEXT_SIZE = 15;
-const BOXWIDTH = 110;
-const BOXHEIGHT = 22.5;
-const MATRIX_WIDTH = 115;
-const CHECKBOX_SIZE = 20;
-const TEXT_TOP = 30;
-const HEAD_COLORS = d3.scale.category10();
+requirejs(['jquery', 'd3'], function ($, d3) {
 
-var params = window.params;
-var config = {};
-initialize();
+    const TEXT_SIZE = 15;
+    const BOXWIDTH = 110;
+    const BOXHEIGHT = 22.5;
+    const MATRIX_WIDTH = 115;
+    const CHECKBOX_SIZE = 20;
+    const TEXT_TOP = 30;
 
-function lighten(color) {
-  var c = d3.hsl(color);
-  var increment = (1 - c.l) * 0.6;
-  c.l += increment;
-  c.s -= increment;
-  return c;
-}
+    // var headColors;
+    console.log("d3 version", d3.version)
+    let headColors;
+    try {
+        headColors = d3.scaleOrdinal(d3.schemeCategory10);
+    } catch (err) {
+        console.log('Older d3 version')
+        headColors = d3.scale.category10();
+    }
+    const params = window.params;
+    let config = {};
+    initialize();
 
-function transpose(mat) {
-  return mat[0].map(function(col, i) {
-    return mat.map(function(row) {
-      return row[i];
-    });
-  });
-}
+    function render() {
 
-function zip(a, b) {
-  return a.map(function (e, i) {
-    return [e, b[i]];
-  });
-}
+        // Load parameters
+        const attnData = config.attention[config.filter];
+        const leftText = attnData.left_text;
+        const rightText = attnData.right_text;
 
-function render() {
+        // Select attention for given layer
+        const layerAttention = attnData.attn[config.layer];
 
-  var attnData = config.attention[config.filter];
-  var leftText = attnData.left_text;
-  var rightText = attnData.right_text;
-  var attentionHeads = attnData.attn[config.layer];
+        // Clear vis
+        $("#vis svg").empty();
+        $("#vis").empty();
 
-  $("#vis svg").empty();
-  $("#vis").empty();
-
-  var height = config.initialTextLength * BOXHEIGHT + TEXT_TOP;
-  var svg = d3.select("#vis")
+        // Determine size of visualization
+        const height = config.initialTextLength * BOXHEIGHT + TEXT_TOP;
+        const svg = d3.select("#vis")
             .append('svg')
             .attr("width", "100%")
             .attr("height", height + "px");
 
-  var attData = [];
-  for (var i=0; i < config.nHeads; i++) {
-    var att = attentionHeads[i];
-    var att_trans = transpose(att);
-    attData.push(zip(att_trans, att));
-  }
+        // Display tokens on left and right side of visualization
+        renderText(svg, leftText, true, layerAttention, 0);
+        renderText(svg, rightText, false, layerAttention, MATRIX_WIDTH + BOXWIDTH);
 
-  renderText(svg, leftText, true, attData, 0);
-  renderText(svg, rightText, false, attData, MATRIX_WIDTH + BOXWIDTH);
+        // Render attention arcs
+        renderAttention(svg, layerAttention);
 
-  renderAttentionHighlights(svg, attData);
+        // Draw squares at top of visualization, one for each head
+        drawCheckboxes(0, svg, layerAttention);
+    }
 
-  svg.append("g").classed("attentionHeads", true);
+    function renderText(svg, text, isLeft, attention, leftPos) {
 
-  renderAttention(svg, attentionHeads);
+        const textContainer = svg.append("svg:g")
+            .attr("id", isLeft ? "left" : "right");
 
-  drawCheckboxes(0, svg, attentionHeads);
+        // Add attention highlights superimposed over words
+        textContainer.append("g")
+            .classed("attentionBoxes", true)
+            .selectAll("g")
+            .data(attention)
+            .enter()
+            .append("g")
+            .attr("head-index", (d, i) => i)
+            .selectAll("rect")
+            .data(d => isLeft ? d : transpose(d)) // if right text, transpose attention to get right-to-left weights
+            .enter()
+            .append("rect")
+            .attr("x", function () {
+                var headIndex = +this.parentNode.getAttribute("head-index");
+                return leftPos + boxOffsets(headIndex);
+            })
+            .attr("y", (+1) * BOXHEIGHT)
+            .attr("width", BOXWIDTH / activeHeads())
+            .attr("height", BOXHEIGHT)
+            .attr("fill", function () {
+                return headColors(+this.parentNode.getAttribute("head-index"))
+            })
+            .style("opacity", 0.0);
 
-}
+        const tokenContainer = textContainer.append("g").selectAll("g")
+            .data(text)
+            .enter()
+            .append("g");
 
-function renderText(svg, text, isLeft, attData, leftPos) {
-  // attData: list of tuples (att, att_trans), one for each layer. att and att_trans are attention matrics for each layer.
-  //           att is of shape [nHeads, source_len, target_len)
-  var id = isLeft ? "left" : "right";
-  var textContainer = svg.append("svg:g")
-                         .attr("id", id);
+        // Add gray background that appears when hovering over text
+        tokenContainer.append("rect")
+            .classed("background", true)
+            .style("opacity", 0.0)
+            .attr("fill", "lightgray")
+            .attr("x", leftPos)
+            .attr("y", (d, i) => TEXT_TOP + i * BOXHEIGHT)
+            .attr("width", BOXWIDTH)
+            .attr("height", BOXHEIGHT);
 
-  textContainer.append("g").classed("attentionBoxes", true)
-               .selectAll("g")
-               .data(attData)
-               .enter()
-               .append("g")
-               .selectAll("rect")
-               .data(function(d) {return d;})
-               .enter()
-               .append("rect")
-               .attr("x", function(d, i, j) {
-                 return leftPos + boxOffsets(j);
-               })
-               .attr("y", function(d, i) {
-                 return (+1) * BOXHEIGHT;
-               })
-               .attr("width", BOXWIDTH / activeHeads())
-               .attr("height", function() { return BOXHEIGHT; })
-               .attr("fill", function(d, i, j) {
-                  return HEAD_COLORS(j);
-                })
-               .style("opacity", 0.0);
+        // Add token text
+        const textEl = tokenContainer.append("text")
+            .text(d => d)
+            .attr("font-size", TEXT_SIZE + "px")
+            .style("cursor", "default")
+            .style("-webkit-user-select", "none")
+            .attr("x", leftPos)
+            .attr("y", (d, i) => TEXT_TOP + i * BOXHEIGHT);
 
-  var tokenContainer = textContainer.append("g").selectAll("g")
-                                    .data(text)
-                                    .enter()
-                                    .append("g");
-
-  tokenContainer.append("rect")
-                .classed("background", true)
-                .style("opacity", 0.0)
-                .attr("fill", "lightgray")
-                .attr("x", leftPos)
-                .attr("y", function(d, i) {
-                  return TEXT_TOP + i * BOXHEIGHT;
-                })
-                .attr("width", BOXWIDTH)
-                .attr("height", BOXHEIGHT);
-
-  var textEl = tokenContainer.append("text")
-                              .text(function(d) { return d; })
-                              .attr("font-size", TEXT_SIZE + "px")
-                              .style("cursor", "default")
-                              .style("-webkit-user-select", "none")
-                              .attr("x", leftPos)
-                              .attr("y", function(d, i) {
-                                return TEXT_TOP + i * BOXHEIGHT;
-                              });
-
-  if (isLeft) {
-    textEl.style("text-anchor", "end")
-           .attr("dx", BOXWIDTH - 0.5 * TEXT_SIZE)
-           .attr("dy", TEXT_SIZE);
-  } else {
-    textEl.style("text-anchor", "start")
-           .attr("dx", + 0.5 * TEXT_SIZE)
-           .attr("dy", TEXT_SIZE);
-  }
-
-  tokenContainer.on("mouseover", function(d, index) {
-    textContainer.selectAll(".background")
-                 .style("opacity", function(d, i) {
-                   return i == index ? 1.0 : 0.0;
-                 });
-
-    svg.selectAll(".attentionHeads").style("display", "none");
-
-    svg.selectAll(".lineHeads")  // To get the nesting to work.
-       .selectAll(".attLines")
-       .attr("stroke-opacity", function(d) {
-          return 1.0;
-        })
-       .attr("y1", function(d, i) {
         if (isLeft) {
-          return TEXT_TOP + index * BOXHEIGHT + (BOXHEIGHT/2);
+            textEl.style("text-anchor", "end")
+                .attr("dx", BOXWIDTH - 0.5 * TEXT_SIZE)
+                .attr("dy", TEXT_SIZE);
         } else {
-          return TEXT_TOP + i * BOXHEIGHT + (BOXHEIGHT/2);
+            textEl.style("text-anchor", "start")
+                .attr("dx", +0.5 * TEXT_SIZE)
+                .attr("dy", TEXT_SIZE);
         }
-     })
-     .attr("x1", BOXWIDTH)
-     .attr("y2", function(d, i) {
-       if (isLeft) {
-          return TEXT_TOP + i * BOXHEIGHT + (BOXHEIGHT/2);
-        } else {
-          return TEXT_TOP + index * BOXHEIGHT + (BOXHEIGHT/2);
-        }
-     })
-     .attr("x2", BOXWIDTH + MATRIX_WIDTH)
-     .attr("stroke-width", 2)
-     .attr("stroke", function(d, i, j) {
-        return HEAD_COLORS(j);
-      })
-     .attr("stroke-opacity", function(d, i, j) {
-      if (isLeft) {d = d[0];} else {d = d[1];}
-      if (config.headVis[j]) {
-        if (d) {
-          return d[index];
-        } else {
-          return 0.0;
-        }
-      } else {
-        return 0.0;
-      }
-     });
 
-    function updateAttentionBoxes() {
-      var id = isLeft ? "right" : "left";
-      var leftPos = isLeft ? MATRIX_WIDTH + BOXWIDTH : 0;
-      svg.select("#" + id)
-         .selectAll(".attentionBoxes")
-         .selectAll("g")
-         .selectAll("rect")
-         .attr("x", function(d, i, j) { return leftPos + boxOffsets(j); })
-         .attr("y", function(d, i) { return TEXT_TOP + i * BOXHEIGHT; })
-         .attr("width", BOXWIDTH/activeHeads())
-         .attr("height", function() { return BOXHEIGHT; })
-         .style("opacity", function(d, i, j) {
-            if (isLeft) {d = d[0];} else {d = d[1];}
-            if (config.headVis[j])
-              if (d) {
-                return d[index];
-              } else {
-                return 0.0;
-              }
-            else
-              return 0.0;
-         });
+        tokenContainer.on("mouseover", function (d, index) {
+
+            // Show gray background for moused-over token
+            textContainer.selectAll(".background")
+                .style("opacity", (d, i) => i === index ? 1.0 : 0.0)
+
+            // Reset visibility attribute for any previously highlighted attention arcs
+            svg.select("#attention")
+                .selectAll("line[visibility='visible']")
+                .attr("visibility", null)
+
+            // Hide group containing attention arcs
+            svg.select("#attention").attr("visibility", "hidden");
+
+            // Set to visible appropriate attention arcs to be highlighted
+            if (isLeft) {
+                svg.select("#attention").selectAll("line[left-token-index='" + index + "']").attr("visibility", "visible");
+            } else {
+                svg.select("#attention").selectAll("line[right-token-index='" + index + "']").attr("visibility", "visible");
+            }
+
+            // Update color boxes superimposed over tokens
+            const id = isLeft ? "right" : "left";
+            const leftPos = isLeft ? MATRIX_WIDTH + BOXWIDTH : 0;
+            svg.select("#" + id)
+                .selectAll(".attentionBoxes")
+                .selectAll("g")
+                .attr("head-index", (d, i) => i)
+                .selectAll("rect")
+                .attr("x", function () {
+                    const headIndex = +this.parentNode.getAttribute("head-index");
+                    return leftPos + boxOffsets(headIndex);
+                })
+                .attr("y", (d, i) => TEXT_TOP + i * BOXHEIGHT)
+                .attr("width", BOXWIDTH / activeHeads())
+                .attr("height", BOXHEIGHT)
+                .style("opacity", function (d) {
+                    const headIndex = +this.parentNode.getAttribute("head-index");
+                    if (config.headVis[headIndex])
+                        if (d) {
+                            return d[index];
+                        } else {
+                            return 0.0;
+                        }
+                    else
+                        return 0.0;
+                });
+        });
+
+        textContainer.on("mouseleave", function () {
+
+            // Unhighlight selected token
+            d3.select(this).selectAll(".background")
+                .style("opacity", 0.0);
+
+            // Reset visibility attributes for previously selected lines
+            svg.select("#attention")
+                .selectAll("line[visibility='visible']")
+                .attr("visibility", null) ;
+            svg.select("#attention").attr("visibility", "visible");
+
+            // Reset highlights superimposed over tokens
+            svg.selectAll(".attentionBoxes")
+                .selectAll("g")
+                .selectAll("rect")
+                .style("opacity", 0.0);
+        });
     }
 
-    updateAttentionBoxes();
-  });
+    function renderAttention(svg, attention) {
 
-  textContainer.on("mouseleave", function() {
-    d3.select(this).selectAll(".background")
-                   .style("opacity", 0.0);
-    svg.selectAll(".attLines").attr("stroke-opacity", 0.0);
-    svg.selectAll(".attentionHeads").style("display", "inline");
-    svg.selectAll(".attentionBoxes")
-       .selectAll("g")
-       .selectAll("rect")
-       .style("opacity", 0.0);
-  });
-}
+        // Remove previous dom elements
+        svg.select("#attention").remove();
 
-function renderAttentionHighlights(svg, attention) {
-  var line_container = svg.append("g");
-  line_container.selectAll("g")
-                .data(attention)
-                .enter()
-                .append("g")
-                .classed("lineHeads", true)
-                .selectAll("line")
-                .data(function(d){return d;})
-                .enter()
-                .append("line").classed("attLines", true);
-}
-
-function renderAttention(svg, attentionHeads) {
-  var line_container = svg.selectAll(".attentionHeads");
-  line_container.html(null);
-  for(var h=0; h<attentionHeads.length; h++) {
-    for(var s=0; s<attentionHeads[h].length; s++) {
-      for(var a=0; a<attentionHeads[h][s].length; a++) {
-        line_container.append("line")
-        .attr("y1", TEXT_TOP + s * BOXHEIGHT + (BOXHEIGHT/2))
-        .attr("x1", BOXWIDTH)
-        .attr("y2", TEXT_TOP + a * BOXHEIGHT + (BOXHEIGHT/2))
-        .attr("x2", BOXWIDTH + MATRIX_WIDTH)
-        .attr("stroke-width", 2)
-        .attr("stroke", HEAD_COLORS(h))
-        .attr("stroke-opacity", function() {
-          if (config.headVis[h]) {
-            return attentionHeads[h][s][a]/activeHeads();
-          } else {
-            return 0.0;
-          }
-        }());
-      }
+        // Add new elements
+        svg.append("g")
+            .attr("id", "attention") // Container for all attention arcs
+            .selectAll(".headAttention")
+            .data(attention)
+            .enter()
+            .append("g")
+            .classed("headAttention", true) // Group attention arcs by head
+            .attr("head-index", (d, i) => i)
+            .selectAll(".tokenAttention")
+            .data(d => d)
+            .enter()
+            .append("g")
+            .classed("tokenAttention", true) // Group attention arcs by left token
+            .attr("left-token-index", (d, i) => i)
+            .selectAll("line")
+            .data(d => d)
+            .enter()
+            .append("line")
+            .attr("x1", BOXWIDTH)
+            .attr("y1", function () {
+                const leftTokenIndex = +this.parentNode.getAttribute("left-token-index")
+                return TEXT_TOP + leftTokenIndex * BOXHEIGHT + (BOXHEIGHT / 2)
+            })
+            .attr("x2", BOXWIDTH + MATRIX_WIDTH)
+            .attr("y2", (d, rightTokenIndex) => TEXT_TOP + rightTokenIndex * BOXHEIGHT + (BOXHEIGHT / 2))
+            .attr("stroke-width", 2)
+            .attr("stroke", function () {
+                const headIndex = +this.parentNode.parentNode.getAttribute("head-index");
+                return headColors(headIndex)
+            })
+            .attr("left-token-index", function () {
+                return +this.parentNode.getAttribute("left-token-index")
+            })
+            .attr("right-token-index", (d, i) => i)
+        ;
+        updateAttention(svg)
     }
-  }
-}
 
-// Checkboxes
-function boxOffsets(i) {
-  var numHeadsAbove = config.headVis.reduce(
-      function(acc, val, cur) {return val && cur < i ? acc + 1: acc;}, 0);
-  return numHeadsAbove * (BOXWIDTH / activeHeads());
-}
+    function updateAttention(svg) {
+        svg.select("#attention")
+            .selectAll("line")
+            .attr("stroke-opacity", function (d) {
+                const headIndex = +this.parentNode.parentNode.getAttribute("head-index");
+                // If head is selected
+                if (config.headVis[headIndex]) {
+                    // Set opacity to attention weight divided by number of active heads
+                    return d / activeHeads()
+                } else {
+                    return 0.0;
+                }
+            })
+    }
 
-function activeHeads() {
-  return config.headVis.reduce(function(acc, val) {
-    return val ? acc + 1: acc;
-  }, 0);
-}
+    function boxOffsets(i) {
+        const numHeadsAbove = config.headVis.reduce(
+            function (acc, val, cur) {
+                return val && cur < i ? acc + 1 : acc;
+            }, 0);
+        return numHeadsAbove * (BOXWIDTH / activeHeads());
+    }
 
-function drawCheckboxes(top, svg, attentionHeads) {
-  var checkboxContainer = svg.append("g");
-  var checkbox = checkboxContainer.selectAll("rect")
-                                  .data(config.headVis)
-                                  .enter()
-                                  .append("rect")
-                                  .attr("fill", function(d, i) {
-                                    return HEAD_COLORS(i);
-                                  })
-                                  .attr("x", function(d, i) {
-                                    return i * CHECKBOX_SIZE;
-                                  })
-                                  .attr("y", top)
-                                  .attr("width", CHECKBOX_SIZE)
-                                  .attr("height", CHECKBOX_SIZE);
+    function activeHeads() {
+        return config.headVis.reduce(function (acc, val) {
+            return val ? acc + 1 : acc;
+        }, 0);
+    }
 
-  function updateCheckboxes() {
-    checkboxContainer.selectAll("rect")
-                              .data(config.headVis)
-                              .attr("fill", function(d, i) {
-      var headColor = HEAD_COLORS(i);
-      var color = d ? headColor : lighten(headColor);
-      return color;
+    function drawCheckboxes(top, svg) {
+        const checkboxContainer = svg.append("g");
+        const checkbox = checkboxContainer.selectAll("rect")
+            .data(config.headVis)
+            .enter()
+            .append("rect")
+            .attr("fill", (d, i) => headColors(i))
+            .attr("x", (d, i) => i * CHECKBOX_SIZE)
+            .attr("y", top)
+            .attr("width", CHECKBOX_SIZE)
+            .attr("height", CHECKBOX_SIZE);
+
+        function updateCheckboxes() {
+            checkboxContainer.selectAll("rect")
+                .data(config.headVis)
+                .attr("fill", (d, i) => d ? headColors(i): lighten(headColors(i)));
+        }
+
+        updateCheckboxes();
+
+        checkbox.on("click", function (d, i) {
+            if (config.headVis[i] && activeHeads() === 1) return;
+            config.headVis[i] = !config.headVis[i];
+            updateCheckboxes();
+            updateAttention(svg);
+        });
+
+        checkbox.on("dblclick", function (d, i) {
+            // If we double click on the only active head then reset
+            if (config.headVis[i] && activeHeads() === 1) {
+                config.headVis = new Array(config.nHeads).fill(true);
+            } else {
+                config.headVis = new Array(config.nHeads).fill(false);
+                config.headVis[i] = true;
+            }
+            updateCheckboxes();
+            updateAttention(svg);
+        });
+    }
+
+    function lighten(color) {
+        const c = d3.hsl(color);
+        const increment = (1 - c.l) * 0.6;
+        c.l += increment;
+        c.s -= increment;
+        return c;
+    }
+
+    function transpose(mat) {
+        return mat[0].map(function (col, i) {
+            return mat.map(function (row) {
+                return row[i];
+            });
+        });
+    }
+
+    function initialize() {
+        config.attention = params['attention'];
+        config.filter = params['default_filter'];
+        config.nLayers = config.attention[config.filter]['attn'].length;
+        config.nHeads = config.attention[config.filter]['attn'][0].length;
+        config.headVis = new Array(config.nHeads).fill(true);
+        config.layer = 0;
+        config.initialTextLength = config.attention[config.filter].right_text.length;
+    }
+
+    $("#layer").empty();
+    for (var i = 0; i < config.nLayers; i++) {
+        $("#layer").append($("<option />").val(i).text(i));
+    }
+
+    $("#layer").on('change', function (e) {
+        config.layer = +e.currentTarget.value;
+        render();
     });
-  }
 
-  updateCheckboxes();
+    $("#filter").on('change', function (e) {
+        config.filter = e.currentTarget.value;
+        render();
+    });
 
-  checkbox.on("click", function(d, i) {
-    if (config.headVis[i] && activeHeads() == 1) return;
-    config.headVis[i] = !config.headVis[i];
-    updateCheckboxes();
-    renderAttention(svg, attentionHeads);
-  });
-
-  checkbox.on("dblclick", function(d, i) {
-    // If we double click on the only active head then reset
-    if (config.headVis[i] && activeHeads() == 1) {
-      config.headVis = new Array(config.nHeads).fill(true);
-    } else {
-      config.headVis = new Array(config.nHeads).fill(false);
-      config.headVis[i] = true;
-    }
-    updateCheckboxes();
-    renderAttention(svg, attentionHeads);
-  });
-}
-
-function initialize() {
-  config.attention = params['attention'];
-  config.filter = params['default_filter'];
-  config.nLayers = config.attention[config.filter]['attn'].length;
-  console.log('num layers')
-  console.log(config.nLayers)
-  config.nHeads = config.attention[config.filter]['attn'][0].length;
-  config.headVis  = new Array(config.nHeads).fill(true);
-  config.layer = 0;
-  config.initialTextLength = config.attention[config.filter].right_text.length;
-  console.log('initial text length')
-  console.log(config.initialTextLength)
-}
-
-$("#layer").empty();
-for(var i=0; i<config.nLayers; i++) {
-  $("#layer").append($("<option />").val(i).text(i));
-}
-
-$("#layer").on('change', function(e) {
-  config.layer = +e.currentTarget.value;
-  render();
-});
-
-$("#filter").on('change', function(e) {
-  config.filter = e.currentTarget.value;
-  render();
-});
-
-render();
+    render();
 
 });
