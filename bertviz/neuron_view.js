@@ -25,8 +25,7 @@ requirejs(['jquery', 'd3'],
     const MATRIX_WIDTH = 200;
     const BOXWIDTH = TEXT_SIZE * 8;
     const BOXHEIGHT = 26;
-    const WIDTH = 3000;
-    const HEIGHT_PADDING = 800;
+    const HEIGHT_PADDING = 100;
     const PADDING_WIDTH = 25;
     const DOT_WIDTH = 70;
     const SOFTMAX_WIDTH = 70;
@@ -47,11 +46,11 @@ requirejs(['jquery', 'd3'],
       var att = attnData.attn[config.layer][config.head];
 
       $("#bertviz #vis").empty();
-      var height = config.initialTextLength * BOXHEIGHT * 2 + HEIGHT_PADDING;
+      var height = config.initialTextLength * BOXHEIGHT + HEIGHT_PADDING;
       var svg = d3.select("#bertviz #vis")
         .append('svg')
-        .attr("width", WIDTH)
-        .attr("height", height);
+        .attr("width", "100%")
+        .attr("height", height + "px");
 
       renderVisExpanded(svg, leftText, rightText, queries, keys);
       renderVisCollapsed(svg, leftText, rightText, att);
