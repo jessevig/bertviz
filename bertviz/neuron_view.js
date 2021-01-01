@@ -12,6 +12,7 @@
 
 requirejs(['jquery', 'd3'],
   function ($, d3) {
+    console.log('Inside function')
 
     const params = PYTHON_PARAMS; // HACK: PYTHON_PARAMS is a template marker that is replaced by actual params.
 
@@ -959,6 +960,7 @@ requirejs(['jquery', 'd3'],
         });
     }
 
+    console.log("render")
     render();
 
   });
