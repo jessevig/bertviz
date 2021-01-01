@@ -8,11 +8,13 @@
  *
  * 12/19/18  Jesse Vig   Assorted cleanup. Changed orientation of attention matrices.
  * 12/29/20  Jesse Vig   Significant refactor.
+ * 12/31/20  Jesse Vig   Support multiple visualizations in single notebook.
  **/
 
 
 requirejs(['jquery', 'd3'], function ($, d3) {
 
+    const params = PYTHON_PARAMS; // HACK: PYTHON_PARAMS is a template marker that is replaced by actual params.
     const TEXT_SIZE = 15;
     const BOXWIDTH = 110;
     const BOXHEIGHT = 22.5;
@@ -29,11 +31,41 @@ requirejs(['jquery', 'd3'], function ($, d3) {
         console.log('Older d3 version')
         headColors = d3.scale.category10();
     }
-    const params = window.params;
+    // let params = window.params;
     let config = {};
     initialize();
+    renderVis();
 
-    function render() {
+    function initialize() {
+        config.attention = params['attention'];
+        config.filter = params['default_filter'];
+        config.rootDivId = params['root_div_id'];
+        config.nLayers = config.attention[config.filter]['attn'].length;
+        config.nHeads = config.attention[config.filter]['attn'][0].length;
+        config.headVis = new Array(config.nHeads).fill(true);
+        config.layer = 0;
+        config.initialTextLength = config.attention[config.filter].right_text.length;
+
+        // .empty();
+        let layerEl = $(`#${config.rootDivId} #layer`);
+        // console.log('layerel', layerEl)
+
+        for (var i = 0; i < config.nLayers; i++) {
+            layerEl.append($("<option />").val(i).text(i));
+        }
+
+        layerEl.on('change', function (e) {
+            config.layer = +e.currentTarget.value;
+            renderVis();
+        });
+
+        $(`#${config.rootDivId} #filter`).on('change', function (e) {
+            config.filter = e.currentTarget.value;
+            renderVis();
+        });
+    }
+
+    function renderVis() {
 
         // Load parameters
         const attnData = config.attention[config.filter];
@@ -44,12 +76,11 @@ requirejs(['jquery', 'd3'], function ($, d3) {
         const layerAttention = attnData.attn[config.layer];
 
         // Clear vis
-        $("#vis svg").empty();
-        $("#vis").empty();
+        $(`#${config.rootDivId} #vis`).empty();
 
         // Determine size of visualization
         const height = config.initialTextLength * BOXHEIGHT + TEXT_TOP;
-        const svg = d3.select("#vis")
+        const svg = d3.select(`#${config.rootDivId} #vis`)
             .append('svg')
             .attr("width", "100%")
             .attr("height", height + "px");
@@ -325,32 +356,5 @@ requirejs(['jquery', 'd3'], function ($, d3) {
             });
         });
     }
-
-    function initialize() {
-        config.attention = params['attention'];
-        config.filter = params['default_filter'];
-        config.nLayers = config.attention[config.filter]['attn'].length;
-        config.nHeads = config.attention[config.filter]['attn'][0].length;
-        config.headVis = new Array(config.nHeads).fill(true);
-        config.layer = 0;
-        config.initialTextLength = config.attention[config.filter].right_text.length;
-    }
-
-    $("#layer").empty();
-    for (var i = 0; i < config.nLayers; i++) {
-        $("#layer").append($("<option />").val(i).text(i));
-    }
-
-    $("#layer").on('change', function (e) {
-        config.layer = +e.currentTarget.value;
-        render();
-    });
-
-    $("#filter").on('change', function (e) {
-        config.filter = e.currentTarget.value;
-        render();
-    });
-
-    render();
 
 });

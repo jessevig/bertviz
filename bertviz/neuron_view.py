@@ -16,6 +16,7 @@
 # Change log
 # 12/12/18  Jesse Vig   Adapted to BERT model
 # 12/19/18  Jesse Vig   Assorted cleanup. Changed orientation of attention matrices. Updated comments.
+# 12/30/20  Jesse Vig   Enable multiple visualizations in one notebook
 
 
 """Module for postprocessing and displaying transformer attentions.
@@ -24,14 +25,22 @@ This module is designed to be called from an ipython notebook.
 """
 
 import json
-from IPython.core.display import display, HTML, Javascript
 import os
-import torch
+import uuid
 from collections import defaultdict
 
+import torch
+from IPython.core.display import display, HTML, Javascript
+
+
 def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
+
+    # Generate unique div id to enable multiple visualizations in one notebook
+    vis_id = 'bertviz-%s'%(uuid.uuid4().hex)
+
     if sentence_b:
         vis_html = """
+        <div id='%s'>
           <span style="user-select:none">
             Layer: <select id="layer"></select>
             Head: <select id="att_head"></select>
@@ -44,19 +53,21 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
             </select>
           </span>
           <div id='vis'></div>
-        """
+        </div>
+        """%(vis_id)
     else:
         vis_html = """
-          <span style="user-select:none">
-            Layer: <select id="layer"></select>
-            Head: <select id="att_head"></select>
-          </span>
-          <div id='vis'></div>
-        """
+            <div id='%s'>
+              <span style="user-select:none">
+                Layer: <select id="layer"></select>
+                Head: <select id="att_head"></select>
+              </span>
+              <div id='vis'></div>
+            </div>
+         """%(vis_id)
     display(HTML(vis_html))
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    vis_js = open(os.path.join(__location__, 'neuron_view.js')).read()
     attn_data = get_attention(model, model_type, tokenizer, sentence_a, sentence_b, include_queries_and_keys=True)
     if model_type == 'gpt2':
         bidirectional = False
@@ -65,9 +76,11 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
     params = {
         'attention': attn_data,
         'default_filter': "all",
-        'bidirectional': bidirectional
+        'bidirectional': bidirectional,
+        'root_div_id': vis_id
     }
-    display(Javascript('window.params = %s' % json.dumps(params)))
+    vis_js = open(os.path.join(__location__, 'neuron_view.js')).read().replace("PYTHON_PARAMS", json.dumps(params))
+
     display(Javascript(vis_js))
 
 

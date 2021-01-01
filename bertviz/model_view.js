@@ -6,13 +6,14 @@
  * Change log:
  *
  * 02/01/19  Jesse Vig   Initial implementation
+ * 12/31/20  Jesse Vig   Support multiple visualizations in single notebook.
  */
 
 
 requirejs(['jquery', 'd3'], function($, d3) {
 
-        var params = window.params;
-        var config = {};
+        const params = PYTHON_PARAMS; // HACK: PYTHON_PARAMS is a template marker that is replaced by actual params.
+        const config = {};
 
         const MIN_X = 0;
         const MIN_Y = 0;
@@ -45,9 +46,10 @@ requirejs(['jquery', 'd3'], function($, d3) {
             config.detailHeight = Math.max(config.leftText.length, config.rightText.length) * DETAIL_BOX_HEIGHT + 2 * DETAIL_PADDING + DETAIL_HEADING_HEIGHT;
             config.divHeight = config.numLayers * config.thumbnailHeight;
 
-            $("#vis").empty();
-            $("#vis").attr("height", config.divHeight);
-            config.svg = d3.select("#vis")
+            const vis = $(`#${config.rootDivId} #vis`)
+            vis.empty();
+            vis.attr("height", config.divHeight);
+            config.svg = d3.select(`#${config.rootDivId} #vis`)
                 .append('svg')
                 .attr("width", DIV_WIDTH)
                 .attr("height", config.divHeight)
@@ -309,20 +311,20 @@ requirejs(['jquery', 'd3'], function($, d3) {
                     return d;
                 });
         }
-        
+
         function getColor(layer) {
           return LAYER_COLORS[layer % 10];
         }
 
         function initialize() {
-          config.attention = params['attention'];
-          config.filter = params['default_filter'];
+            config.attention = params['attention'];
+            config.filter = params['default_filter'];
+            config.rootDivId = params['root_div_id'];
+            $(`#${config.rootDivId} #filter`).on('change', function (e) {
+                config.filter = e.currentTarget.value;
+                render();
+            });
         }
-
-        $("#filter").on('change', function (e) {
-            config.filter = e.currentTarget.value;
-            render();
-        });
 
         initialize();
         render();

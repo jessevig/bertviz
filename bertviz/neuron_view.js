@@ -7,13 +7,16 @@
  *
  * 12/19/18  Jesse Vig   Assorted cleanup. Changed orientation of attention matrices.
  * 12/22/18  Jesse Vig   Display attention details: query/key vectors
+ * 12/31/20  Jesse Vig   Enable multiple visualizations per notebook
  */
 
 requirejs(['jquery', 'd3'],
   function ($, d3) {
 
-    var params = window.params;
-    var config = {};
+    const params = PYTHON_PARAMS; // HACK: PYTHON_PARAMS is a template marker that is replaced by actual params.
+
+    const config = {};
+    const root = params["root_div_id"];
     initialize();
 
     const HEADING_TEXT_SIZE = 16;
@@ -46,9 +49,11 @@ requirejs(['jquery', 'd3'],
       var keys = attnData.keys[config.layer][config.head];
       var att = attnData.attn[config.layer][config.head];
 
-      $("#vis").empty();
+      console.log(`#${root} #vis`);
+
+      $(`#${root} #vis`).empty();
       var height = config.initialTextLength * BOXHEIGHT * 2 + HEIGHT_PADDING;
-      var svg = d3.select("#vis")
+      var svg = d3.select(`#${root} #vis`)
         .append('svg')
         .attr("width", WIDTH)
         .attr("height", height);
@@ -127,7 +132,6 @@ requirejs(['jquery', 'd3'],
         .text('q')
         .attr("y", HEADING_HEIGHT - 12)
         .attr("font-size", HEADING_TEXT_SIZE + "px");
-
 
       var keyHeadingContainer = headingContainer.append("text")
         .attr("x", posKeys + 73)
@@ -897,11 +901,11 @@ requirejs(['jquery', 'd3'],
 
     function showCollapsed() {
        if (config.index != null) {
-        var svg = d3.select("#vis");
+        var svg = d3.select(`#${root} #vis`);
         highlightSelection(svg, config.index);
       }
-      d3.select("#expanded").attr("visibility", "hidden");
-      d3.select("#collapsed").attr("visibility", "visible");
+      d3.select(`#${root} #expanded`).attr("visibility", "hidden");
+      d3.select(`#${root} #collapsed`).attr("visibility", "visible");
     }
 
     function showExpanded() {
@@ -910,8 +914,8 @@ requirejs(['jquery', 'd3'],
         highlightSelection(svg, config.index);
         showComputation(svg, config.index);
       }
-      d3.select("#expanded").attr("visibility", "visible");
-      d3.select("#collapsed").attr("visibility", "hidden")
+      d3.select(`#${root} #expanded`).attr("visibility", "visible");
+      d3.select(`#${root} #collapsed`).attr("visibility", "hidden")
     }
     
     function initialize() {
@@ -927,32 +931,33 @@ requirejs(['jquery', 'd3'],
       config.initialTextLength = attentionFilter.right_text.length;
       config.expanded = false;
       config.bidirectional = params['bidirectional']
+
+
+        $(`#${root} #layer`).empty();
+        for (var i = 0; i < config.nLayers; i++) {
+          $(`#${root} #layer`).append($("<option />").val(i).text(i));
+        }
+
+        $(`#${root} #layer`).on('change', function (e) {
+          config.layer = +e.currentTarget.value;
+          render();
+        });
+
+        $(`#${root} #att_head`).empty();
+        for (var i = 0; i < config.nHeads; i++) {
+          $(`#${root} #att_head`).append($("<option />").val(i).text(i));
+        }
+
+        $(`#${root} #att_head`).on('change', function (e) {
+          config.head = +e.currentTarget.value;
+          render();
+        });
+
+        $(`#${root} #filter`).on('change', function (e) {
+          config.filter = e.currentTarget.value;
+          render();
+        });
     }
-
-    $("#layer").empty();
-    for (var i = 0; i < config.nLayers; i++) {
-      $("#layer").append($("<option />").val(i).text(i));
-    }
-
-    $("#layer").on('change', function (e) {
-      config.layer = +e.currentTarget.value;
-      render();
-    });
-
-    $("#att_head").empty();
-    for (var i = 0; i < config.nHeads; i++) {
-      $("#att_head").append($("<option />").val(i).text(i));
-    }
-
-    $("#att_head").on('change', function (e) {
-      config.head = +e.currentTarget.value;
-      render();
-    });
-
-    $("#filter").on('change', function (e) {
-      config.filter = e.currentTarget.value;
-      render();
-    });
 
     render();
 

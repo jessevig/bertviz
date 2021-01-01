@@ -1,6 +1,9 @@
 import json
-from IPython.core.display import display, HTML, Javascript
 import os
+import uuid
+
+from IPython.core.display import display, HTML, Javascript
+
 from .util import format_special_chars, format_attention
 
 
@@ -11,36 +14,38 @@ def head_view(attention, tokens, sentence_b_start = None, prettify_tokens=True):
             attention: list of ``torch.FloatTensor``(one for each layer) of shape
                 ``(batch_size(must be 1), num_heads, sequence_length, sequence_length)``
             tokens: list of tokens
-            sentence_b_index: index of first wordpiece in sentence B if input text is sentence pair (optional)
+            sentence_b_start: index of first wordpiece in sentence B if input text is sentence pair (optional)
             prettify_tokens: indicates whether to remove special characters in wordpieces, e.g. Ġ
     """
 
+    # Generate unique div id to enable multiple visualizations in one notebook
+    vis_id = 'bertviz-%s'%(uuid.uuid4().hex)
+
     if sentence_b_start is not None:
         vis_html = """
-        <span style="user-select:none">
-            Layer: <select id="layer"></select>
-            Attention: <select id="filter">
-              <option value="all">All</option>
-              <option value="aa">Sentence A -> Sentence A</option>
-              <option value="ab">Sentence A -> Sentence B</option>
-              <option value="ba">Sentence B -> Sentence A</option>
-              <option value="bb">Sentence B -> Sentence B</option>
-            </select>
-            </span>
-        <div id='vis'></div>
-        """
+            <div id='%s'>
+                <span style="user-select:none">
+                    Layer: <select id="layer"></select>
+                    Attention: <select id="filter">
+                      <option value="all">All</option>
+                      <option value="aa">Sentence A -> Sentence A</option>
+                      <option value="ab">Sentence A -> Sentence B</option>
+                      <option value="ba">Sentence B -> Sentence A</option>
+                      <option value="bb">Sentence B -> Sentence B</option>
+                    </select>
+                    </span>
+                <div id='vis'></div>
+            </div>
+        """%(vis_id)
     else:
         vis_html = """
+            <div id='%s'>
               <span style="user-select:none">
                 Layer: <select id="layer"></select>
               </span>
               <div id='vis'></div> 
-            """
-
-    display(HTML(vis_html))
-    __location__ = os.path.realpath(
-        os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    vis_js = open(os.path.join(__location__, 'head_view.js')).read()
+            </div>
+        """%(vis_id)
 
     if prettify_tokens:
         tokens = format_special_chars(tokens)
@@ -78,11 +83,15 @@ def head_view(attention, tokens, sentence_b_start = None, prettify_tokens=True):
         }
     params = {
         'attention': attn_data,
-        'default_filter': "all"
+        'default_filter': "all",
+        'root_div_id': vis_id
     }
     attn_seq_len = len(attn_data['all']['attn'][0][0])
     if attn_seq_len != len(tokens):
         raise ValueError(f"Attention has {attn_seq_len} positions, while number of tokens is {len(tokens)}")
 
-    display(Javascript('window.params = %s' % json.dumps(params)))
+    display(HTML(vis_html))
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    vis_js = open(os.path.join(__location__, 'head_view.js')).read().replace("PYTHON_PARAMS", json.dumps(params))
     display(Javascript(vis_js))
