@@ -3,7 +3,7 @@
 BertViz is a tool for visualizing attention in the Transformer model, supporting all models from the [transformers](https://github.com/huggingface/transformers) library (BERT, GPT-2, XLNet, RoBERTa, XLM, CTRL, etc.). It extends the [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj) and the [transformers](https://github.com/huggingface/transformers) library from [HuggingFace](https://github.com/huggingface).
 
 **Interactive Demo**:
-* Try out this [Colab Notebook](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing) (visualizations are pre-loaded)
+* Try out this [Colab Notebook](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing) with pre-loaded visualizations (no need to run).
 
 **Blog post**:
 * [Deconstructing BERT, Part 2: Visualizing the Inner Workings of Attention](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) (Part 1 is not a prerequisite)
@@ -89,9 +89,12 @@ If you write your own code for executing BertViz in Colab, note that some of the
 
 ## Current limitations
 
-The visualizations works best with shorter sentences and may fail if the input text is very long. The tool is designed
- such that only one visualization should be included per notebook. If you have issues running the tool in Jupyter Lab,
- try running with a plain Jupyter notebook.
+* The visualizations works best with shorter sentences and may run slowly if the input text is very long, especially for the Model View.
+* The Neuron View only supports BERT, GPT-2, and Roberta models, because this required modifying the code for these models (see transformers_neuron_view directory) in order to
+retrieve the query and key values. Also, only one Neuron View may be included per notebook.
+* If you have issues running the tool in Jupyter Lab, try running with a plain Jupyter notebook.
+* Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
+necessarily provide a direct *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf)], [[2](https://arxiv.org/abs/1902.10186)], [[3](https://arxiv.org/pdf/1908.04626.pdf)].
 
 ## Authors
 
