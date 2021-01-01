@@ -7,17 +7,14 @@
  *
  * 12/19/18  Jesse Vig   Assorted cleanup. Changed orientation of attention matrices.
  * 12/22/18  Jesse Vig   Display attention details: query/key vectors
- * 12/31/20  Jesse Vig   Enable multiple visualizations per notebook
+ * 01/01/21  Jesse Vig   Change to bertviz-specific naming conventions so as not to interfere with other html elements
  */
 
 requirejs(['jquery', 'd3'],
   function ($, d3) {
-    console.log('Inside function')
 
-    const params = PYTHON_PARAMS; // HACK: PYTHON_PARAMS is a template marker that is replaced by actual params.
-
+    const params = window.bertviz_params
     const config = {};
-    const root = params["root_div_id"];
     initialize();
 
     const HEADING_TEXT_SIZE = 16;
@@ -45,16 +42,13 @@ requirejs(['jquery', 'd3'],
       var attnData = config.attention[config.filter];
       var leftText = attnData.left_text;
       var rightText = attnData.right_text;
-      // var attentionHeads = attnData.attn[config.layer];
       var queries = attnData.queries[config.layer][config.head];
       var keys = attnData.keys[config.layer][config.head];
       var att = attnData.attn[config.layer][config.head];
 
-      console.log(`#${root} #vis`);
-
-      $(`#${root} #vis`).empty();
+      $("#bertviz #vis").empty();
       var height = config.initialTextLength * BOXHEIGHT * 2 + HEIGHT_PADDING;
-      var svg = d3.select(`#${root} #vis`)
+      var svg = d3.select("#bertviz #vis")
         .append('svg')
         .attr("width", WIDTH)
         .attr("height", height);
@@ -902,11 +896,11 @@ requirejs(['jquery', 'd3'],
 
     function showCollapsed() {
        if (config.index != null) {
-        var svg = d3.select(`#${root} #vis`);
+        var svg = d3.select("#bertviz #vis");
         highlightSelection(svg, config.index);
       }
-      d3.select(`#${root} #expanded`).attr("visibility", "hidden");
-      d3.select(`#${root} #collapsed`).attr("visibility", "visible");
+      d3.select("#bertviz #expanded").attr("visibility", "hidden");
+      d3.select("#bertviz #collapsed").attr("visibility", "visible");
     }
 
     function showExpanded() {
@@ -915,8 +909,8 @@ requirejs(['jquery', 'd3'],
         highlightSelection(svg, config.index);
         showComputation(svg, config.index);
       }
-      d3.select(`#${root} #expanded`).attr("visibility", "visible");
-      d3.select(`#${root} #collapsed`).attr("visibility", "hidden")
+      d3.select("#bertviz #expanded").attr("visibility", "visible");
+      d3.select("#bertviz #collapsed").attr("visibility", "hidden")
     }
     
     function initialize() {
@@ -934,33 +928,32 @@ requirejs(['jquery', 'd3'],
       config.bidirectional = params['bidirectional']
 
 
-        $(`#${root} #layer`).empty();
+        $("#bertviz #layer").empty();
         for (var i = 0; i < config.nLayers; i++) {
-          $(`#${root} #layer`).append($("<option />").val(i).text(i));
+          $("#bertviz #layer").append($("<option />").val(i).text(i));
         }
 
-        $(`#${root} #layer`).on('change', function (e) {
+        $("#bertviz #layer").on('change', function (e) {
           config.layer = +e.currentTarget.value;
           render();
         });
 
-        $(`#${root} #att_head`).empty();
+        $("#bertviz #att_head").empty();
         for (var i = 0; i < config.nHeads; i++) {
-          $(`#${root} #att_head`).append($("<option />").val(i).text(i));
+          $("#bertviz #att_head").append($("<option />").val(i).text(i));
         }
 
-        $(`#${root} #att_head`).on('change', function (e) {
+        $("#bertviz #att_head").on('change', function (e) {
           config.head = +e.currentTarget.value;
           render();
         });
 
-        $(`#${root} #filter`).on('change', function (e) {
+        $("#bertviz #filter").on('change', function (e) {
           config.filter = e.currentTarget.value;
           render();
         });
     }
 
-    console.log("render")
     render();
 
   });

@@ -36,11 +36,10 @@ from IPython.core.display import display, HTML, Javascript
 def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
 
     # Generate unique div id to enable multiple visualizations in one notebook
-    vis_id = 'bertviz-%s'%(uuid.uuid4().hex)
 
     if sentence_b:
         vis_html = """
-        <div id='%s'>
+        <div id="bertviz">
           <span style="user-select:none">
             Layer: <select id="layer"></select>
             Head: <select id="att_head"></select>
@@ -54,17 +53,17 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
           </span>
           <div id='vis'></div>
         </div>
-        """%(vis_id)
+        """
     else:
         vis_html = """
-            <div id='%s'>
+            <div id="bertviz">
               <span style="user-select:none">
                 Layer: <select id="layer"></select>
                 Head: <select id="att_head"></select>
               </span>
               <div id='vis'></div>
             </div>
-         """%(vis_id)
+         """
     display(HTML(vis_html))
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -76,11 +75,10 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
     params = {
         'attention': attn_data,
         'default_filter': "all",
-        'bidirectional': bidirectional,
-        'root_div_id': vis_id
+        'bidirectional': bidirectional
     }
-    vis_js = open(os.path.join(__location__, 'neuron_view.js')).read().replace("PYTHON_PARAMS", json.dumps(params))
-
+    vis_js = open(os.path.join(__location__, 'neuron_view.js')).read()
+    display(Javascript('window.bertviz_params = %s' % json.dumps(params)))
     display(Javascript(vis_js))
 
 
