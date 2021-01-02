@@ -2,25 +2,22 @@
 
 BertViz is a tool for visualizing attention in the Transformer model, supporting all models from the [transformers](https://github.com/huggingface/transformers) library (BERT, GPT-2, XLNet, RoBERTa, XLM, CTRL, etc.). It extends the [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj) and the [transformers](https://github.com/huggingface/transformers) library from [HuggingFace](https://github.com/huggingface).
 
-**Interactive Demo**:
-* Try out this [Colab Notebook](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing) with pre-loaded visualizations (no need to run).
+####Interactive Demo
+Try out this [Colab Notebook](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing) with pre-loaded visualizations.
 
-**Blog post**:
-* [Deconstructing BERT, Part 2: Visualizing the Inner Workings of Attention](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) (Part 1 is not a prerequisite)
+####Blog post
+[Deconstructing BERT, Part 2: Visualizing the Inner Workings of Attention](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) (Part 1 is not a prerequisite)
 
-**Paper**:
-* [A Multiscale Visualization of Attention in the Transformer Model](https://www.aclweb.org/anthology/P19-3007.pdf)
+####Paper
+[A Multiscale Visualization of Attention in the Transformer Model](https://www.aclweb.org/anthology/P19-3007.pdf)
 
-Related blog posts:
-* [OpenAI GPT-2: Understanding Language Generation through Visualization](https://towardsdatascience.com/openai-gpt-2-understanding-language-generation-through-visualization-8252f683b2f8)
-* [Deconstructing BERT: Distilling 6 Patterns from 100 Million Parameters](https://towardsdatascience.com/deconstructing-bert-distilling-6-patterns-from-100-million-parameters-b49113672f77)
 
 ## Attention-head view
 
 The *attention-head view* visualizes the attention patterns produced by one or more attention heads in a given 
 transformer layer. It follows the design of the excellent [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj). 
 
-![Attention-head view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/head_thumbnail_left.png) ![Attention-head view animated](https://raw.githubusercontent.com/jessevig/bertviz/master/images/head_thumbnail_right.gif)
+![Attention-head view](images/head_thumbnail_left.png) ![Attention-head view animated](images/head_thumbnail_right.gif)
 
 The attention view supports all models from the Transformers library, including:<br>
  BERT:
@@ -36,11 +33,14 @@ Albert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_a
 DistilBert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_distilbert.ipynb)<br>
 (and others)
 
+####Interactive Demo
+Try out this [Colab Notebook](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj) with pre-loaded visualizations.
+
 ## Model view 
 
 The *model view* provides a birds-eye view of attention across all of the model’s layers  and heads.
 
-![Model view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/model_thumbnail.jpg)
+![Model view](images/model-view.gif)
 
 The model view supports all models from the Transformers library, including:<br>
 BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_bert.ipynb)
@@ -53,6 +53,10 @@ XLM: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_xlm
 Albert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_albert.ipynb)<br>
 DistilBert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_distilbert.ipynb)<br>
 (and others)
+
+####Interactive Demo
+Try out this [Colab Notebook](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS) with pre-loaded visualizations.
+
 
 ## Neuron view 
 The *neuron view* visualizes the individual neurons in the query and key vectors and shows how they are used to compute attention.
@@ -67,6 +71,9 @@ GPT-2
 [[Colab]](https://colab.research.google.com/drive/1s8XCCyxsKvNRWNzjWi5Nl8ZAYZ5YkLm_)<br>
 RoBERTa
 [[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_roberta.ipynb) 
+
+####Interactive Demo
+Try out this [Colab Notebook](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b) with pre-loaded visualizations (requires Chrome).
 
 ## Execution
 ### Running locally
