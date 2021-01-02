@@ -3,7 +3,7 @@
 BertViz is a tool for visualizing attention in the Transformer model, supporting all models from the [transformers](https://github.com/huggingface/transformers) library (BERT, GPT-2, XLNet, RoBERTa, XLM, CTRL, etc.). It extends the [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj) and the [transformers](https://github.com/huggingface/transformers) library from [HuggingFace](https://github.com/huggingface).
 
 #### Interactive Demo
-Try out this [Colab Notebook](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing) with pre-loaded visualizations.
+Try out this interactive [Colab Notebook](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing) with pre-loaded visualizations.
 
 #### Blog post
 [Deconstructing BERT, Part 2: Visualizing the Inner Workings of Attention](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) (Part 1 is not a prerequisite)
@@ -17,63 +17,63 @@ Try out this [Colab Notebook](https://colab.research.google.com/drive/1YoJqS9cPG
 The *attention-head view* visualizes the attention patterns produced by one or more attention heads in a given 
 transformer layer. It follows the design of the excellent [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj). 
 
-![Attention-head view](images/head_thumbnail_left.png) ![Attention-head view animated](images/head_thumbnail_right.gif)
+Try out this interactive [Colab Notebook](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)
+ with the head view pre-loaded.
+
+![Attention-head view 1](images/head-view-1.gif) 
 
 The attention view supports all models from the Transformers library, including:<br>
  BERT:
  [[Notebook]](head_view_bert.ipynb)
   [[Colab]](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)<br>
  GPT-2:
-  [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_gpt2.ipynb)
+  [[Notebook]](head_view_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1c9kBsbvSqpKkmd62u7nfqVhvWr0W8_Lx)<br>
- XLNet: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlnet.ipynb)<br>
-RoBERTa: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_roberta.ipynb)<br>
-XLM: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_xlm.ipynb)<br>
-Albert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_albert.ipynb)<br>
-DistilBert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_distilbert.ipynb)<br>
+ XLNet: [[Notebook]](head_view_xlnet.ipynb)<br>
+RoBERTa: [[Notebook]](head_view_roberta.ipynb)<br>
+XLM: [[Notebook]](head_view_xlm.ipynb)<br>
+Albert: [[Notebook]](head_view_albert.ipynb)<br>
+DistilBert: [[Notebook]](head_view_distilbert.ipynb)<br>
 (and others)
 
-#### Interactive Demo
-Try out this [Colab Notebook](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj) with pre-loaded visualizations.
 
 ## Model view 
 
 The *model view* provides a birds-eye view of attention across all of the model’s layers  and heads.
 
+Try out this interactive [Colab Notebook](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS) with
+ the model view pre-loaded.
+
 ![Model view](images/model-view.gif)
 
 The model view supports all models from the Transformers library, including:<br>
-BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_bert.ipynb)
+BERT: [[Notebook]](model_view_bert.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS)<br>
-GPT2: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_gpt2.ipynb)
+GPT2: [[Notebook]](model_view_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1y-wfC95Z0aASawYqA34LQeV0_qC9mOto)<br>
- XLNet: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_xlnet.ipynb)<br>
-RoBERTa: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_roberta.ipynb)<br>
-XLM: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_xlm.ipynb)<br>
-Albert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_albert.ipynb)<br>
-DistilBert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_distilbert.ipynb)<br>
+ XLNet: [[Notebook]](model_view_xlnet.ipynb)<br>
+RoBERTa: [[Notebook]](model_view_roberta.ipynb)<br>
+XLM: [[Notebook]](model_view_xlm.ipynb)<br>
+Albert: [[Notebook]](model_view_albert.ipynb)<br>
+DistilBert: [[Notebook]](model_view_distilbert.ipynb)<br>
 (and others)
-
-#### Interactive Demo
-Try out this [Colab Notebook](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS) with pre-loaded visualizations.
-
 
 ## Neuron view 
 The *neuron view* visualizes the individual neurons in the query and key vectors and shows how they are used to compute attention.
 
-![Neuron view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/neuron_thumbnail.png)
+Try out this interactive [Colab Notebook](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)
+ with the neuron view pre-loaded (requires Chrome).
+
+![Neuron view](images/neuron-view.gif)
 
 The neuron view supports the following three models:<br>
-BERT: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_bert.ipynb) 
+BERT: [[Notebook]](neuron_view_bert.ipynb) 
 [[Colab]](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)<br>
 GPT-2
-[[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_gpt2.ipynb) 
+[[Notebook]](neuron_view_gpt2.ipynb) 
 [[Colab]](https://colab.research.google.com/drive/1s8XCCyxsKvNRWNzjWi5Nl8ZAYZ5YkLm_)<br>
 RoBERTa
-[[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_roberta.ipynb) 
-
-#### Interactive Demo
-Try out this [Colab Notebook](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b) with pre-loaded visualizations (requires Chrome).
+[[Notebook]](neuron_view_roberta.ipynb) 
 
 ## Execution
 ### Running locally
