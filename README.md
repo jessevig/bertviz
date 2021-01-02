@@ -2,13 +2,13 @@
 
 BertViz is a tool for visualizing attention in the Transformer model, supporting all models from the [transformers](https://github.com/huggingface/transformers) library (BERT, GPT-2, XLNet, RoBERTa, XLM, CTRL, etc.). It extends the [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj) and the [transformers](https://github.com/huggingface/transformers) library from [HuggingFace](https://github.com/huggingface).
 
-####Interactive Demo
+#### Interactive Demo
 Try out this [Colab Notebook](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing) with pre-loaded visualizations.
 
-####Blog post
+#### Blog post
 [Deconstructing BERT, Part 2: Visualizing the Inner Workings of Attention](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) (Part 1 is not a prerequisite)
 
-####Paper
+#### Paper
 [A Multiscale Visualization of Attention in the Transformer Model](https://www.aclweb.org/anthology/P19-3007.pdf)
 
 
@@ -21,7 +21,7 @@ transformer layer. It follows the design of the excellent [Tensor2Tensor visuali
 
 The attention view supports all models from the Transformers library, including:<br>
  BERT:
- [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_bert.ipynb)
+ [[Notebook]](head_view_bert.ipynb)
   [[Colab]](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)<br>
  GPT-2:
   [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_gpt2.ipynb)
@@ -33,7 +33,7 @@ Albert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_a
 DistilBert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/head_view_distilbert.ipynb)<br>
 (and others)
 
-####Interactive Demo
+#### Interactive Demo
 Try out this [Colab Notebook](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj) with pre-loaded visualizations.
 
 ## Model view 
@@ -54,7 +54,7 @@ Albert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_
 DistilBert: [[Notebook]](https://github.com/jessevig/bertviz/blob/master/model_view_distilbert.ipynb)<br>
 (and others)
 
-####Interactive Demo
+#### Interactive Demo
 Try out this [Colab Notebook](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS) with pre-loaded visualizations.
 
 
@@ -72,7 +72,7 @@ GPT-2
 RoBERTa
 [[Notebook]](https://github.com/jessevig/bertviz/blob/master/neuron_view_roberta.ipynb) 
 
-####Interactive Demo
+#### Interactive Demo
 Try out this [Colab Notebook](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b) with pre-loaded visualizations (requires Chrome).
 
 ## Execution
@@ -85,7 +85,6 @@ cd bertviz
 jupyter notebook
 ```
 
-###
 Click on any of the sample notebooks. You can view a notebook's cached output visualizations by selecting `File > Trust Notebook` (and confirming in dialog)
 or you can run the notebook yourself. Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
 
