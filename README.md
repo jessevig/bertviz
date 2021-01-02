@@ -20,7 +20,7 @@ transformer layer. It follows the design of the excellent [Tensor2Tensor visuali
 Try out this interactive [Colab Notebook](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)
  with the head view pre-loaded.
 
-![Attention-head view 1](images/head-view-1.gif) 
+![Model view](images/head-view.gif)
 
 The attention view supports all models from the Transformers library, including:<br>
  BERT:
