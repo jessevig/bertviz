@@ -102,9 +102,9 @@ If you write your own code for executing BertViz in Colab, note that some of the
 * The Neuron View only supports BERT, GPT-2, and Roberta models. This view needs access to the query and key vectors, 
 which requires modifying the model code (see `transformers_neuron_view directory`), which has only been done for these three models.
 Also, only one Neuron View may be included per notebook.
-####Attention as "explanation"
+### Attention as "explanation"
 Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
-necessarily provide an *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf)], [[2](https://arxiv.org/abs/1902.10186)], [[3](https://arxiv.org/pdf/1908.04626.pdf)].
+necessarily provide a direct *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf)], [[2](https://arxiv.org/abs/1902.10186)], [[3](https://arxiv.org/pdf/1908.04626.pdf)].
 
 ## Authors
 
