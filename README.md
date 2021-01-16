@@ -93,14 +93,18 @@ Click on any of the Colab links above, and scroll to the bottom of the page. It 
  
 If you write your own code for executing BertViz in Colab, note that some of the steps are different from those in the Jupyter notebooks (see Colab examples above).
 
-## Current limitations
+## Limitations
 
+#### Tool
 * The visualizations works best with shorter sentences and may run slowly if the input text is very long, especially for the Model View.
-* The Neuron View only supports BERT, GPT-2, and Roberta models, because this required modifying the code for these models (see transformers_neuron_view directory) in order to
-retrieve the query and key values. Also, only one Neuron View may be included per notebook.
+* When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long.
 * If you have issues running the tool in Jupyter Lab, try running with a plain Jupyter notebook.
-* Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
-necessarily provide a direct *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf)], [[2](https://arxiv.org/abs/1902.10186)], [[3](https://arxiv.org/pdf/1908.04626.pdf)].
+* The Neuron View only supports BERT, GPT-2, and Roberta models. This view needs access to the query and key vectors, 
+which requires modifying the model code (see `transformers_neuron_view directory`), which has only been done for these three models.
+Also, only one Neuron View may be included per notebook.
+#### Attention as "explanation"
+Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
+necessarily provide an *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf)], [[2](https://arxiv.org/abs/1902.10186)], [[3](https://arxiv.org/pdf/1908.04626.pdf)].
 
 ## Authors
 
