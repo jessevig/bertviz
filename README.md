@@ -64,7 +64,7 @@ The *neuron view* visualizes the individual neurons in the query and key vectors
 Try out this interactive [Colab Notebook](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)
  with the neuron view pre-loaded (requires Chrome).
 
-![Neuron view](images/neuron-view.gif)
+![Neuron view](images/neuron-view-dark.gif)
 
 The neuron view supports the following three models:<br>
 BERT: [[Notebook]](neuron_view_bert.ipynb) 
@@ -95,14 +95,14 @@ If you write your own code for executing BertViz in Colab, note that some of the
 
 ## Limitations
 
-#### Tool
+### Tool
 * The visualizations works best with shorter sentences and may run slowly if the input text is very long, especially for the Model View.
 * When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long.
 * If you have issues running the tool in Jupyter Lab, try running with a plain Jupyter notebook.
 * The Neuron View only supports BERT, GPT-2, and Roberta models. This view needs access to the query and key vectors, 
 which requires modifying the model code (see `transformers_neuron_view directory`), which has only been done for these three models.
 Also, only one Neuron View may be included per notebook.
-#### Attention as "explanation"
+####Attention as "explanation"
 Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
 necessarily provide an *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf)], [[2](https://arxiv.org/abs/1902.10186)], [[3](https://arxiv.org/pdf/1908.04626.pdf)].
 
@@ -134,6 +134,6 @@ When referencing BertViz, please cite [this paper](https://www.aclweb.org/anthol
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
-We thank the authors of the following projects, which are incorporated into this repo:
+We are grateful to the authors of the following projects, which are incorporated into this repo:
 * https://github.com/tensorflow/tensor2tensor
 * https://github.com/huggingface/pytorch-pretrained-BERT

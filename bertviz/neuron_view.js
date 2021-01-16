@@ -8,6 +8,7 @@
  * 12/19/18  Jesse Vig   Assorted cleanup. Changed orientation of attention matrices.
  * 12/22/18  Jesse Vig   Display attention details: query/key vectors
  * 01/01/21  Jesse Vig   Change to bertviz-specific naming conventions so as not to interfere with other html elements
+ * 01/16/21  Jesse Vig   Dark mode
  */
 
 requirejs(['jquery', 'd3'],
@@ -17,10 +18,10 @@ requirejs(['jquery', 'd3'],
     const config = {};
     initialize();
 
+    const ATTN_COLOR = "#2994de";
     const HEADING_TEXT_SIZE = 16;
     const HEADING_HEIGHT = 42;
-    const HEADING_TEXT_COLOR = "#000000";
-    const TEXT_COLOR = "#202020"
+    const TEXT_COLOR_HIGHLIGHTED = "white"
     const TEXT_SIZE = 15;
     const MATRIX_WIDTH = 200;
     const BOXWIDTH = TEXT_SIZE * 8;
@@ -30,11 +31,16 @@ requirejs(['jquery', 'd3'],
     const DOT_WIDTH = 70;
     const SOFTMAX_WIDTH = 70;
     const ATTENTION_WIDTH = 150;
-    const POS_COLOR = '#0c36d8';
+    const POS_COLOR = "#2090dd";
     const NEG_COLOR = '#ff6318';
-    const TEXT_HIGHLIGHT_COLOR_LEFT = "#e5e5e5";
-    const TEXT_HIGHLIGHT_COLOR_RIGHT = '#478be8';
+    const TEXT_HIGHLIGHT_COLOR_LEFT = "#1b86cd";
+    const TEXT_HIGHLIGHT_COLOR_RIGHT = '#1b86cd';
     const DOT_PRODUCT_BORDER_COLOR = "#5d5d5d";
+    const HEADING_TEXT_COLOR = "#FFFFFF";
+    const TEXT_COLOR = "#bbb"
+      const CONNECTOR_COLOR = "#8aa4d2"
+      const VECTOR_BORDER_COLOR = "#444"
+      const MIN_CONNECTOR_OPACITY = 0
 
     function render() {
 
@@ -194,7 +200,7 @@ requirejs(['jquery', 'd3'],
         .attr("width", SOFTMAX_WIDTH + MATRIX_WIDTH + DOT_WIDTH)
         .attr("font-size", 20 + "px")
         .text("No token selected")
-        .attr("fill", TEXT_HIGHLIGHT_COLOR_LEFT);
+        .attr("fill", TEXT_COLOR_HIGHLIGHTED);
     }
 
     function renderHorizLines(svg, id, start_pos, end_pos) {
@@ -224,10 +230,14 @@ requirejs(['jquery', 'd3'],
         .attr("y2", function (d, targetIndex) {
           return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
-        .attr("stroke-width", 2)
-        .attr("stroke", "blue")
+        .attr("stroke-width", 1.5)
+        .attr("stroke", CONNECTOR_COLOR)
         .attr("stroke-opacity", function (d) {
-          return d * 1.1;
+            if (d==0) {
+                return 0;
+            } else {
+                return Math.max(MIN_CONNECTOR_OPACITY, Math.tanh(Math.abs(4 * d)));
+            }
         });
     }
 
@@ -257,10 +267,10 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT - 5)
         .attr("width", MATRIX_WIDTH + 3)
         .style("fill-opacity", 0)
-        .attr("stroke-width", 1.9)
-        .attr("stroke", "blue")
+        .attr("stroke-width", 1.5)
+        .attr("stroke", CONNECTOR_COLOR)
         .attr("stroke-opacity", function (d) {
-          return d * 1.6;
+            return Math.tanh(Math.abs(4*d) );
         });
     }
 
@@ -307,10 +317,14 @@ requirejs(['jquery', 'd3'],
           ])
         })
         .attr("fill", "none")
-        .attr("stroke-width", 2)
-        .attr("stroke", "blue")
+        .attr("stroke-width", 1.5)
+        .attr("stroke", CONNECTOR_COLOR)
         .attr("stroke-opacity", function (d) {
-          return d * 1.1;
+            if (d==0) {
+                return 0;
+            } else {
+                return Math.max(MIN_CONNECTOR_OPACITY, Math.tanh(Math.abs(4 * d)));
+            }
         });
     }
 
@@ -332,8 +346,8 @@ requirejs(['jquery', 'd3'],
         .attr("y2", function (d, i) {
           return i * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
-        .attr("stroke-width", 2)
-        .attr("stroke", "blue")
+        .attr("stroke-width", 1.5)
+        .attr("stroke", CONNECTOR_COLOR)
     }
 
     function renderAttn(svg, start_pos, end_pos, expanded) {
@@ -363,13 +377,9 @@ requirejs(['jquery', 'd3'],
           return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
         .attr("stroke-width", 2)
-        .attr("stroke", "blue")
-        .attr("stroke-opacity", function (d, i) {
-          if (expanded) {
+        .attr("stroke", ATTN_COLOR)
+        .attr("stroke-opacity", function (d) {
             return d;
-          } else {
-            return d;
-          }
         });
     }
 
@@ -401,11 +411,11 @@ requirejs(['jquery', 'd3'],
           .attr("width", MATRIX_WIDTH + 2)
           .attr("height", BOXHEIGHT - 5)
           .style("fill-opacity", 0)
-          .style("stroke-width", 1.9)
-          .style("stroke", "#5b83d5")
+          .style("stroke-width", 1)
+          .style("stroke", VECTOR_BORDER_COLOR)
           .attr("rx", 1)
           .attr("ry", 1)
-          .style("stroke-opacity", 0)
+          .style("stroke-opacity", 1)
       } else if (id == "keys") {
         vector.append("rect")
           .classed("vectorborder", true)
@@ -417,10 +427,10 @@ requirejs(['jquery', 'd3'],
           .attr("height", BOXHEIGHT - 6)
           .style("fill-opacity", 0)
           .style("stroke-width", 1)
-          .style("stroke", "#a2b4d5")
+          .style("stroke", VECTOR_BORDER_COLOR)
           .attr("rx", 1)
           .attr("ry", 1)
-          .style("stroke-opacity", 0)
+          .style("stroke-opacity", 1)
       } else {
         vector.append("rect")
           .classed("vectorborder", true)
@@ -432,9 +442,10 @@ requirejs(['jquery', 'd3'],
           .attr("height", BOXHEIGHT - 6)
           .style("fill-opacity", 0)
           .style("stroke-width", 1)
-          .style("stroke", "#a2b4d5")
+          .style("stroke", VECTOR_BORDER_COLOR)
           .attr("rx", 1)
           .attr("ry", 1)
+                    .style("stroke-opacity", 1)
       }
 
       vector.selectAll(".element")
@@ -541,7 +552,7 @@ requirejs(['jquery', 'd3'],
           tokenContainer.append('path')
             .attr("d", "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zM124 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H124z")
             .classed("minus-sign", true)
-            .attr("fill", "#909090")
+            .attr("fill", TEXT_COLOR_HIGHLIGHTED)
             .style('font-size', "17px")
             .style('font-weight', 900)
             .style('opacity', 0)
@@ -576,7 +587,7 @@ requirejs(['jquery', 'd3'],
           tokenContainer.append('path')
             .attr("d", "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z")
             .classed("plus-sign", true)
-            .attr("fill", "#909090")
+            .attr("fill", TEXT_COLOR_HIGHLIGHTED)
             .style('font-size', "17px")
             .style('font-weight', 900)
             .style('opacity', 0)
@@ -654,7 +665,7 @@ requirejs(['jquery', 'd3'],
           }
         })
         .style("fill-opacity", function (d) {
-          return Math.tanh(Math.abs(d) / 54);
+          return Math.tanh(Math.abs(d) / 6);
         })
         .style("stroke", function (d) {
           if (d >= 0) {
@@ -664,7 +675,7 @@ requirejs(['jquery', 'd3'],
           }
         })
         .style("stroke-opacity", function (d) {
-          return Math.max(Math.tanh(Math.abs(d) / 24), .15);
+            return Math.max(Math.tanh(Math.abs(d) / 3), .35);
         })
         .attr("data-value", function (d) {
           return d
@@ -687,14 +698,16 @@ requirejs(['jquery', 'd3'],
     function highlightSelection(svg, index) {
       svg.select("#queries")
         .selectAll(".vector")
-        .style("opacity", function (d, i) {
-          return i == index ? 1.0 : 0.4;
-        });
+        .style("opacity", 1);
       svg.select("#queries")
         .selectAll(".vectorborder")
-        .style("stroke-opacity", function (d, i) {
-          return i == index ? 1.0 : 0;
-        });
+          .style("stroke", function (d, i) {
+          return i == index ? CONNECTOR_COLOR : VECTOR_BORDER_COLOR;
+        })
+          .style("stroke-width", function (d, i) {
+          return i == index ? 1.5 : 1;
+        })
+      ;
       svg.select("#queries")
         .select(".matrixborder")
         .style("stroke-opacity", 0);
@@ -702,6 +715,11 @@ requirejs(['jquery', 'd3'],
         .selectAll(".highlight")
         .style("opacity", function (d, i) {
           return i == index ? 1.0 : 0.0;
+        });
+      svg.select("#leftText")
+        .selectAll(".token")
+        .style("fill", function (d, i) {
+          return i == index ? TEXT_COLOR_HIGHLIGHTED : TEXT_COLOR;
         });
       if (config.expanded) {
         svg.select("#leftText")
@@ -731,17 +749,7 @@ requirejs(['jquery', 'd3'],
           .selectAll(".vectorborder")
           .style("stroke-opacity", 1);
       } else {
-        svg.select("#keys")
-        .selectAll(".vectorborder")
-        .style("opacity", function (d, i) {
-          return i <= index ? 1.0 : 0.0;
-        });
-        svg.select("#keys")
-          .selectAll(".vector")
-          .style("opacity", function (d, i) {
-            return i <= index ? 1.0 : 0.0;
-          });
-        svg.select("#product")
+       svg.select("#product")
           .selectAll(".vector")
           .style("opacity", function (d, i) {
             return i <= index ? 1.0 : 0.0;
@@ -789,13 +797,17 @@ requirejs(['jquery', 'd3'],
         .style("opacity", 1.0);
       svg.select("#queries")
         .selectAll(".vectorborder")
-        .style("stroke-opacity", 0);
+        .style("stroke", VECTOR_BORDER_COLOR)
+        .style("stroke-width", 1);
       svg.select("#queries")
         .select(".matrixborder")
         .style("stroke-opacity", 1);
       svg.select("#leftText")
         .selectAll(".highlight")
         .style("opacity", 0.0);
+      svg.select("#leftText")
+        .selectAll(".token")
+        .style("fill", TEXT_COLOR);
       svg.select("#leftText")
         .selectAll(".minus-sign")
         .style("opacity", 0);
@@ -810,10 +822,6 @@ requirejs(['jquery', 'd3'],
       }
       svg.selectAll(".qk-line-group")
         .style("opacity", 0);
-      svg.select("#keys")
-        .selectAll(".vectorborder")
-        .style("stroke-opacity", 0);
-
       svg.selectAll(".horiz-line-group")
         .style("opacity", 0);
       svg.selectAll(".vector-highlight-group")
@@ -846,11 +854,12 @@ requirejs(['jquery', 'd3'],
         var dotProduct = 0;
         for (var j = 0; j < config.vectorSize; j++) {
           var product = query_vector[j] * key_vector[j];
-          productVector.push(product);
+          productVector.push(product); // Normalize to be on similar scale as query/key
           dotProduct += product;
         }
         productVectors.push(productVector);
-        dotProducts.push(dotProduct);
+        var scaledDotProduct = dotProduct / Math.sqrt(config.vectorSize)
+        dotProducts.push(scaledDotProduct);
       }
       updateVectors(svg, 'product', productVectors);
       updateDotProducts(svg, dotProducts);
@@ -889,7 +898,7 @@ requirejs(['jquery', 'd3'],
           return d
         })
         .style("opacity", function (d) {
-          return Math.tanh(Math.abs(d) / 4);
+          return Math.tanh(Math.abs(d) / 2);
         });
     }
 

@@ -17,6 +17,7 @@
 # 12/12/18  Jesse Vig   Adapted to BERT model
 # 12/19/18  Jesse Vig   Assorted cleanup. Changed orientation of attention matrices. Updated comments.
 # 12/30/20  Jesse Vig   Enable multiple visualizations in one notebook
+# 01/16/21  Jesse Vig   Dark mode
 
 
 """Module for postprocessing and displaying transformer attentions.
@@ -39,10 +40,10 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
 
     if sentence_b:
         vis_html = """
-        <div id="bertviz">
+        <div id="bertviz" style='background-color:black'>
           <span style="user-select:none">
-            Layer: <select id="layer"></select>
-            Head: <select id="att_head"></select>
+            <span style="color:white">Layer: </span><select id="layer"></select>
+            <span style="color:white">Head: </span><select id="att_head"></select>
             Attention: <select id="filter">
               <option value="all">All</option>
               <option value="aa">Sentence A -> Sentence A</option>
@@ -56,10 +57,10 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
         """
     else:
         vis_html = """
-            <div id="bertviz">
+            <div id="bertviz" style='background-color:black'>
               <span style="user-select:none">
-                Layer: <select id="layer"></select>
-                Head: <select id="att_head"></select>
+                <span style="color:white">Layer: </span><select id="layer"></select>
+                <span style="color:white">Head: </span> <select id="att_head"></select>
               </span>
               <div id='vis'></div>
             </div>
