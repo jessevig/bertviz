@@ -44,7 +44,7 @@ The *model view* provides a birds-eye view of attention across all of the modelâ
 Try out this interactive [Colab Notebook](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS) with
  the model view pre-loaded.
 
-![Model view](images/model-view.gif)
+![Model view](images/model-view-dark.gif)
 
 The model view supports all models from the Transformers library, including:<br>
 BERT: [[Notebook]](model_view_bert.ipynb)

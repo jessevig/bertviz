@@ -22,13 +22,14 @@ requirejs(['jquery', 'd3'], function($, d3) {
         const DETAIL_WIDTH = 300;
         const DETAIL_ATTENTION_WIDTH = 140;
         const DETAIL_BOX_WIDTH = 80;
-        const DETAIL_BOX_HEIGHT = 20;
-        const DETAIL_PADDING = 5;
+        const DETAIL_BOX_HEIGHT = 18;
+        const DETAIL_PADDING = 28;
         const ATTN_PADDING = 0;
-        const DETAIL_HEADING_HEIGHT = 47;
+        const DETAIL_HEADING_HEIGHT = 25;
         const DETAIL_HEADING_TEXT_SIZE = 15;
         const TEXT_SIZE = 13;
         const LAYER_COLORS = d3.schemeCategory10;
+        const TEXT_COLOR = "#bbb"
 
         function render() {
 
@@ -93,30 +94,32 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 y = maxY - config.detailHeight;
             }
             renderDetailFrame(x, y, layerIndex);
-            renderDetailHeading(x, y, layerIndex, headIndex);
-            renderText(config.leftText, "leftText", posLeftText, y + DETAIL_HEADING_HEIGHT, layerIndex);
-            renderDetailAttn(posAttention, y + DETAIL_HEADING_HEIGHT, att, layerIndex, headIndex);
-            renderText(config.rightText, "rightText", posRightText, y + DETAIL_HEADING_HEIGHT, layerIndex);
+            renderDetailHeading(x, y + Math.max(config.leftText.length, config.rightText.length) *
+                DETAIL_BOX_HEIGHT, layerIndex, headIndex);
+            renderDetailText(config.leftText, "leftText", posLeftText, y + DETAIL_PADDING, layerIndex);
+            renderDetailAttn(posAttention, y + DETAIL_PADDING, att, layerIndex, headIndex);
+            renderDetailText(config.rightText, "rightText", posRightText, y + DETAIL_PADDING, layerIndex);
         }
 
         function renderDetailHeading(x, y, layerIndex, headIndex) {
-            var fillColor = getColor(layerIndex);
+            // var fillColor = getColor(layerIndex);
+            var fillColor = TEXT_COLOR;
             config.svg.append("text")
                 .classed("detail", true)
                 .text('Layer ' + layerIndex + ", Head " + headIndex)
                 .attr("font-size", DETAIL_HEADING_TEXT_SIZE + "px")
                 .style("cursor", "default")
                 .style("-webkit-user-select", "none")
-                .style("font-weight", "bold")
                 .attr("fill", fillColor)
-                .attr("x", x + 87)
-                .attr("y", y + 16)
+                .attr("x", x + DETAIL_WIDTH / 2)
+                .attr("text-anchor", "middle")
+                .attr("y", y + 40)
                 .attr("height", DETAIL_HEADING_HEIGHT)
                 .attr("width", DETAIL_WIDTH)
                 .attr("dy", DETAIL_HEADING_TEXT_SIZE);
         }
 
-        function renderText(text, id, x, y, layerIndex) {
+        function renderDetailText(text, id, x, y, layerIndex) {
             var tokenContainer = config.svg.append("svg:g")
                 .classed("detail", true)
                 .selectAll("g")
@@ -124,7 +127,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .enter()
                 .append("g");
 
-            var fillColor = getColor(layerIndex);
+            var fillColor = TEXT_COLOR;
 
             tokenContainer.append("rect")
                 .classed("highlight", true)
@@ -134,7 +137,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .attr("width", DETAIL_BOX_WIDTH)
                 .attr("x", x)
                 .attr("y", function (d, i) {
-                    return y + i * DETAIL_BOX_HEIGHT - 1;
+                    return y + i * DETAIL_BOX_HEIGHT;
                 });
 
             var textContainer = tokenContainer.append("text")
@@ -272,8 +275,8 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .attr("height", config.detailHeight)
                 .attr("width", DETAIL_WIDTH)
                 .style("opacity", 1)
-                .attr("fill", "white")
-                .attr("stroke-width", 2)
+                .attr("fill", "black")
+                .attr("stroke-width", 3)
                 .attr("stroke-opacity", 0.7)
                 .attr("stroke", getColor(layerIndex));
         }
@@ -305,7 +308,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .attr("y2", function (d, targetIndex) {
                     return y + (targetIndex + .5) * DETAIL_BOX_HEIGHT;
                 })
-                .attr("stroke-width", 2)
+                .attr("stroke-width", 2.2)
                 .attr("stroke", getColor(layerIndex))
                 .attr("stroke-opacity", function (d) {
                     return d;
