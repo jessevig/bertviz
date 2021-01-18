@@ -12,9 +12,9 @@ Try out this [interactive Colab Notebook](https://colab.research.google.com/driv
 [A Multiscale Visualization of Attention in the Transformer Model](https://www.aclweb.org/anthology/P19-3007.pdf)
 
 
-## Attention-head view
+## Head view
 
-The *attention-head view* visualizes the attention patterns produced by one or more attention heads in a given 
+The *head view* visualizes the attention patterns produced by one or more attention heads in a given 
 transformer layer. It is based on the excellent [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj). 
 
 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)
@@ -26,17 +26,16 @@ Attention for specific layer / head            |  Attention filtered by token
 
 
 The attention view supports all models from the Transformers library, including:<br>
- BERT:
- [[Notebook]](head_view_bert.ipynb)
+BERT: [[Notebook]](head_view_bert.ipynb)
   [[Colab]](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)<br>
- GPT-2:
+GPT-2:
   [[Notebook]](head_view_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1c9kBsbvSqpKkmd62u7nfqVhvWr0W8_Lx)<br>
- XLNet: [[Notebook]](head_view_xlnet.ipynb)<br>
+XLNet: [[Notebook]](head_view_xlnet.ipynb)<br>
 RoBERTa: [[Notebook]](head_view_roberta.ipynb)<br>
 XLM: [[Notebook]](head_view_xlm.ipynb)<br>
-Albert: [[Notebook]](head_view_albert.ipynb)<br>
-DistilBert: [[Notebook]](head_view_distilbert.ipynb)<br>
+ALBERT: [[Notebook]](head_view_albert.ipynb)<br>
+DistilBERT: [[Notebook]](head_view_distilbert.ipynb)<br>
 (and others)
 
 
@@ -54,11 +53,11 @@ BERT: [[Notebook]](model_view_bert.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS)<br>
 GPT2: [[Notebook]](model_view_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1y-wfC95Z0aASawYqA34LQeV0_qC9mOto)<br>
- XLNet: [[Notebook]](model_view_xlnet.ipynb)<br>
+XLNet: [[Notebook]](model_view_xlnet.ipynb)<br>
 RoBERTa: [[Notebook]](model_view_roberta.ipynb)<br>
 XLM: [[Notebook]](model_view_xlm.ipynb)<br>
-Albert: [[Notebook]](model_view_albert.ipynb)<br>
-DistilBert: [[Notebook]](model_view_distilbert.ipynb)<br>
+ALBERT: [[Notebook]](model_view_albert.ipynb)<br>
+DistilBERT: [[Notebook]](model_view_distilbert.ipynb)<br>
 (and others)
 
 ## Neuron view 
@@ -102,7 +101,7 @@ If you write your own code for executing BertViz in Colab, note that some of the
 * The visualizations works best with shorter sentences and may run slowly if the input text is very long, especially for the Model View.
 * When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long.
 * If you have issues running the tool in Jupyter Lab, try running with a plain Jupyter notebook.
-* The Neuron View only supports BERT, GPT-2, and Roberta models. This view needs access to the query and key vectors, 
+* The Neuron View only supports BERT, GPT-2, and RoBERTa models. This view needs access to the query and key vectors, 
 which requires modifying the model code (see `transformers_neuron_view directory`), which has only been done for these three models.
 Also, only one Neuron View may be included per notebook.
 ### Attention as "explanation"
