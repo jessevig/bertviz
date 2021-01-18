@@ -40,11 +40,11 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
 
     if sentence_b:
         vis_html = """
-        <div id="bertviz" style='background-color:black'>
+        <div id="bertviz" style='background-color:black; padding:8px'>
           <span style="user-select:none">
             <span style="color:white">Layer: </span><select id="layer"></select>
             <span style="color:white">Head: </span><select id="att_head"></select>
-            Attention: <select id="filter">
+            <span style="color:white">Attention: </span><select id="filter">
               <option value="all">All</option>
               <option value="aa">Sentence A -> Sentence A</option>
               <option value="ab">Sentence A -> Sentence B</option>
@@ -57,7 +57,7 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
         """
     else:
         vis_html = """
-            <div id="bertviz" style='background-color:black'>
+            <div id="bertviz" style='background-color:black; padding:8px'>
               <span style="user-select:none">
                 <span style="color:white">Layer: </span><select id="layer"></select>
                 <span style="color:white">Head: </span> <select id="att_head"></select>

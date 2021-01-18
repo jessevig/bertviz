@@ -376,7 +376,7 @@ requirejs(['jquery', 'd3'],
         .attr("y2", function (d, targetIndex) {
           return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
-        .attr("stroke-width", 2)
+        .attr("stroke-width", 3)
         .attr("stroke", ATTN_COLOR)
         .attr("stroke-opacity", function (d) {
             return d;
