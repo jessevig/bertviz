@@ -20,10 +20,7 @@ transformer layer. It is based on the excellent [Tensor2Tensor visualization too
 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)
  with the head view pre-loaded.
 
-Attention for specific layer / head            |  Attention filtered by token
-:-------------------------:|:-------------------------:
-![Head view](images/head-view-large.png) | ![Head view](images/head-view-large.gif)
-
+![Head view](images/head-view.gif) 
 
 The attention view supports all models from the Transformers library, including:<br>
 BERT: [[Notebook]](head_view_bert.ipynb)
