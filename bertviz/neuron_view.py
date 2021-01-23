@@ -34,7 +34,7 @@ import torch
 from IPython.core.display import display, HTML, Javascript
 
 
-def show(model, model_type, tokenizer, sentence_a, sentence_b=None, display_mode='dark'):
+def show(model, model_type, tokenizer, sentence_a, sentence_b=None, display_mode='dark', layer=None, head=None):
 
     # Generate unique div id to enable multiple visualizations in one notebook
 
@@ -77,7 +77,9 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None, display_mode
         'attention': attn_data,
         'default_filter': "all",
         'bidirectional': bidirectional,
-        'display_mode': display_mode
+        'display_mode': display_mode,
+        'layer': layer,
+        'head': head
     }
     vis_js = open(os.path.join(__location__, 'neuron_view.js')).read()
     display(Javascript('window.bertviz_params = %s' % json.dumps(params)))

@@ -42,18 +42,21 @@ requirejs(['jquery', 'd3'], function ($, d3) {
         config.rootDivId = params['root_div_id'];
         config.nLayers = config.attention[config.filter]['attn'].length;
         config.nHeads = config.attention[config.filter]['attn'][0].length;
-        config.headVis = new Array(config.nHeads).fill(true);
-        config.layer = 0;
+        if (params['heads']) {
+            config.headVis = new Array(config.nHeads).fill(false);
+            params['heads'].forEach(x => config.headVis[x] = true);
+        } else {
+            config.headVis = new Array(config.nHeads).fill(true);
+        }
         config.initialTextLength = config.attention[config.filter].right_text.length;
+        config.layer = (params['layer'] == null ? 0 : params['layer'])
 
-        // .empty();
+
         let layerEl = $(`#${config.rootDivId} #layer`);
-        // console.log('layerel', layerEl)
-
         for (var i = 0; i < config.nLayers; i++) {
             layerEl.append($("<option />").val(i).text(i));
         }
-
+        layerEl.val(config.layer).change();
         layerEl.on('change', function (e) {
             config.layer = +e.currentTarget.value;
             renderVis();

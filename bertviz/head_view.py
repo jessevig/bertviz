@@ -7,7 +7,7 @@ from IPython.core.display import display, HTML, Javascript
 from .util import format_special_chars, format_attention
 
 
-def head_view(attention, tokens, sentence_b_start = None, prettify_tokens=True):
+def head_view(attention, tokens, sentence_b_start = None, prettify_tokens=True, layer=None, heads=None):
     """Render head view
 
         Args:
@@ -16,6 +16,8 @@ def head_view(attention, tokens, sentence_b_start = None, prettify_tokens=True):
             tokens: list of tokens
             sentence_b_start: index of first wordpiece in sentence B if input text is sentence pair (optional)
             prettify_tokens: indicates whether to remove special characters in wordpieces, e.g. Ġ
+            layer: index of layer to show in visualization when first loads. If non specified, defaults to layer 0.
+            heads: indices of heads to show in visualizaiton when first loads. If non specified, defaults to all.
     """
 
     # Generate unique div id to enable multiple visualizations in one notebook
@@ -84,7 +86,9 @@ def head_view(attention, tokens, sentence_b_start = None, prettify_tokens=True):
     params = {
         'attention': attn_data,
         'default_filter': "all",
-        'root_div_id': vis_id
+        'root_div_id': vis_id,
+        'layer': layer,
+        'heads': heads
     }
     attn_seq_len = len(attn_data['all']['attn'][0][0])
     if attn_seq_len != len(tokens):

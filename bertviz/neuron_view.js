@@ -962,30 +962,32 @@ requirejs(['jquery', 'd3'],
       config.nHeads = attentionFilter['attn'][0].length;
       config.vectorSize = attentionFilter['queries'][0][0][0].length; // Layer 0, head 0, position 0 length
       config.headVis  = new Array(config.nHeads).fill(true);
-      config.head = 0;
-      config.layer = 0;
       config.initialTextLength = attentionFilter.right_text.length;
       config.expanded = false;
       config.bidirectional = params['bidirectional'];
       config.mode = params['display_mode'];
+      config.layer = (params['layer'] == null ? 0 : params['layer'])
+      config.head = (params['head'] == null ? 0 : params['head'])
 
 
-        $("#bertviz #layer").empty();
-        for (var i = 0; i < config.nLayers; i++) {
-          $("#bertviz #layer").append($("<option />").val(i).text(i));
+        const layerSelect = $("#bertviz #layer");
+        layerSelect.empty();
+        for (var i = 0; i < config.nHeads; i++) {
+          layerSelect.append($("<option />").val(i).text(i));
         }
-
-        $("#bertviz #layer").on('change', function (e) {
+        layerSelect.val(config.layer).change();
+        layerSelect.on('change', function (e) {
           config.layer = +e.currentTarget.value;
           render();
         });
 
-        $("#bertviz #att_head").empty();
+        const headSelect = $("#bertviz #att_head");
+        headSelect.empty();
         for (var i = 0; i < config.nHeads; i++) {
-          $("#bertviz #att_head").append($("<option />").val(i).text(i));
+          headSelect.append($("<option />").val(i).text(i));
         }
-
-        $("#bertviz #att_head").on('change', function (e) {
+        headSelect.val(config.head).change();
+        headSelect.on('change', function (e) {
           config.head = +e.currentTarget.value;
           render();
         });
