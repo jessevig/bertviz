@@ -18,10 +18,8 @@ requirejs(['jquery', 'd3'],
     const config = {};
     initialize();
 
-    const ATTN_COLOR = "#2994de";
     const HEADING_TEXT_SIZE = 16;
     const HEADING_HEIGHT = 42;
-    const TEXT_COLOR_HIGHLIGHTED = "white"
     const TEXT_SIZE = 15;
     const MATRIX_WIDTH = 200;
     const BOXWIDTH = TEXT_SIZE * 8;
@@ -31,15 +29,40 @@ requirejs(['jquery', 'd3'],
     const DOT_WIDTH = 70;
     const SOFTMAX_WIDTH = 70;
     const ATTENTION_WIDTH = 150;
-    const POS_COLOR = "#2090dd";
-    const NEG_COLOR = '#ff6318';
-    const TEXT_HIGHLIGHT_COLOR_LEFT = "#1b86cd";
-    const TEXT_HIGHLIGHT_COLOR_RIGHT = '#1b86cd';
-    const DOT_PRODUCT_BORDER_COLOR = "#5d5d5d";
-    const HEADING_TEXT_COLOR = "#FFFFFF";
-    const TEXT_COLOR = "#bbb"
-      const CONNECTOR_COLOR = "#8aa4d2"
-      const VECTOR_BORDER_COLOR = "#444"
+    const PALETTE = {
+        'dark': {
+            'attn': '#2994de',
+            'neg': '#ff6318',
+            'pos': '#2090dd',
+            'text': '#bbb',
+            'selected_text': 'white',
+            'heading_text': 'white',
+            'text_highlight_left': "#1b86cd",
+            'text_highlight_right': "#1b86cd",
+            'vector_border': "#444",
+            'connector': "#8aa4d2",
+            'background': 'black',
+            'dropdown': 'white',
+            'icon': 'white'
+        },
+        'light': {
+            'attn': 'blue',
+            'neg': '#ff6318',
+            'pos': '#0c36d8',
+            'text': '#202020',
+            'selected_text': 'black',
+            'heading_text': 'black',
+            'text_highlight_left': "#e5e5e5",
+            'text_highlight_right': "#478be8",
+            'vector_border': "#EEE",
+            'connector': "blue",
+            'background': 'white',
+            'dropdown': 'black',
+            'icon': '#888'
+        }
+    }
+
+
       const MIN_CONNECTOR_OPACITY = 0
 
     function render() {
@@ -57,6 +80,11 @@ requirejs(['jquery', 'd3'],
         .append('svg')
         .attr("width", "100%")
         .attr("height", height + "px");
+
+      d3.select("#bertviz")
+          .style("background-color", getColor('background'));
+      d3.selectAll("#bertviz .dropdown-label")
+          .style("color", getColor('dropdown'))
 
       renderVisExpanded(svg, leftText, rightText, queries, keys);
       renderVisCollapsed(svg, leftText, rightText, att);
@@ -121,7 +149,7 @@ requirejs(['jquery', 'd3'],
         .attr("y", HEADING_HEIGHT - 12)
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
-        .style('fill', HEADING_TEXT_COLOR);
+        .style('fill', getColor('heading_text'));
 
       queryHeadingContainer.append('tspan')
         .text('Query ')
@@ -139,7 +167,7 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", HEADING_TEXT_SIZE + "px")
-        .style('fill', HEADING_TEXT_COLOR);
+        .style('fill', getColor('heading_text'));
 
       keyHeadingContainer.append('tspan')
         .text('Key ')
@@ -157,7 +185,7 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", HEADING_TEXT_SIZE + "px")
-        .style('fill', HEADING_TEXT_COLOR);
+        .style('fill', getColor('heading_text'));
 
       productHeadingContainer.append('tspan')
         .text('q \u00D7 k (elementwise)')
@@ -170,7 +198,7 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT)
         .attr("width", MATRIX_WIDTH)
         .attr("font-size", HEADING_TEXT_SIZE + "px")
-        .style('fill', HEADING_TEXT_COLOR);
+        .style('fill', getColor('heading_text'));
 
       dotProductHeadingContainer.append('tspan')
         .text('q')
@@ -189,7 +217,7 @@ requirejs(['jquery', 'd3'],
         .attr("width", SOFTMAX_WIDTH)
         .attr("font-size", HEADING_TEXT_SIZE + "px")
         .style("text-anchor", "start")
-        .style('fill', HEADING_TEXT_COLOR)
+        .style('fill', getColor('heading_text'))
         .text("Softmax");
 
       headingContainer.append("text")
@@ -200,7 +228,7 @@ requirejs(['jquery', 'd3'],
         .attr("width", SOFTMAX_WIDTH + MATRIX_WIDTH + DOT_WIDTH)
         .attr("font-size", 20 + "px")
         .text("No token selected")
-        .attr("fill", TEXT_COLOR_HIGHLIGHTED);
+        .attr("fill", getColor('text_highlighted'));
     }
 
     function renderHorizLines(svg, id, start_pos, end_pos) {
@@ -230,13 +258,13 @@ requirejs(['jquery', 'd3'],
         .attr("y2", function (d, targetIndex) {
           return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
-        .attr("stroke-width", 1.5)
-        .attr("stroke", CONNECTOR_COLOR)
+        .attr("stroke-width", 1.9)
+        .attr("stroke", getColor('connector'))
         .attr("stroke-opacity", function (d) {
             if (d==0) {
                 return 0;
             } else {
-                return Math.max(MIN_CONNECTOR_OPACITY, Math.tanh(Math.abs(4 * d)));
+                return Math.max(MIN_CONNECTOR_OPACITY, Math.tanh(Math.abs(2 * d)));
             }
         });
     }
@@ -267,10 +295,10 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT - 5)
         .attr("width", MATRIX_WIDTH + 3)
         .style("fill-opacity", 0)
-        .attr("stroke-width", 1.5)
-        .attr("stroke", CONNECTOR_COLOR)
+        .attr("stroke-width", 1.9)
+        .attr("stroke", getColor('connector'))
         .attr("stroke-opacity", function (d) {
-            return Math.tanh(Math.abs(4*d) );
+            return Math.tanh(Math.abs(2*d) );
         });
     }
 
@@ -317,13 +345,13 @@ requirejs(['jquery', 'd3'],
           ])
         })
         .attr("fill", "none")
-        .attr("stroke-width", 1.5)
-        .attr("stroke", CONNECTOR_COLOR)
+        .attr("stroke-width", 1.9)
+        .attr("stroke", getColor('connector'))
         .attr("stroke-opacity", function (d) {
             if (d==0) {
                 return 0;
             } else {
-                return Math.max(MIN_CONNECTOR_OPACITY, Math.tanh(Math.abs(4 * d)));
+                return Math.max(MIN_CONNECTOR_OPACITY, Math.tanh(Math.abs(2 * d)));
             }
         });
     }
@@ -346,8 +374,8 @@ requirejs(['jquery', 'd3'],
         .attr("y2", function (d, i) {
           return i * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
-        .attr("stroke-width", 1.5)
-        .attr("stroke", CONNECTOR_COLOR)
+        .attr("stroke-width", 1.9)
+        .attr("stroke", getColor('connector'))
     }
 
     function renderAttn(svg, start_pos, end_pos, expanded) {
@@ -377,7 +405,7 @@ requirejs(['jquery', 'd3'],
           return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
         .attr("stroke-width", 3)
-        .attr("stroke", ATTN_COLOR)
+        .attr("stroke", getColor('attn'))
         .attr("stroke-opacity", function (d) {
             return d;
         });
@@ -412,7 +440,7 @@ requirejs(['jquery', 'd3'],
           .attr("height", BOXHEIGHT - 5)
           .style("fill-opacity", 0)
           .style("stroke-width", 1)
-          .style("stroke", VECTOR_BORDER_COLOR)
+          .style("stroke", getColor('vector_border'))
           .attr("rx", 1)
           .attr("ry", 1)
           .style("stroke-opacity", 1)
@@ -427,7 +455,7 @@ requirejs(['jquery', 'd3'],
           .attr("height", BOXHEIGHT - 6)
           .style("fill-opacity", 0)
           .style("stroke-width", 1)
-          .style("stroke", VECTOR_BORDER_COLOR)
+          .style("stroke", getColor('vector_border'))
           .attr("rx", 1)
           .attr("ry", 1)
           .style("stroke-opacity", 1)
@@ -442,7 +470,7 @@ requirejs(['jquery', 'd3'],
           .attr("height", BOXHEIGHT - 6)
           .style("fill-opacity", 0)
           .style("stroke-width", 1)
-          .style("stroke", VECTOR_BORDER_COLOR)
+          .style("stroke", getColor('vector_border'))
           .attr("rx", 1)
           .attr("ry", 1)
                     .style("stroke-opacity", 1)
@@ -471,9 +499,9 @@ requirejs(['jquery', 'd3'],
         })
         .style("fill", function (d) {
           if (d >= 0) {
-            return POS_COLOR;
+            return getColor('pos');
           } else {
-            return NEG_COLOR
+            return getColor('neg')
           }
         })
         .style("opacity", function (d) {
@@ -492,10 +520,10 @@ requirejs(['jquery', 'd3'],
       if (id == "leftText" || id == "rightText") {
         var fillColor;
         if (id == "rightText") {
-          fillColor = TEXT_HIGHLIGHT_COLOR_RIGHT;
+          fillColor = getColor('text_highlight_right');
         }
         if (id == "leftText") {
-          fillColor = TEXT_HIGHLIGHT_COLOR_LEFT;
+          fillColor = getColor('text_highlight_left');
         }
 
         tokenContainer.append("rect")
@@ -523,7 +551,7 @@ requirejs(['jquery', 'd3'],
           return d;
         })
         .attr("font-size", TEXT_SIZE + "px")
-          .style("fill", TEXT_COLOR)
+          .style("fill", getColor('text'))
         .style("cursor", "default")
         .style("-webkit-user-select", "none")
         .attr("x", leftPos + offset)
@@ -552,7 +580,7 @@ requirejs(['jquery', 'd3'],
           tokenContainer.append('path')
             .attr("d", "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zM124 296c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h264c6.6 0 12 5.4 12 12v56c0 6.6-5.4 12-12 12H124z")
             .classed("minus-sign", true)
-            .attr("fill", TEXT_COLOR_HIGHLIGHTED)
+            .attr("fill", getColor('icon'))
             .style('font-size', "17px")
             .style('font-weight', 900)
             .style('opacity', 0)
@@ -587,7 +615,7 @@ requirejs(['jquery', 'd3'],
           tokenContainer.append('path')
             .attr("d", "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z")
             .classed("plus-sign", true)
-            .attr("fill", TEXT_COLOR_HIGHLIGHTED)
+            .attr("fill", getColor('icon'))
             .style('font-size', "17px")
             .style('font-weight', 900)
             .style('opacity', 0)
@@ -645,8 +673,8 @@ requirejs(['jquery', 'd3'],
         })
         .attr("height", BOXHEIGHT - 4)
         .attr("width", BOXHEIGHT - 4)
-        .style("stroke-width", 1)
-        .style("stroke", DOT_PRODUCT_BORDER_COLOR)
+        .style("stroke-width", 1.2)
+        .style("stroke", getColor('vector_border'))
         .style("stroke-opacity", 1)
         .style("fill-opacity", 0)
         .attr("rx", 2)
@@ -659,23 +687,24 @@ requirejs(['jquery', 'd3'],
         .data(dotProducts)
         .style("fill", function (d) {
           if (d >= 0) {
-            return POS_COLOR;
+            return getColor('pos');
           } else {
-            return NEG_COLOR;
+            return getColor('neg');
           }
         })
         .style("fill-opacity", function (d) {
-          return Math.tanh(Math.abs(d) / 6);
+          return Math.tanh(Math.abs(d) / 4);
         })
         .style("stroke", function (d) {
           if (d >= 0) {
-            return POS_COLOR;
+            return getColor('pos');
           } else {
-            return NEG_COLOR;
+            return getColor('neg');
           }
         })
         .style("stroke-opacity", function (d) {
-            return Math.max(Math.tanh(Math.abs(d) / 3), .35);
+            // Set border to slightly higher opacity
+            return Math.max(Math.tanh(Math.abs(d) / 2), .35);
         })
         .attr("data-value", function (d) {
           return d
@@ -702,10 +731,10 @@ requirejs(['jquery', 'd3'],
       svg.select("#queries")
         .selectAll(".vectorborder")
           .style("stroke", function (d, i) {
-          return i == index ? CONNECTOR_COLOR : VECTOR_BORDER_COLOR;
+          return i == index ? getColor('connector') : getColor('vector_border');
         })
           .style("stroke-width", function (d, i) {
-          return i == index ? 1.5 : 1;
+          return i == index ? 1.9 : 1;
         })
       ;
       svg.select("#queries")
@@ -719,7 +748,7 @@ requirejs(['jquery', 'd3'],
       svg.select("#leftText")
         .selectAll(".token")
         .style("fill", function (d, i) {
-          return i == index ? TEXT_COLOR_HIGHLIGHTED : TEXT_COLOR;
+          return i == index ? getColor('selected_text') : getColor('text');
         });
       if (config.expanded) {
         svg.select("#leftText")
@@ -797,7 +826,7 @@ requirejs(['jquery', 'd3'],
         .style("opacity", 1.0);
       svg.select("#queries")
         .selectAll(".vectorborder")
-        .style("stroke", VECTOR_BORDER_COLOR)
+        .style("stroke", getColor('vector_border'))
         .style("stroke-width", 1);
       svg.select("#queries")
         .select(".matrixborder")
@@ -807,7 +836,7 @@ requirejs(['jquery', 'd3'],
         .style("opacity", 0.0);
       svg.select("#leftText")
         .selectAll(".token")
-        .style("fill", TEXT_COLOR);
+        .style("fill", getColor('text'));
       svg.select("#leftText")
         .selectAll(".minus-sign")
         .style("opacity", 0);
@@ -889,16 +918,16 @@ requirejs(['jquery', 'd3'],
         .style("fill", function (d) {
 
           if (d >= 0) {
-            return POS_COLOR;
+            return getColor('pos');
           } else {
-            return NEG_COLOR;
+            return getColor('neg');
           }
         })
         .attr("data-value", function (d) {
           return d
         })
         .style("opacity", function (d) {
-          return Math.tanh(Math.abs(d) / 2);
+          return Math.tanh(Math.abs(d) / 4);
         });
     }
 
@@ -920,7 +949,11 @@ requirejs(['jquery', 'd3'],
       d3.select("#bertviz #expanded").attr("visibility", "visible");
       d3.select("#bertviz #collapsed").attr("visibility", "hidden")
     }
-    
+
+    function getColor(name) {
+        return PALETTE[config.mode][name]
+    }
+
     function initialize() {
       config.attention = params['attention'];
       config.filter = params['default_filter'];
@@ -933,7 +966,8 @@ requirejs(['jquery', 'd3'],
       config.layer = 0;
       config.initialTextLength = attentionFilter.right_text.length;
       config.expanded = false;
-      config.bidirectional = params['bidirectional']
+      config.bidirectional = params['bidirectional'];
+      config.mode = params['display_mode'];
 
 
         $("#bertviz #layer").empty();

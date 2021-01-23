@@ -34,17 +34,17 @@ import torch
 from IPython.core.display import display, HTML, Javascript
 
 
-def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
+def show(model, model_type, tokenizer, sentence_a, sentence_b=None, display_mode='dark'):
 
     # Generate unique div id to enable multiple visualizations in one notebook
 
     if sentence_b:
         vis_html = """
-        <div id="bertviz" style='background-color:black; padding:8px'>
+        <div id="bertviz" style='padding:8px'>
           <span style="user-select:none">
-            <span style="color:white">Layer: </span><select id="layer"></select>
-            <span style="color:white">Head: </span><select id="att_head"></select>
-            <span style="color:white">Attention: </span><select id="filter">
+            <span class="dropdown-label">Layer: </span><select id="layer"></select>
+            <span class="dropdown-label">Head: </span><select id="att_head"></select>
+            <span class="dropdown-label">Attention: </span><select id="filter">
               <option value="all">All</option>
               <option value="aa">Sentence A -> Sentence A</option>
               <option value="ab">Sentence A -> Sentence B</option>
@@ -57,10 +57,10 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
         """
     else:
         vis_html = """
-            <div id="bertviz" style='background-color:black; padding:8px'>
+            <div id="bertviz" style='padding:8px'>
               <span style="user-select:none">
-                <span style="color:white">Layer: </span><select id="layer"></select>
-                <span style="color:white">Head: </span> <select id="att_head"></select>
+                <span class="dropdown-label">Layer: </span><select id="layer"></select>
+                <span class="dropdown-label">Head: </span> <select id="att_head"></select>
               </span>
               <div id='vis'></div>
             </div>
@@ -76,7 +76,8 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None):
     params = {
         'attention': attn_data,
         'default_filter': "all",
-        'bidirectional': bidirectional
+        'bidirectional': bidirectional,
+        'display_mode': display_mode
     }
     vis_js = open(os.path.join(__location__, 'neuron_view.js')).read()
     display(Javascript('window.bertviz_params = %s' % json.dumps(params)))

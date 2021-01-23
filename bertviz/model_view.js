@@ -7,6 +7,7 @@
  *
  * 02/01/19  Jesse Vig   Initial implementation
  * 12/31/20  Jesse Vig   Support multiple visualizations in single notebook.
+ * 01/19/21  Jesse Vig   Support light/dark modes
  */
 
 
@@ -29,7 +30,18 @@ requirejs(['jquery', 'd3'], function($, d3) {
         const DETAIL_HEADING_TEXT_SIZE = 15;
         const TEXT_SIZE = 13;
         const LAYER_COLORS = d3.schemeCategory10;
-        const TEXT_COLOR = "#bbb"
+        const PALETTE = {
+            'light': {
+                'text': 'black',
+                'background': 'white',
+                'highlight': '#F5F5F5'
+            },
+            'dark': {
+                'text': '#bbb',
+                'background': 'black',
+                'highlight': '#222'
+            }
+        }
 
         function render() {
 
@@ -54,7 +66,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .append('svg')
                 .attr("width", DIV_WIDTH)
                 .attr("height", config.divHeight)
-              .attr("fill", "black");
+              .attr("fill", getBackgroundColor());
 
             var i;
             var j;
@@ -102,8 +114,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
         }
 
         function renderDetailHeading(x, y, layerIndex, headIndex) {
-            // var fillColor = getColor(layerIndex);
-            var fillColor = TEXT_COLOR;
+            var fillColor = getTextColor();
             config.svg.append("text")
                 .classed("detail", true)
                 .text('Layer ' + layerIndex + ", Head " + headIndex)
@@ -127,7 +138,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .enter()
                 .append("g");
 
-            var fillColor = TEXT_COLOR;
+            var fillColor = getTextColor();
 
             tokenContainer.append("rect")
                 .classed("highlight", true)
@@ -201,8 +212,9 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .attr("height", config.thumbnailHeight)
                 .attr("width", config.thumbnailWidth)
                 .attr("stroke-width", 2)
-                .attr("stroke", getColor(layerIndex))
-                .attr("stroke-opacity", 0);
+                .attr("stroke", getLayerColor(layerIndex))
+                .attr("stroke-opacity", 0)
+                .attr("fill", getBackgroundColor());
             var x1 = x + THUMBNAIL_PADDING;
             var x2 = x1 + config.thumbnailWidth - 14;
             var y1 = y + THUMBNAIL_PADDING;
@@ -230,7 +242,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                     return y1 + (targetIndex + .5) * config.thumbnailBoxHeight;
                 })
                 .attr("stroke-width", 2.2)
-                .attr("stroke", getColor(layerIndex))
+                .attr("stroke", getLayerColor(layerIndex))
                 .attr("stroke-opacity", function (d) {
                     return d;
                 });
@@ -244,7 +256,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
 
             clickRegion.on("click", function (d, index) {
                 var attnBackgroundOther = config.svg.selectAll(".attn_background");
-                attnBackgroundOther.attr("fill", "black");
+                attnBackgroundOther.attr("fill", getBackgroundColor());
                 attnBackgroundOther.attr("stroke-opacity", 0);
 
                 config.svg.selectAll(".detail").remove();
@@ -252,12 +264,12 @@ requirejs(['jquery', 'd3'], function($, d3) {
                     renderDetail(att, layerIndex, headIndex);
                     config.detail_layer = layerIndex;
                     config.detail_head = headIndex;
-                    attnBackground.attr("fill", "#202020");
+                    attnBackground.attr("fill", getHighlightColor());
                     attnBackground.attr("stroke-opacity", .8);
                 } else {
                     config.detail_layer = null;
                     config.detail_head = null;
-                    attnBackground.attr("fill", "black");
+                    attnBackground.attr("fill", getBackgroundColor());
                     attnBackground.attr("stroke-opacity", 0);
                 }
             });
@@ -275,10 +287,9 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .attr("height", config.detailHeight)
                 .attr("width", DETAIL_WIDTH)
                 .style("opacity", 1)
-                .attr("fill", "black")
-                .attr("stroke-width", 3)
+                .attr("stroke-width", 1.5)
                 .attr("stroke-opacity", 0.7)
-                .attr("stroke", getColor(layerIndex));
+                .attr("stroke", getLayerColor(layerIndex));
         }
 
         function renderDetailAttn(x, y, att, layerIndex) {
@@ -309,24 +320,49 @@ requirejs(['jquery', 'd3'], function($, d3) {
                     return y + (targetIndex + .5) * DETAIL_BOX_HEIGHT;
                 })
                 .attr("stroke-width", 2.2)
-                .attr("stroke", getColor(layerIndex))
+                .attr("stroke", getLayerColor(layerIndex))
                 .attr("stroke-opacity", function (d) {
                     return d;
                 });
         }
 
-        function getColor(layer) {
+        function getLayerColor(layer) {
           return LAYER_COLORS[layer % 10];
+        }
+
+        function getTextColor() {
+            return PALETTE[config.mode]['text']
+        }
+
+        function getBackgroundColor() {
+           return PALETTE[config.mode]['background']
+        }
+
+        function getHighlightColor() {
+           return PALETTE[config.mode]['highlight']
         }
 
         function initialize() {
             config.attention = params['attention'];
             config.filter = params['default_filter'];
+            config.mode = params['display_mode'];
             config.rootDivId = params['root_div_id'];
             $(`#${config.rootDivId} #filter`).on('change', function (e) {
                 config.filter = e.currentTarget.value;
                 render();
             });
+            // // Configure the display mode drop down
+            // var select = $(`#${config.rootDivId} #mode`)
+            // console.log('select', select)
+            // for(var i = 0;i < select.length;i++){
+            //     if(select[i].value == config.mode ){
+            //         select[i].selected = true;
+            //     }
+            // }
+            // $(`#${config.rootDivId} #mode`).on('change', function (e) {
+            //     config.mode = e.currentTarget.value;
+            //     render();
+            // });
         }
 
         initialize();

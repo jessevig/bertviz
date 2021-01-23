@@ -4,7 +4,7 @@ import os
 import uuid
 from .util import format_special_chars, format_attention
 
-def model_view(attention, tokens, sentence_b_start=None, prettify_tokens=True):
+def model_view(attention, tokens, sentence_b_start=None, prettify_tokens=True, display_mode='dark'):
     """Render model view
 
         Args:
@@ -13,6 +13,7 @@ def model_view(attention, tokens, sentence_b_start=None, prettify_tokens=True):
             tokens: list of tokens
             sentence_b_start: index of first wordpiece in sentence B if input text is sentence pair (optional)
             prettify_tokens: indicates whether to remove special characters in wordpieces, e.g. Ġ
+            display_mode: 'light' or 'dark' display mode
     """
 
     # Generate unique div id to enable multiple visualizations in one notebook
@@ -77,6 +78,7 @@ def model_view(attention, tokens, sentence_b_start=None, prettify_tokens=True):
     params = {
         'attention': attn_data,
         'default_filter': "all",
+        'display_mode': display_mode,
         'root_div_id': vis_id
     }
     attn_seq_len = len(attn_data['all']['attn'][0][0])
