@@ -107,7 +107,7 @@ necessarily provide a direct *explanation* for model predictions. See [[1](https
 
 ## Authors
 
-[Jesse Vig](https://twitter.com/jesse_vig)
+[Jesse Vig](https://jessevig.com)
 
 ## Citation
 
