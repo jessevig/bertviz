@@ -4,11 +4,11 @@ BertViz is a tool for visualizing attention in the Transformer model, supporting
 
 ## Resources
 
-🕹️[<b>Colab tutorial</b>](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing)
+🕹️ [<b>Colab tutorial</b>](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing)
 
-✍️[<b>Blog post</b>](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) 
+✍️ [<b>Blog post</b>](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) 
 
-📖[<b>Paper</b>](https://www.aclweb.org/anthology/P19-3007.pdf)
+📖 [<b>Paper</b>](https://www.aclweb.org/anthology/P19-3007.pdf)
 
 
 ## Overview
