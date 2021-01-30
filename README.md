@@ -124,7 +124,7 @@ head_view(attention, tokens)
 Just be sure that a copy of the `bertviz` directory is contained in the same folder or has been added to the
  `PYTHONPATH`. For more advanced use cases, e.g., specifying a two-sentence input to the model, please refer to the
  sample notebooks.  The neuron view has a
- more constrained API (see [Limitations](limitations)); refer to the sample notebooks for examples.
+ more constrained API (see [Limitations](#limitations)); refer to the sample notebooks for examples.
  
 #### Advanced options 
 
@@ -161,7 +161,6 @@ Click on any of the Colab links above, and scroll to the bottom of the page. It 
 #### Writing your own Colab notebook 
 If you write your own code for executing BertViz in Colab, note that some of the steps are different from those in the Jupyter notebooks (see Colab examples above).
 
-<a name="limitations"></a>
 ## Limitations
 
 ### Tool
