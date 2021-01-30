@@ -13,16 +13,16 @@ BertViz is a tool for visualizing attention in the Transformer model, supporting
 
 ## Overview
 
-### Head view
+### Head View
 The *head view* visualizes the attention patterns produced by one or more attention heads in a given 
 transformer layer. It is based on the excellent [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj). 
 
 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)
  with the head view pre-loaded.
 
-![Head view](images/head-view.gif) 
+![head view](images/head-view.gif) 
 
-The attention view supports all models from the Transformers library, including:<br>
+The head view supports all models from the Transformers library, including:<br>
 BERT: [[Notebook]](head_view_bert.ipynb)
   [[Colab]](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)<br>
 GPT-2:
@@ -36,14 +36,14 @@ DistilBERT: [[Notebook]](head_view_distilbert.ipynb)<br>
 (and others)
 
 
-### Model view 
+### Model View 
 
 The *model view* provides a birds-eye view of attention across all of the model’s layers  and heads.
 
 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS) with
  the model view pre-loaded.
 
-![Model view](images/model-view-dark.gif)
+![model view](images/model-view-dark.gif)
 
 The model view supports all models from the Transformers library, including:<br>
 BERT: [[Notebook]](model_view_bert.ipynb)
@@ -57,13 +57,13 @@ ALBERT: [[Notebook]](model_view_albert.ipynb)<br>
 DistilBERT: [[Notebook]](model_view_distilbert.ipynb)<br>
 (and others)
 
-### Neuron view 
+### Neuron View 
 The *neuron view* visualizes the individual neurons in the query and key vectors and shows how they are used to compute attention.
 
 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)
  with the neuron view pre-loaded (requires Chrome).
 
-![Neuron view](images/neuron-view-dark.gif)
+![neuron view](images/neuron-view-dark.gif)
 
 The neuron view supports the following three models:<br>
 BERT: [[Notebook]](neuron_view_bert.ipynb) 
@@ -87,20 +87,90 @@ jupyter notebook
 Click on any of the sample notebooks. You can view a notebook's cached output visualizations by selecting `File > Trust Notebook` (and confirming in dialog)
 or you can run the notebook yourself. Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
 
+#### Minimal example to create your own notebook
+
+In the first cell, configure Javascript dependencies as shown here:
+```
+%%javascript
+require.config({
+  paths: {
+      d3: '//cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min',
+    jquery: '//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min',
+  }
+});
+```
+Then load a Huggingface model, either a pre-trained model as shown below, or your own fine-tuned model. Be sure to set `output_attention=True`.
+
+
+```
+from transformers import AutoTokenizer, AutoModel
+
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+model = AutoModel.from_pretrained("bert-base-uncased", output_attentions=True)
+inputs = tokenizer.encode("The cat sat on the mat", return_tensors='pt')
+outputs = model(inputs)
+attention = outputs[-1]  # Output includes attention weights when output_attentions=True
+tokens = tokenizer.convert_ids_to_tokens(inputs[0]) 
+```
+
+Finally, display the returned attention weights using the BertViz `head_view` or `model_view` function:
+
+```
+from bertviz import head_view
+
+head_view(attention, tokens)
+```
+
+Just be sure that a copy of the `bertviz` directory is contained in the same folder or has been added to the
+ `PYTHONPATH`. For more advanced use cases, e.g., specifying a two-sentence input to the model, please refer to the
+ sample notebooks.  The neuron view has a
+ more constrained API (see [Limitations](limitations)); refer to the sample notebooks for examples.
+ 
+#### Advanced options 
+
+##### Pre-selecting layer/head(s)
+
+For the head view, you may pre-select a specific `layer` and collection of `heads`, e.g.:
+
+```
+head_view(attention, tokens, layer=2, heads=[3,5])
+```
+
+You may also pre-select a specific `layer` and single `head` for the neuron view.
+
+##### Dark mode
+
+The model view and neuron view support dark (default) and light modes. You may turn off dark mode in these views using
+the `display_mode` parameter:
+
+```
+model_view(attention, tokens, display_mode="light")
+```
+
+##### Non-huggingface models
+
+The `head_view` and `model_view` functions may technically be used to visualize self-attention for any Transformer model,
+as long as the attention weights are available and follow the format specified in `model_view` and `head_view` (which is the format 
+returned from Huggingface models). In some case, Tensorflow checkpoints may be loaded as Huggingface models as described in the
+ [Huggingface docs](https://huggingface.co/transformers/). 
+ 
 ### Running from Colab
 Click on any of the Colab links above, and scroll to the bottom of the page. It should be pre-loaded with the visualization.
- 
+
+
+#### Writing your own Colab notebook 
 If you write your own code for executing BertViz in Colab, note that some of the steps are different from those in the Jupyter notebooks (see Colab examples above).
 
+<a name="limitations"></a>
 ## Limitations
 
 ### Tool
-* The visualizations works best with shorter sentences and may run slowly if the input text is very long, especially for the Model View.
+* The visualizations works best with shorter inputs (e.g. a single sentence) and may run slowly if the input text is very long, especially for the model view.
 * When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long.
 * If you have issues running the tool in Jupyter Lab, try running with a plain Jupyter notebook.
-* The Neuron View only supports BERT, GPT-2, and RoBERTa models. This view needs access to the query and key vectors, 
-which requires modifying the model code (see `transformers_neuron_view directory`), which has only been done for these three models.
-Also, only one Neuron View may be included per notebook.
+* The neuron view only supports BERT, GPT-2, and RoBERTa models. This view needs access to the query and key vectors, 
+which required modifying the model code (see `transformers_neuron_view directory`), which has only been done for these three models.
+Also, only one neuron view may be included per notebook.
 ### Attention as "explanation"
 Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
 necessarily provide a direct *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf)], [[2](https://arxiv.org/abs/1902.10186)], [[3](https://arxiv.org/pdf/1908.04626.pdf)].
