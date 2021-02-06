@@ -9,8 +9,15 @@
  * 12/19/18  Jesse Vig   Assorted cleanup. Changed orientation of attention matrices.
  * 12/29/20  Jesse Vig   Significant refactor.
  * 12/31/20  Jesse Vig   Support multiple visualizations in single notebook.
+ * 02/06/21  Jesse Vig   Move require config from separate jupyter notebook step
  **/
 
+require.config({
+  paths: {
+      d3: '//cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min',
+    jquery: '//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min',
+  }
+});
 
 requirejs(['jquery', 'd3'], function ($, d3) {
 
@@ -22,7 +29,6 @@ requirejs(['jquery', 'd3'], function ($, d3) {
     const CHECKBOX_SIZE = 20;
     const TEXT_TOP = 30;
 
-    // var headColors;
     console.log("d3 version", d3.version)
     let headColors;
     try {
@@ -31,7 +37,6 @@ requirejs(['jquery', 'd3'], function ($, d3) {
         console.log('Older d3 version')
         headColors = d3.scale.category10();
     }
-    // let params = window.params;
     let config = {};
     initialize();
     renderVis();
