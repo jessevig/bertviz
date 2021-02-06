@@ -17,7 +17,7 @@ def head_view(attention, tokens, sentence_b_start = None, prettify_tokens=True, 
             sentence_b_start: index of first wordpiece in sentence B if input text is sentence pair (optional)
             prettify_tokens: indicates whether to remove special characters in wordpieces, e.g. Ġ
             layer: index of layer to show in visualization when first loads. If non specified, defaults to layer 0.
-            heads: indices of heads to show in visualizaiton when first loads. If non specified, defaults to all.
+            heads: indices of heads to show in visualization when first loads. If non specified, defaults to all.
     """
 
     # Generate unique div id to enable multiple visualizations in one notebook
