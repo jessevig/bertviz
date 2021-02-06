@@ -75,7 +75,7 @@ RoBERTa
 [[Notebook]](neuron_view_roberta.ipynb) 
 
 ## Execution
-### Running locally
+### Running a Jupyter Notebook
 
 ```
 git clone https://github.com/jessevig/bertviz.git
@@ -87,24 +87,14 @@ jupyter notebook
 Click on any of the sample notebooks. You can view a notebook's cached output visualizations by selecting `File > Trust Notebook` (and confirming in dialog)
 or you can run the notebook yourself. Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
 
+
 #### Minimal example to create your own notebook
 
-In the first cell, configure Javascript dependencies as shown here:
-```
-%%javascript
-require.config({
-  paths: {
-      d3: '//cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min',
-    jquery: '//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min',
-  }
-});
-```
-Then load a Huggingface model, either a pre-trained model as shown below, or your own fine-tuned model. Be sure to set `output_attention=True`.
+(If running in Jupyter Lab or Colab, see additional instructions below).
 
-
+First load a Huggingface model, either a pre-trained model as shown below, or your own fine-tuned model. Be sure to set `output_attention=True`.
 ```
 from transformers import AutoTokenizer, AutoModel
-
 tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 model = AutoModel.from_pretrained("bert-base-uncased", output_attentions=True)
 inputs = tokenizer.encode("The cat sat on the mat", return_tensors='pt')
@@ -113,11 +103,10 @@ attention = outputs[-1]  # Output includes attention weights when output_attenti
 tokens = tokenizer.convert_ids_to_tokens(inputs[0]) 
 ```
 
-Finally, display the returned attention weights using the BertViz `head_view` or `model_view` function:
+Then display the returned attention weights using the BertViz `head_view` or `model_view` function:
 
 ```
 from bertviz import head_view
-
 head_view(attention, tokens)
 ```
 
@@ -125,7 +114,25 @@ Just be sure that a copy of the `bertviz` directory is contained in the same fol
  `PYTHONPATH`. For more advanced use cases, e.g., specifying a two-sentence input to the model, please refer to the
  sample notebooks.  The neuron view has a
  more constrained API (see [Limitations](#limitations)); refer to the sample notebooks for examples.
- 
+
+#### Running in Jupyter Lab
+
+Include the following code prior to calling BertViz:
+```
+from IPython.core.display import HTML
+display(HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>'))
+```
+
+#### Running in Colab
+
+Include the following code in the beginning of the cell where BertViz is called:
+```
+from IPython.core.display import HTML
+display(HTML('<script src="/static/components/requirejs/require.js"></script>'))
+```
+
+See the Colab links above for full working examples.
+
 #### Advanced options 
 
 ##### Pre-selecting layer/head(s)
@@ -154,19 +161,11 @@ as long as the attention weights are available and follow the format specified i
 returned from Huggingface models). In some case, Tensorflow checkpoints may be loaded as Huggingface models as described in the
  [Huggingface docs](https://huggingface.co/transformers/). 
  
-### Running from Colab
-Click on any of the Colab links above, and scroll to the bottom of the page. It should be pre-loaded with the visualization.
-
-
-#### Writing your own Colab notebook 
-If you write your own code for executing BertViz in Colab, note that some of the steps are different from those in the Jupyter notebooks (see Colab examples above).
-
 ## Limitations
 
 ### Tool
 * The visualizations works best with shorter inputs (e.g. a single sentence) and may run slowly if the input text is very long, especially for the model view.
 * When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long.
-* If you have issues running the tool in Jupyter Lab, try running with a plain Jupyter notebook.
 * The neuron view only supports BERT, GPT-2, and RoBERTa models. This view needs access to the query and key vectors, 
 which required modifying the model code (see `transformers_neuron_view directory`), which has only been done for these three models.
 Also, only one neuron view may be included per notebook.
