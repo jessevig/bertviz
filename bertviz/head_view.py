@@ -25,7 +25,6 @@ def head_view(attention, tokens, sentence_b_start = None, prettify_tokens=True, 
 
     if sentence_b_start is not None:
         vis_html = """
-            <script src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script>
             <div id='%s'>
                 <span style="user-select:none">
                     Layer: <select id="layer"></select>
@@ -95,7 +94,6 @@ def head_view(attention, tokens, sentence_b_start = None, prettify_tokens=True, 
     if attn_seq_len != len(tokens):
         raise ValueError(f"Attention has {attn_seq_len} positions, while number of tokens is {len(tokens)}")
 
-    # display(HTML('<script src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script>'))
     display(HTML(vis_html))
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))

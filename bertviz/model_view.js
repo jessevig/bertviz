@@ -8,8 +8,15 @@
  * 02/01/19  Jesse Vig   Initial implementation
  * 12/31/20  Jesse Vig   Support multiple visualizations in single notebook.
  * 01/19/21  Jesse Vig   Support light/dark modes
- */
+ * 02/06/21  Jesse Vig   Move require config from separate jupyter notebook step
+ **/
 
+require.config({
+  paths: {
+      d3: '//cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min',
+    jquery: '//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min',
+  }
+});
 
 requirejs(['jquery', 'd3'], function($, d3) {
 

@@ -9,7 +9,15 @@
  * 12/22/18  Jesse Vig   Display attention details: query/key vectors
  * 01/01/21  Jesse Vig   Change to bertviz-specific naming conventions so as not to interfere with other html elements
  * 01/16/21  Jesse Vig   Dark mode
- */
+ * 02/06/21  Jesse Vig   Move require config from separate jupyter notebook step
+ **/
+
+require.config({
+  paths: {
+      d3: '//cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min',
+    jquery: '//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min',
+  }
+});
 
 requirejs(['jquery', 'd3'],
   function ($, d3) {
