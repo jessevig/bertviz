@@ -20,7 +20,7 @@ transformer layer. It is based on the excellent [Tensor2Tensor visualization too
 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)
  with the head view pre-loaded.
 
-![head view](images/head-view.gif) 
+![head view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/head-view.gif) 
 
 The head view supports all models from the Transformers library, including:<br>
 BERT: [[Notebook]](head_view_bert.ipynb)
@@ -43,7 +43,7 @@ The *model view* provides a birds-eye view of attention across all of the modelâ
 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS) with
  the model view pre-loaded.
 
-![model view](images/model-view-dark.gif)
+![model view](https://github.com/jessevig/bertviz/raw/master/images/model-view-dark.gif)
 
 The model view supports all models from the Transformers library, including:<br>
 BERT: [[Notebook]](model_view_bert.ipynb)
@@ -63,7 +63,7 @@ The *neuron view* visualizes the individual neurons in the query and key vectors
 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)
  with the neuron view pre-loaded (requires Chrome).
 
-![neuron view](images/neuron-view-dark.gif)
+![neuron view](https://github.com/jessevig/bertviz/raw/master/images/neuron-view-dark.gif)
 
 The neuron view supports the following three models:<br>
 BERT: [[Notebook]](neuron_view_bert.ipynb) 
