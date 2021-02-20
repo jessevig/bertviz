@@ -17,79 +17,78 @@ BertViz is a tool for visualizing attention in the Transformer model, supporting
 The *head view* visualizes the attention patterns produced by one or more attention heads in a given 
 transformer layer. It is based on the excellent [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj). 
 
-Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)
+🕹 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)
  with the head view pre-loaded.
 
 ![head view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/head-view.gif) 
 
-The head view supports all models from the Transformers library, including:<br>
+The head view supports all models from the Transformers library, including:  
 BERT: [[Notebook]](head_view_bert.ipynb)
-  [[Colab]](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)<br>
+  [[Colab]](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)  
 GPT-2:
   [[Notebook]](head_view_gpt2.ipynb)
-[[Colab]](https://colab.research.google.com/drive/1c9kBsbvSqpKkmd62u7nfqVhvWr0W8_Lx)<br>
-XLNet: [[Notebook]](head_view_xlnet.ipynb)<br>
-RoBERTa: [[Notebook]](head_view_roberta.ipynb)<br>
-XLM: [[Notebook]](head_view_xlm.ipynb)<br>
-ALBERT: [[Notebook]](head_view_albert.ipynb)<br>
-DistilBERT: [[Notebook]](head_view_distilbert.ipynb)<br>
+[[Colab]](https://colab.research.google.com/drive/1c9kBsbvSqpKkmd62u7nfqVhvWr0W8_Lx)  
+XLNet: [[Notebook]](head_view_xlnet.ipynb)  
+RoBERTa: [[Notebook]](head_view_roberta.ipynb)  
+XLM: [[Notebook]](head_view_xlm.ipynb)  
+ALBERT: [[Notebook]](head_view_albert.ipynb)  
+DistilBERT: [[Notebook]](head_view_distilbert.ipynb)
 (and others)
-
 
 ### Model View 
 
 The *model view* provides a birds-eye view of attention across all of the model’s layers  and heads.
 
-Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS) with
+🕹 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS) with
  the model view pre-loaded.
 
 ![model view](https://github.com/jessevig/bertviz/raw/master/images/model-view-dark.gif)
 
-The model view supports all models from the Transformers library, including:<br>
+The model view supports all models from the Transformers library, including:  
 BERT: [[Notebook]](model_view_bert.ipynb)
-[[Colab]](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS)<br>
+[[Colab]](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS)  
 GPT2: [[Notebook]](model_view_gpt2.ipynb)
-[[Colab]](https://colab.research.google.com/drive/1y-wfC95Z0aASawYqA34LQeV0_qC9mOto)<br>
-XLNet: [[Notebook]](model_view_xlnet.ipynb)<br>
-RoBERTa: [[Notebook]](model_view_roberta.ipynb)<br>
-XLM: [[Notebook]](model_view_xlm.ipynb)<br>
-ALBERT: [[Notebook]](model_view_albert.ipynb)<br>
-DistilBERT: [[Notebook]](model_view_distilbert.ipynb)<br>
+[[Colab]](https://colab.research.google.com/drive/1y-wfC95Z0aASawYqA34LQeV0_qC9mOto)  
+XLNet: [[Notebook]](model_view_xlnet.ipynb)  
+RoBERTa: [[Notebook]](model_view_roberta.ipynb)  
+XLM: [[Notebook]](model_view_xlm.ipynb)  
+ALBERT: [[Notebook]](model_view_albert.ipynb)  
+DistilBERT: [[Notebook]](model_view_distilbert.ipynb) 
 (and others)
 
 ### Neuron View 
 The *neuron view* visualizes the individual neurons in the query and key vectors and shows how they are used to compute attention.
 
-Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)
+🕹 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)
  with the neuron view pre-loaded (requires Chrome).
 
 ![neuron view](https://github.com/jessevig/bertviz/raw/master/images/neuron-view-dark.gif)
 
-The neuron view supports the following three models:<br>
+The neuron view supports the following three models:  
 BERT: [[Notebook]](neuron_view_bert.ipynb) 
-[[Colab]](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)<br>
-GPT-2
-[[Notebook]](neuron_view_gpt2.ipynb) 
-[[Colab]](https://colab.research.google.com/drive/1s8XCCyxsKvNRWNzjWi5Nl8ZAYZ5YkLm_)<br>
+[[Colab]](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)  
+GPT-2 [[Notebook]](neuron_view_gpt2.ipynb) 
+[[Colab]](https://colab.research.google.com/drive/1s8XCCyxsKvNRWNzjWi5Nl8ZAYZ5YkLm_)  
 RoBERTa
 [[Notebook]](neuron_view_roberta.ipynb) 
 
+## Installation
+```
+pip install bertviz
+```
+You must also have [Jupyter Notebook](https://jupyter.org/install) installed.
+
 ## Execution
-### Running a sample notebook
+
+First start Jupyter Notebook:
 
 ```
-git clone https://github.com/jessevig/bertviz.git
-cd bertviz
-<Install from requirements.txt as needed>
 jupyter notebook
 ```
 
-Click on any of the sample notebooks. You can view a notebook's cached output visualizations by selecting `File > Trust Notebook` (and confirming in dialog)
-or you can run the notebook yourself. Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
+Click *New* to start a Jupter notebook, then follow the instructions below.
 
-### Creating a notebook
-
-#### Head view / model view
+### Head view / model view
 First load a Huggingface model, either a pre-trained model as shown below, or your own fine-tuned model. Be sure to set `output_attention=True`.
 ```
 from transformers import AutoTokenizer, AutoModel
@@ -108,8 +107,7 @@ from bertviz import head_view
 head_view(attention, tokens)
 ```
 
-Just be sure that a copy of the `bertviz` directory is contained in the same folder or has been added to the
- `PYTHONPATH`. For more advanced use cases, e.g., specifying a two-sentence input to the model, please refer to the
+For more advanced use cases, e.g., specifying a two-sentence input to the model, please refer to the
  sample notebooks.
 
 #### Neuron view
@@ -130,9 +128,20 @@ model_type = 'bert'
 show(model, model_type, tokenizer, sentence_a, sentence_b, layer=2, head=0)
 ```
 
+### Running a sample notebook
 
-#### Advanced options
-##### Pre-selecting layer/head(s)
+```
+git clone https://github.com/jessevig/bertviz.git
+cd bertviz
+jupyter notebook
+```
+
+Click on any of the sample notebooks. You can view a notebook's cached output visualizations by selecting `File > Trust Notebook` (and confirming in dialog)
+or you can run the notebook yourself. Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
+
+
+### Advanced options
+#### Pre-selecting layer/head(s)
 
 For the head view, you may pre-select a specific `layer` and collection of `heads`, e.g.:
 
@@ -142,7 +151,7 @@ head_view(attention, tokens, layer=2, heads=[3,5])
 
 You may also pre-select a specific `layer` and single `head` for the neuron view.
 
-##### Dark/light mode
+#### Dark/light mode
 
 The model view and neuron view support dark (default) and light modes. You may turn off dark mode in these views using
 the `display_mode` parameter:
@@ -151,12 +160,13 @@ the `display_mode` parameter:
 model_view(attention, tokens, display_mode="light")
 ```
 
-##### Non-huggingface models
+#### Non-huggingface models
 
 The `head_view` and `model_view` functions may technically be used to visualize self-attention for any Transformer model,
 as long as the attention weights are available and follow the format specified in `model_view` and `head_view` (which is the format 
 returned from Huggingface models). In some case, Tensorflow checkpoints may be loaded as Huggingface models as described in the
  [Huggingface docs](https://huggingface.co/transformers/). 
+ 
  
 ## Limitations
 
