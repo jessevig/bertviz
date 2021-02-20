@@ -75,7 +75,7 @@ RoBERTa
 [[Notebook]](neuron_view_roberta.ipynb) 
 
 ## Execution
-### Running a Jupyter Notebook
+### Running a sample notebook
 
 ```
 git clone https://github.com/jessevig/bertviz.git
@@ -87,11 +87,9 @@ jupyter notebook
 Click on any of the sample notebooks. You can view a notebook's cached output visualizations by selecting `File > Trust Notebook` (and confirming in dialog)
 or you can run the notebook yourself. Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
 
+### Creating a notebook
 
-#### Minimal example to create your own notebook
-
-(If running in Jupyter Lab or Colab, see additional instructions below).
-
+#### Head view / model view
 First load a Huggingface model, either a pre-trained model as shown below, or your own fine-tuned model. Be sure to set `output_attention=True`.
 ```
 from transformers import AutoTokenizer, AutoModel
@@ -112,29 +110,28 @@ head_view(attention, tokens)
 
 Just be sure that a copy of the `bertviz` directory is contained in the same folder or has been added to the
  `PYTHONPATH`. For more advanced use cases, e.g., specifying a two-sentence input to the model, please refer to the
- sample notebooks.  The neuron view has a
- more constrained API (see [Limitations](#limitations)); refer to the sample notebooks for examples.
+ sample notebooks.
 
-#### Running in Jupyter Lab
+#### Neuron view
 
-Include the following code prior to calling BertViz:
+The neuron view is invoked differently than the head view or model view, due to requiring access to the model's
+query/key vectors, which are not returned through the Huggingface API. It is currently limited to BERT, GPT-2, and
+RoBERTa.
+
 ```
-from IPython.core.display import HTML
-display(HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>'))
+# Import specialized versions of models (that return query/key vectors)
+from bertviz.transformers_neuron_view import BertModel, BertTokenizer
+
+from bertviz.neuron_view import show
+
+model = BertModel.from_pretrained(model_version, output_attentions=True)
+tokenizer = BertTokenizer.from_pretrained(model_version, do_lower_case=do_lower_case)
+model_type = 'bert'
+show(model, model_type, tokenizer, sentence_a, sentence_b, layer=2, head=0)
 ```
 
-#### Running in Colab
 
-Include the following code in the beginning of the cell where BertViz is called:
-```
-from IPython.core.display import HTML
-display(HTML('<script src="/static/components/requirejs/require.js"></script>'))
-```
-
-See the Colab links above for full working examples.
-
-#### Advanced options 
-
+#### Advanced options
 ##### Pre-selecting layer/head(s)
 
 For the head view, you may pre-select a specific `layer` and collection of `heads`, e.g.:
@@ -145,7 +142,7 @@ head_view(attention, tokens, layer=2, heads=[3,5])
 
 You may also pre-select a specific `layer` and single `head` for the neuron view.
 
-##### Dark mode
+##### Dark/light mode
 
 The model view and neuron view support dark (default) and light modes. You may turn off dark mode in these views using
 the `display_mode` parameter:
