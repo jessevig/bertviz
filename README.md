@@ -110,7 +110,7 @@ head_view(attention, tokens)
 For more advanced use cases, e.g., specifying a two-sentence input to the model, please refer to the
  sample notebooks.
 
-#### Neuron view
+### Neuron view
 
 The neuron view is invoked differently than the head view or model view, due to requiring access to the model's
 query/key vectors, which are not returned through the Huggingface API. It is currently limited to BERT, GPT-2, and
