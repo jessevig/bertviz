@@ -24,7 +24,7 @@ def head_view(attention, tokens, sentence_b_start = None, prettify_tokens=True, 
     vis_id = 'bertviz-%s'%(uuid.uuid4().hex)
 
     if sentence_b_start is not None:
-        vis_html = """
+        vis_html = """      
             <div id='%s'>
                 <span style="user-select:none">
                     Layer: <select id="layer"></select>
@@ -94,6 +94,8 @@ def head_view(attention, tokens, sentence_b_start = None, prettify_tokens=True, 
     if attn_seq_len != len(tokens):
         raise ValueError(f"Attention has {attn_seq_len} positions, while number of tokens is {len(tokens)}")
 
+    # require.js must be imported for Colab or JupyterLab:
+    display(HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>'))
     display(HTML(vis_html))
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
