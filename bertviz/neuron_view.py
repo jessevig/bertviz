@@ -65,6 +65,8 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None, display_mode
               <div id='vis'></div>
             </div>
          """
+    # require.js must be imported for Colab or JupyterLab:
+    display(HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>'))
     display(HTML(vis_html))
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
