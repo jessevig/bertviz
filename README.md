@@ -113,8 +113,8 @@ For more advanced use cases, e.g., specifying a two-sentence input to the model,
 ### Neuron view
 
 The neuron view is invoked differently than the head view or model view, due to requiring access to the model's
-query/key vectors, which are not returned through the Huggingface API. It is currently limited to BERT, GPT-2, and
-RoBERTa.
+query/key vectors, which are not returned through the Huggingface API. It is currently limited to custom versions of BERT, GPT-2, and
+RoBERTa included with BertViz.
 
 ```
 # Import specialized versions of models (that return query/key vectors)
@@ -173,9 +173,10 @@ returned from Huggingface models). In some case, Tensorflow checkpoints may be l
 ### Tool
 * The visualizations works best with shorter inputs (e.g. a single sentence) and may run slowly if the input text is very long, especially for the model view.
 * When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long.
-* The neuron view only supports BERT, GPT-2, and RoBERTa models. This view needs access to the query and key vectors, 
+* The neuron view only supports the custom BERT, GPT-2, and RoBERTa models included with the tool. This view needs access to the query and key vectors, 
 which required modifying the model code (see `transformers_neuron_view directory`), which has only been done for these three models.
 Also, only one neuron view may be included per notebook.
+* The visualization doesn't currently support sequence-to-sequence models out of the box. 
 ### Attention as "explanation"
 Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
 necessarily provide a direct *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf)], [[2](https://arxiv.org/abs/1902.10186)], [[3](https://arxiv.org/pdf/1908.04626.pdf)].
