@@ -87,7 +87,7 @@ requirejs(['jquery', 'd3'], function ($, d3) {
         $(`#${config.rootDivId} #vis`).empty();
 
         // Determine size of visualization
-        const height = config.initialTextLength * BOXHEIGHT + TEXT_TOP;
+        const height = Math.max(leftText.length, rightText.length) * BOXHEIGHT + TEXT_TOP;
         const svg = d3.select(`#${config.rootDivId} #vis`)
             .append('svg')
             .attr("width", "100%")
