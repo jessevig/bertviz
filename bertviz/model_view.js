@@ -9,6 +9,7 @@
  * 12/31/20  Jesse Vig   Support multiple visualizations in single notebook.
  * 01/19/21  Jesse Vig   Support light/dark modes
  * 02/06/21  Jesse Vig   Move require config from separate jupyter notebook step
+ * 05/03/21  Jesse Vig   Adjust visualization height dynamically
  **/
 
 require.config({
@@ -358,18 +359,6 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 config.filter = e.currentTarget.value;
                 render();
             });
-            // // Configure the display mode drop down
-            // var select = $(`#${config.rootDivId} #mode`)
-            // console.log('select', select)
-            // for(var i = 0;i < select.length;i++){
-            //     if(select[i].value == config.mode ){
-            //         select[i].selected = true;
-            //     }
-            // }
-            // $(`#${config.rootDivId} #mode`).on('change', function (e) {
-            //     config.mode = e.currentTarget.value;
-            //     render();
-            // });
         }
 
         initialize();

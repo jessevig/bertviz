@@ -11,14 +11,14 @@ def head_view(
         attention=None,
         tokens=None,
         sentence_b_start=None,
-        encoder_attention=None,
-        decoder_attention=None,
-        cross_attention = None,
-        encoder_tokens=None,
-        decoder_tokens=None,
         prettify_tokens=True,
         layer=None,
-        heads=None
+        heads=None,
+        encoder_attention=None,
+        decoder_attention=None,
+        cross_attention=None,
+        encoder_tokens=None,
+        decoder_tokens=None,
 ):
     """Render head view
 
@@ -201,4 +201,3 @@ def head_view(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
     vis_js = open(os.path.join(__location__, 'head_view.js')).read().replace("PYTHON_PARAMS", json.dumps(params))
     display(Javascript(vis_js))
-

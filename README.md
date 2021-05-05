@@ -78,7 +78,7 @@ pip install bertviz
 ```
 You must also have [Jupyter Notebook](https://jupyter.org/install) installed.
 
-## Execution
+## Quickstart
 
 First start Jupyter Notebook:
 
@@ -86,21 +86,48 @@ First start Jupyter Notebook:
 jupyter notebook
 ```
 
-Click *New* to start a Jupter notebook, then follow the instructions below.
+Click *New* to start a Jupter notebook.
 
-### Head view / model view
-First load a Huggingface model, either a pre-trained model as shown below, or your own fine-tuned model. Be sure to set `output_attention=True`.
+Add the following cell:
+
 ```
 from transformers import AutoTokenizer, AutoModel
+from bertviz import model_view
+
 tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 model = AutoModel.from_pretrained("bert-base-uncased", output_attentions=True)
 inputs = tokenizer.encode("The cat sat on the mat", return_tensors='pt')
 outputs = model(inputs)
 attention = outputs[-1]  # Output includes attention weights when output_attentions=True
 tokens = tokenizer.convert_ids_to_tokens(inputs[0]) 
+model_view(attention, tokens)
 ```
 
-Then display the returned attention weights using the BertViz `head_view` or `model_view` function:
+And run it! It will take a few seconds to load.
+ 
+## Detailed Instructions
+
+### Self-Attention Models (BERT, GPT-2, etc.)
+
+#### Head view / model view
+First load a Huggingface model, either a pre-trained model as shown below, or your own fine-tuned model.
+ Be sure to set `output_attention=True`.
+```
+from transformers import AutoTokenizer, AutoModel
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+model = AutoModel.from_pretrained("bert-base-uncased", output_attentions=True)
+```
+
+Then prepare inputs and compute attention:
+
+```
+inputs = tokenizer.encode("The cat sat on the mat", return_tensors='pt')
+outputs = model(inputs)
+attention = outputs[-1]  # Output includes attention weights when output_attentions=True
+tokens = tokenizer.convert_ids_to_tokens(inputs[0]) 
+```
+
+Finally, display the attention weights using the `head_view` or `model_view` function:
 
 ```
 from bertviz import head_view
@@ -110,7 +137,7 @@ head_view(attention, tokens)
 For more advanced use cases, e.g., specifying a two-sentence input to the model, please refer to the
  sample notebooks.
 
-### Neuron view
+#### Neuron view
 
 The neuron view is invoked differently than the head view or model view, due to requiring access to the model's
 query/key vectors, which are not returned through the Huggingface API. It is currently limited to custom versions of BERT, GPT-2, and
@@ -126,6 +153,45 @@ model = BertModel.from_pretrained(model_version, output_attentions=True)
 tokenizer = BertTokenizer.from_pretrained(model_version, do_lower_case=do_lower_case)
 model_type = 'bert'
 show(model, model_type, tokenizer, sentence_a, sentence_b, layer=2, head=0)
+```
+
+### Encoder-Decoder Models (MarianMT, etc.)
+
+The head view and model view both support encoder-decoder models.
+
+First, load an encoder-decoder model:
+
+```
+from transformers import AutoTokenizer, AutoModel
+
+tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-en-de")
+model = AutoModel.from_pretrained("Helsinki-NLP/opus-mt-en-de")
+```
+
+Then prepare the inputs and compute attention:
+```
+# get encoded input vectors
+encoder_input_ids = tokenizer("She sees the small elephant.", return_tensors="pt", add_special_tokens=True).input_ids
+
+# create ids of encoded input vectors
+decoder_input_ids = tokenizer("Sie sieht den kleinen Elefanten.", return_tensors="pt", add_special_tokens=True).input_ids
+
+outputs = model(input_ids=encoder_input_ids, decoder_input_ids=decoder_input_ids, output_attentions=True)
+
+encoder_text = tokenizer.convert_ids_to_tokens(encoder_input_ids[0])
+decoder_text = tokenizer.convert_ids_to_tokens(decoder_input_ids[0])
+```
+
+Finally, display the visualization using either `head_view` or `model_view`.
+```
+from bertviz import model_view
+model_view(
+    encoder_attention=outputs.encoder_attentions,
+    decoder_attention=outputs.decoder_attentions,
+    cross_attention=outputs.cross_attentions,
+    encoder_tokens= encoder_text,
+    decoder_tokens = decoder_text
+)
 ```
 
 ### Running a sample notebook
@@ -176,7 +242,6 @@ returned from Huggingface models). In some case, Tensorflow checkpoints may be l
 * The neuron view only supports the custom BERT, GPT-2, and RoBERTa models included with the tool. This view needs access to the query and key vectors, 
 which required modifying the model code (see `transformers_neuron_view directory`), which has only been done for these three models.
 Also, only one neuron view may be included per notebook.
-* The visualization doesn't currently support sequence-to-sequence models out of the box. 
 ### Attention as "explanation"
 Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
 necessarily provide a direct *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf)], [[2](https://arxiv.org/abs/1902.10186)], [[3](https://arxiv.org/pdf/1908.04626.pdf)].

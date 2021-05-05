@@ -10,6 +10,7 @@
  * 12/29/20  Jesse Vig   Significant refactor.
  * 12/31/20  Jesse Vig   Support multiple visualizations in single notebook.
  * 02/06/21  Jesse Vig   Move require config from separate jupyter notebook step
+ * 05/03/21  Jesse Vig   Adjust height of visualization dynamically
  **/
 
 require.config({
