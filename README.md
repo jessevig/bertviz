@@ -191,6 +191,8 @@ model_view(
 )
 ```
 
+You may select `Encoder`, `Decoder`, or `Cross` attention from the drop-down in the upper left corner.
+
 ### Running a sample notebook
 
 ```
@@ -220,7 +222,7 @@ head_view(attention, tokens, layer=2, heads=[3,5])
 
 You may also pre-select a specific `layer` and single `head` for the neuron view.
 
-#### Dark/light mode
+#### Dark / light mode
 
 The model view and neuron view support dark (default) and light modes. You may turn off dark mode in these views using
 the `display_mode` parameter:
