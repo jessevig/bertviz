@@ -23,16 +23,16 @@ transformer layer. It is based on the excellent [Tensor2Tensor visualization too
 ![head view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/head-view.gif) 
 
 The head view supports all models from the Transformers library, including:  
-BERT: [[Notebook]](head_view_bert.ipynb)
+BERT: [[Notebook]](notebooks/head_view_bert.ipynb)
   [[Colab]](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)  
 GPT-2:
-  [[Notebook]](head_view_gpt2.ipynb)
+  [[Notebook]](notebooks/head_view_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1c9kBsbvSqpKkmd62u7nfqVhvWr0W8_Lx)  
-XLNet: [[Notebook]](head_view_xlnet.ipynb)  
-RoBERTa: [[Notebook]](head_view_roberta.ipynb)  
-XLM: [[Notebook]](head_view_xlm.ipynb)  
-ALBERT: [[Notebook]](head_view_albert.ipynb)  
-DistilBERT: [[Notebook]](head_view_distilbert.ipynb)
+XLNet: [[Notebook]](notebooks/head_view_xlnet.ipynb)  
+RoBERTa: [[Notebook]](notebooks/head_view_roberta.ipynb)  
+XLM: [[Notebook]](notebooks/head_view_xlm.ipynb)  
+ALBERT: [[Notebook]](notebooks/head_view_albert.ipynb)  
+DistilBERT: [[Notebook]](notebooks/head_view_distilbert.ipynb)
 (and others)
 
 ### Model View 
@@ -45,15 +45,15 @@ The *model view* provides a birds-eye view of attention across all of the modelâ
 ![model view](https://github.com/jessevig/bertviz/raw/master/images/model-view-dark.gif)
 
 The model view supports all models from the Transformers library, including:  
-BERT: [[Notebook]](model_view_bert.ipynb)
+BERT: [[Notebook]](notebooks/model_view_bert.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS)  
-GPT2: [[Notebook]](model_view_gpt2.ipynb)
+GPT2: [[Notebook]](notebooks/model_view_gpt2.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1y-wfC95Z0aASawYqA34LQeV0_qC9mOto)  
-XLNet: [[Notebook]](model_view_xlnet.ipynb)  
-RoBERTa: [[Notebook]](model_view_roberta.ipynb)  
-XLM: [[Notebook]](model_view_xlm.ipynb)  
-ALBERT: [[Notebook]](model_view_albert.ipynb)  
-DistilBERT: [[Notebook]](model_view_distilbert.ipynb) 
+XLNet: [[Notebook]](notebooks/model_view_xlnet.ipynb)  
+RoBERTa: [[Notebook]](notebooks/model_view_roberta.ipynb)  
+XLM: [[Notebook]](notebooks/model_view_xlm.ipynb)  
+ALBERT: [[Notebook]](notebooks/model_view_albert.ipynb)  
+DistilBERT: [[Notebook]](notebooks/model_view_distilbert.ipynb) 
 (and others)
 
 ### Neuron View 
@@ -65,12 +65,12 @@ The *neuron view* visualizes the individual neurons in the query and key vectors
 ![neuron view](https://github.com/jessevig/bertviz/raw/master/images/neuron-view-dark.gif)
 
 The neuron view supports the following three models:  
-BERT: [[Notebook]](neuron_view_bert.ipynb) 
+BERT: [[Notebook]](notebooks/neuron_view_bert.ipynb) 
 [[Colab]](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)  
-GPT-2 [[Notebook]](neuron_view_gpt2.ipynb) 
+GPT-2 [[Notebook]](notebooks/neuron_view_gpt2.ipynb) 
 [[Colab]](https://colab.research.google.com/drive/1s8XCCyxsKvNRWNzjWi5Nl8ZAYZ5YkLm_)  
 RoBERTa
-[[Notebook]](neuron_view_roberta.ipynb) 
+[[Notebook]](notebooks/neuron_view_roberta.ipynb) 
 
 ## Installation
 ```
@@ -94,8 +94,8 @@ Add the following cell:
 from transformers import AutoTokenizer, AutoModel
 from bertviz import model_view
 
-tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-model = AutoModel.from_pretrained("bert-base-uncased", output_attentions=True)
+tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
+model = AutoModel.from_pretrained("distilbert-base-uncased", output_attentions=True)
 inputs = tokenizer.encode("The cat sat on the mat", return_tensors='pt')
 outputs = model(inputs)
 attention = outputs[-1]  # Output includes attention weights when output_attentions=True
@@ -103,13 +103,13 @@ tokens = tokenizer.convert_ids_to_tokens(inputs[0])
 model_view(attention, tokens)
 ```
 
-And run it! It will take a few seconds to load.
+And run it! The visualization may take a few seconds to load.
  
 ## Detailed Instructions
 
 ### Self-Attention Models (BERT, GPT-2, etc.)
 
-#### Head view / model view
+#### Head / model view
 First load a Huggingface model, either a pre-trained model as shown below, or your own fine-tuned model.
  Be sure to set `output_attention=True`.
 ```
@@ -170,10 +170,7 @@ model = AutoModel.from_pretrained("Helsinki-NLP/opus-mt-en-de")
 
 Then prepare the inputs and compute attention:
 ```
-# get encoded input vectors
 encoder_input_ids = tokenizer("She sees the small elephant.", return_tensors="pt", add_special_tokens=True).input_ids
-
-# create ids of encoded input vectors
 decoder_input_ids = tokenizer("Sie sieht den kleinen Elefanten.", return_tensors="pt", add_special_tokens=True).input_ids
 
 outputs = model(input_ids=encoder_input_ids, decoder_input_ids=decoder_input_ids, output_attentions=True)
@@ -198,13 +195,19 @@ model_view(
 
 ```
 git clone https://github.com/jessevig/bertviz.git
-cd bertviz
+cd bertviz/notebooks
 jupyter notebook
 ```
 
 Click on any of the sample notebooks. You can view a notebook's cached output visualizations by selecting `File > Trust Notebook` (and confirming in dialog)
 or you can run the notebook yourself. Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
 
+### Installing from source
+```
+git clone https://github.com/jessevig/bertviz.git
+cd bertviz
+python setup.py develop
+```
 
 ### Advanced options
 #### Pre-selecting layer/head(s)
@@ -244,7 +247,7 @@ which required modifying the model code (see `transformers_neuron_view directory
 Also, only one neuron view may be included per notebook.
 ### Attention as "explanation"
 Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
-necessarily provide a direct *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf)], [[2](https://arxiv.org/abs/1902.10186)], [[3](https://arxiv.org/pdf/1908.04626.pdf)].
+necessarily provide a direct *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf), [2](https://arxiv.org/abs/1902.10186), [3](https://arxiv.org/pdf/1908.04626.pdf)].
 
 ## Authors
 
