@@ -76,7 +76,13 @@ RoBERTa
 ```
 pip install bertviz
 ```
-You must also have [Jupyter Notebook](https://jupyter.org/install) installed.
+You must also have Jupyter Notebook and ipywidgets installed in order to run BertViz in a notebook:
+
+```
+pip install jupyterlab
+pip install ipywidgets
+```
+For more details on installing Jupyter or ipywidgets, consult the documentation [here](https://jupyter.org/install) and [here](https://ipywidgets.readthedocs.io/en/stable/user_install.html).
 
 ## Quickstart
 
@@ -86,7 +92,7 @@ First start Jupyter Notebook:
 jupyter notebook
 ```
 
-Click *New* to start a Jupter notebook.
+Click *New* to start a Jupyter notebook.
 
 Add the following cell:
 
@@ -165,7 +171,7 @@ First, load an encoder-decoder model:
 from transformers import AutoTokenizer, AutoModel
 
 tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-en-de")
-model = AutoModel.from_pretrained("Helsinki-NLP/opus-mt-en-de")
+model = AutoModel.from_pretrained("Helsinki-NLP/opus-mt-en-de", output_attentions=True)
 ```
 
 Then prepare the inputs and compute attention:
@@ -173,7 +179,7 @@ Then prepare the inputs and compute attention:
 encoder_input_ids = tokenizer("She sees the small elephant.", return_tensors="pt", add_special_tokens=True).input_ids
 decoder_input_ids = tokenizer("Sie sieht den kleinen Elefanten.", return_tensors="pt", add_special_tokens=True).input_ids
 
-outputs = model(input_ids=encoder_input_ids, decoder_input_ids=decoder_input_ids, output_attentions=True)
+outputs = model(input_ids=encoder_input_ids, decoder_input_ids=decoder_input_ids)
 
 encoder_text = tokenizer.convert_ids_to_tokens(encoder_input_ids[0])
 decoder_text = tokenizer.convert_ids_to_tokens(decoder_input_ids[0])
