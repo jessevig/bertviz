@@ -111,7 +111,7 @@ model_view(attention, tokens)
 
 And run it! The visualization may take a few seconds to load.
 
-#### Running example notebooks
+### Running example notebooks
 
 You may also run any of the sample notebooks included:
 
