@@ -110,6 +110,20 @@ model_view(attention, tokens)
 ```
 
 And run it! The visualization may take a few seconds to load.
+
+#### Running example notebooks
+
+You may also run any of the sample notebooks included:
+
+```
+git clone --depth 1 git@github.com:jessevig/bertviz.git
+cd bertviz/notebooks
+jupyter notebook
+```
+
+Specifying `--depth 1`, as shown above, excludes older revisions thus providing a faster download. Note that the sample notebooks do not cover
+ all Huggingface models, but the code should be similar for those not included. 
+
  
 ## Detailed Instructions
 
@@ -197,18 +211,8 @@ model_view(
 )
 ```
 
-You may select `Encoder`, `Decoder`, or `Cross` attention from the drop-down in the upper left corner.
+You may select `Encoder`, `Decoder`, or `Cross` attention from the drop-down in the upper left corner of the visualization.
 
-### Running a sample notebook
-
-```
-git clone https://github.com/jessevig/bertviz.git
-cd bertviz/notebooks
-jupyter notebook
-```
-
-Click on any of the sample notebooks. You can view a notebook's cached output visualizations by selecting `File > Trust Notebook` (and confirming in dialog)
-or you can run the notebook yourself. Note that the sample notebooks do not cover all Huggingface models, but the code should be similar for those not included. 
 
 ### Installing from source
 ```
