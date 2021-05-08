@@ -1,0 +1,4 @@
+include bertviz/head_view.js
+include bertviz/model_view.js
+include bertviz/neuron_view.js
+include bertviz/transformers_neuron_view/*
