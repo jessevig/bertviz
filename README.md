@@ -1,6 +1,10 @@
 # BertViz
 
-BertViz is a tool for visualizing attention in the Transformer model, supporting most models from the [transformers](https://github.com/huggingface/transformers) library (BERT, GPT-2, XLNet, RoBERTa, XLM, CTRL, etc.). It extends the [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj) and the [transformers](https://github.com/huggingface/transformers) library from [HuggingFace](https://github.com/huggingface).
+BertViz is a tool for visualizing attention in the Transformer model, supporting most models from the
+ [transformers](https://github.com/huggingface/transformers) library (BERT, GPT-2, XLNet, RoBERTa, XLM, CTRL, MarianMT,
+  etc.). It extends the
+   [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization)
+    by [Llion Jones](https://medium.com/@llionj) and the [transformers](https://github.com/huggingface/transformers) library from [HuggingFace](https://github.com/huggingface).
 
 ## Resources
 
@@ -120,10 +124,6 @@ git clone --depth 1 git@github.com:jessevig/bertviz.git
 cd bertviz/notebooks
 jupyter notebook
 ```
-
-Specifying `--depth 1`, as shown above, excludes older revisions thus providing a faster download. Note that the sample notebooks do not cover
- all Huggingface models, but the code should be similar for those not included. 
-
  
 ## Detailed Instructions
 
