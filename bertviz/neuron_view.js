@@ -980,7 +980,7 @@ requirejs(['jquery', 'd3'],
 
         const layerSelect = $("#bertviz #layer");
         layerSelect.empty();
-        for (var i = 0; i < config.nHeads; i++) {
+        for (var i = 0; i < config.nLayers; i++) {
           layerSelect.append($("<option />").val(i).text(i));
         }
         layerSelect.val(config.layer).change();
