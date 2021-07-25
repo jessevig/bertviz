@@ -65,7 +65,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
             config.thumbnailHeight = Math.max(config.leftText.length, config.rightText.length) * config.thumbnailBoxHeight + 2 * THUMBNAIL_PADDING;
             config.thumbnailWidth = DIV_WIDTH / config.numHeads;
             config.detailHeight = Math.max(config.leftText.length, config.rightText.length) * DETAIL_BOX_HEIGHT + 2 * DETAIL_PADDING + DETAIL_HEADING_HEIGHT;
-            config.divHeight = config.numLayers * config.thumbnailHeight;
+            config.divHeight = Math.max(config.numLayers * config.thumbnailHeight, config.detailHeight);
 
             const vis = $(`#${config.rootDivId} #vis`)
             vis.empty();
