@@ -26,7 +26,7 @@ transformer layer. It is based on the excellent [Tensor2Tensor visualization too
 
 ![head view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/head-view.gif) 
 
-The head view supports all models from the Transformers library, including:  
+The head view supports most models from the Transformers library. Example notebooks:  
 BERT: [[Notebook]](notebooks/head_view_bert.ipynb)
   [[Colab]](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)  
 GPT-2:
@@ -36,8 +36,8 @@ XLNet: [[Notebook]](notebooks/head_view_xlnet.ipynb)
 RoBERTa: [[Notebook]](notebooks/head_view_roberta.ipynb)  
 XLM: [[Notebook]](notebooks/head_view_xlm.ipynb)  
 ALBERT: [[Notebook]](notebooks/head_view_albert.ipynb)  
-DistilBERT: [[Notebook]](notebooks/head_view_distilbert.ipynb)
-(and others)
+DistilBERT: [[Notebook]](notebooks/head_view_distilbert.ipynb)   
+MarianMT (encoder-decoder): [[Notebook]](notebooks/head_view_encoder_decoder.ipynb)
 
 ### Model View 
 
@@ -48,7 +48,7 @@ The *model view* provides a birds-eye view of attention across all of the modelâ
 
 ![model view](https://github.com/jessevig/bertviz/raw/master/images/model-view-dark.gif)
 
-The model view supports all models from the Transformers library, including:  
+The model view supports most models from the Transformers library. Examples:  
 BERT: [[Notebook]](notebooks/model_view_bert.ipynb)
 [[Colab]](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS)  
 GPT2: [[Notebook]](notebooks/model_view_gpt2.ipynb)
@@ -57,8 +57,8 @@ XLNet: [[Notebook]](notebooks/model_view_xlnet.ipynb)
 RoBERTa: [[Notebook]](notebooks/model_view_roberta.ipynb)  
 XLM: [[Notebook]](notebooks/model_view_xlm.ipynb)  
 ALBERT: [[Notebook]](notebooks/model_view_albert.ipynb)  
-DistilBERT: [[Notebook]](notebooks/model_view_distilbert.ipynb) 
-(and others)
+DistilBERT: [[Notebook]](notebooks/model_view_distilbert.ipynb)   
+MarianMT (encoder-decoder): [[Notebook]](notebooks/model_view_encoder_decoder.ipynb)
 
 ### Neuron View 
 The *neuron view* visualizes the individual neurons in the query and key vectors and shows how they are used to compute attention.
@@ -222,15 +222,33 @@ python setup.py develop
 ```
 
 ### Advanced options
-#### Pre-selecting layer/head(s)
 
-For the head view, you may pre-select a specific `layer` and collection of `heads`, e.g.:
+#### Filtering layers
 
+In order to improve the responsiveness of the tool when visualizing larger models or inputs, you may wish to filter the attention to a subset of layers
+by setting the `include_layers` parameter, which specifies which layers to include in the visualization. This option is supported by the head view and model
+view currently.
+
+**Example:** Render model view with only layers 5 and 6 (zero-indexed) displayed:
+```
+model_view(attention, tokens, include_layers=[5, 6])
+```
+
+Additionally, the model view accepts an `include_heads` parameter, which specifies which heads to include in the visualization. This may
+be set in combination with `include_layers` to display an even smaller subset of attention heads.
+
+#### Setting default layer/head(s)
+
+For the head view, you may choose a specific `layer` and collection of `heads` as the default selection when the
+ visualization renders. (Note that this is different from the `include_heads`/`include_layers` parameter (above), which 
+ removes layers and heads from the visualization completely.)
+
+**Example:** Render head view with layer 2 and heads 3 and 5 preselected:
 ```
 head_view(attention, tokens, layer=2, heads=[3,5])
 ```
 
-You may also pre-select a specific `layer` and single `head` for the neuron view.
+You may also pre-select a specific `layer` and single `head` for the neuron view. 
 
 #### Dark / light mode
 
@@ -252,10 +270,12 @@ returned from Huggingface models). In some case, Tensorflow checkpoints may be l
 ## Limitations
 
 ### Tool
-* The visualizations works best with shorter inputs (e.g. a single sentence) and may run slowly if the input text is very long, especially for the model view.
-* When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long.
-* The neuron view only supports the custom BERT, GPT-2, and RoBERTa models included with the tool. This view needs access to the query and key vectors, 
-which required modifying the model code (see `transformers_neuron_view directory`), which has only been done for these three models.
+* The visualizations may run slowly if the input text is very long or the model is very large.
+ To mitigate this, we recommend using the *model view* with **`include_layers`** set to a subset of model layers. See
+  [documentation](#filtering-layers) above for more details.
+* When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long. Please refer to the above note about setting the **`include_layers`** parameter.
+* The *neuron view* only supports the custom BERT, GPT-2, and RoBERTa models included with the tool. This view needs access to the query and key vectors, 
+which required modifying the model code (see `transformers_neuron_view` directory), which has only been done for these three models.
 Also, only one neuron view may be included per notebook.
 ### Attention as "explanation"
 Visualizing attention weights illuminates a particular mechanism within the model architecture but does not

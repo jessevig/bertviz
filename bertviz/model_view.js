@@ -61,9 +61,9 @@ requirejs(['jquery', 'd3'], function($, d3) {
             config.attn = attData.attn;
             config.numLayers = config.attn.length;
             config.numHeads = config.attn[0].length;
-            config.thumbnailBoxHeight = 7 * (12 / config.numHeads);
+            config.thumbnailBoxHeight = 7 * (12 / config.totalHeads);
             config.thumbnailHeight = Math.max(config.leftText.length, config.rightText.length) * config.thumbnailBoxHeight + 2 * THUMBNAIL_PADDING;
-            config.thumbnailWidth = DIV_WIDTH / config.numHeads;
+            config.thumbnailWidth = DIV_WIDTH / config.totalHeads;
             config.detailHeight = Math.max(config.leftText.length, config.rightText.length) * DETAIL_BOX_HEIGHT + 2 * DETAIL_PADDING + DETAIL_HEADING_HEIGHT;
             config.divHeight = Math.max(config.numLayers * config.thumbnailHeight, config.detailHeight);
 
@@ -95,7 +95,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
             var xOffset = .8 * config.thumbnailWidth;
             var maxX = DIV_WIDTH;
             var maxY = config.divHeight;
-            var leftPos = (headIndex / config.numHeads) * DIV_WIDTH
+            var leftPos = (headIndex / config.totalHeads) * DIV_WIDTH
             var x = leftPos + THUMBNAIL_PADDING + xOffset;
             if (x < MIN_X) {
                 x = MIN_X;
@@ -125,7 +125,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
             var fillColor = getTextColor();
             config.svg.append("text")
                 .classed("detail", true)
-                .text('Layer ' + layerIndex + ", Head " + headIndex)
+                .text('Layer ' + config.layers[layerIndex] + ", Head " + config.heads[headIndex])
                 .attr("font-size", DETAIL_HEADING_TEXT_SIZE + "px")
                 .style("cursor", "default")
                 .style("-webkit-user-select", "none")
@@ -354,6 +354,9 @@ requirejs(['jquery', 'd3'], function($, d3) {
             config.attention = params['attention'];
             config.filter = params['default_filter'];
             config.mode = params['display_mode'];
+            config.layers = params['include_layers']
+            config.heads = params['include_heads']
+            config.totalHeads = params['total_heads']
             config.rootDivId = params['root_div_id'];
             $(`#${config.rootDivId} #filter`).on('change', function (e) {
                 config.filter = e.currentTarget.value;

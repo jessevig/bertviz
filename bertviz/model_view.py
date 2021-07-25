@@ -4,7 +4,7 @@ import uuid
 
 from IPython.core.display import display, HTML, Javascript
 
-from .util import format_special_chars, format_attention
+from .util import format_special_chars, format_attention, num_layers, num_heads
 
 
 def model_view(
@@ -18,6 +18,8 @@ def model_view(
         cross_attention=None,
         encoder_tokens=None,
         decoder_tokens=None,
+        include_layers=None,
+        include_heads=None
 ):
     """Render model view
 
@@ -39,6 +41,10 @@ def model_view(
             For all models:
                 prettify_tokens: indicates whether to remove special characters in wordpieces, e.g. Ġ
                 display_mode: 'light' or 'dark' display mode
+                include_layers: list of indices (zero-based) of layers to include in visualization (optional). Default
+                    is to include all layers. Filtering the layers may improve performance of the visualization.
+                include_heads: list of indices (zero-based) of heads to include in visualization (optional). Default
+                    is to include all heads. Filtering the heads may improve performance of the visualization.
     """
 
     attn_data = []
@@ -49,7 +55,12 @@ def model_view(
                 or encoder_tokens is not None or decoder_tokens is not None:
             raise ValueError("If you specify 'attention' you may not specify any encoder-decoder arguments. This"
                              " argument is only for self-attention models.")
-        attention = format_attention(attention)
+        n_heads = num_heads(attention)
+        if include_layers is None:
+            include_layers = list(range(num_layers(attention)))
+        if include_heads is None:
+            include_heads = list(range(n_heads))
+        attention = format_attention(attention, include_layers, include_heads)
         if sentence_b_start is None:
             attn_data.append(
                 {
@@ -102,11 +113,17 @@ def model_view(
                     'right_text': tokens[slice_a]
                 }
             )
+
     elif encoder_attention is not None or decoder_attention is not None or cross_attention is not None:
         if encoder_attention is not None:
             if encoder_tokens is None:
                 raise ValueError("'encoder_tokens' required if 'encoder_attention' is not None")
-            encoder_attention = format_attention(encoder_attention)
+            if include_layers is None:
+                include_layers = list(range(num_layers(encoder_attention)))
+            n_heads = num_heads(encoder_attention)
+            if include_heads is None:
+                include_heads = list(range(n_heads))
+            encoder_attention = format_attention(encoder_attention, include_layers, include_heads)
             attn_data.append(
                 {
                     'name': 'Encoder',
@@ -118,7 +135,12 @@ def model_view(
         if decoder_attention is not None:
             if decoder_tokens is None:
                 raise ValueError("'decoder_tokens' required if 'decoder_attention' is not None")
-            decoder_attention = format_attention(decoder_attention)
+            if include_layers is None:
+                include_layers = list(range(num_layers(decoder_attention)))
+            n_heads = num_heads(decoder_attention)
+            if include_heads is None:
+                include_heads = list(range(n_heads))
+            decoder_attention = format_attention(decoder_attention, include_layers, include_heads)
             attn_data.append(
                 {
                     'name': 'Decoder',
@@ -132,7 +154,12 @@ def model_view(
                 raise ValueError("'encoder_tokens' required if 'cross_attention' is not None")
             if decoder_tokens is None:
                 raise ValueError("'decoder_tokens' required if 'cross_attention' is not None")
-            cross_attention = format_attention(cross_attention)
+            if include_layers is None:
+                include_layers = list(range(num_layers(cross_attention)))
+            n_heads = num_heads(cross_attention)
+            if include_heads is None:
+                include_heads = list(range(n_heads))
+            cross_attention = format_attention(cross_attention, include_layers, include_heads)
             attn_data.append(
                 {
                     'name': 'Cross',
@@ -143,7 +170,6 @@ def model_view(
             )
     else:
         raise ValueError("You must specify at least one attention argument.")
-
 
     # Generate unique div id to enable multiple visualizations in one notebook
     vis_id = 'bertviz-%s'%(uuid.uuid4().hex)
@@ -188,6 +214,9 @@ def model_view(
         'default_filter': "0",
         'display_mode': display_mode,
         'root_div_id': vis_id,
+        'include_layers': include_layers,
+        'include_heads': include_heads,
+        'total_heads': n_heads
     }
 
     # require.js must be imported for Colab or JupyterLab:

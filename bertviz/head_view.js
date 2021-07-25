@@ -11,6 +11,7 @@
  * 12/31/20  Jesse Vig   Support multiple visualizations in single notebook.
  * 02/06/21  Jesse Vig   Move require config from separate jupyter notebook step
  * 05/03/21  Jesse Vig   Adjust height of visualization dynamically
+ * 07/25/21  Jesse Vig   Support layer filtering
  **/
 
 require.config({
@@ -48,6 +49,8 @@ requirejs(['jquery', 'd3'], function ($, d3) {
         config.rootDivId = params['root_div_id'];
         config.nLayers = config.attention[config.filter]['attn'].length;
         config.nHeads = config.attention[config.filter]['attn'][0].length;
+        config.layers = params['include_layers']
+
         if (params['heads']) {
             config.headVis = new Array(config.nHeads).fill(false);
             params['heads'].forEach(x => config.headVis[x] = true);
@@ -55,16 +58,17 @@ requirejs(['jquery', 'd3'], function ($, d3) {
             config.headVis = new Array(config.nHeads).fill(true);
         }
         config.initialTextLength = config.attention[config.filter].right_text.length;
-        config.layer = (params['layer'] == null ? 0 : params['layer'])
-
+        config.layer_seq = (params['layer'] == null ? 0 : config.layers.findIndex(layer => params['layer'] === layer));
+        config.layer = config.layers[config.layer_seq]
 
         let layerEl = $(`#${config.rootDivId} #layer`);
-        for (var i = 0; i < config.nLayers; i++) {
-            layerEl.append($("<option />").val(i).text(i));
+        for (const layer of config.layers) {
+            layerEl.append($("<option />").val(layer).text(layer));
         }
         layerEl.val(config.layer).change();
         layerEl.on('change', function (e) {
             config.layer = +e.currentTarget.value;
+            config.layer_seq = config.layers.findIndex(layer => config.layer === layer);
             renderVis();
         });
 
@@ -82,7 +86,7 @@ requirejs(['jquery', 'd3'], function ($, d3) {
         const rightText = attnData.right_text;
 
         // Select attention for given layer
-        const layerAttention = attnData.attn[config.layer];
+        const layerAttention = attnData.attn[config.layer_seq];
 
         // Clear vis
         $(`#${config.rootDivId} #vis`).empty();
