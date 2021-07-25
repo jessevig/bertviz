@@ -271,9 +271,8 @@ returned from Huggingface models). In some case, Tensorflow checkpoints may be l
 
 ### Tool
 * The visualizations may run slowly if the input text is very long or the model is very large.
- To mitigate this, we recommend using the *model view* with **`include_layers`** set to a subset of model layers. See
-  [documentation](#filtering-layers) above for more details.
-* When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long. Please refer to the above note about setting the **`include_layers`** parameter.
+ To mitigate this, you may wish to filter the layers displayed by setting the **`include_layers`** parameter, as described [above](#filtering-layers).
+* When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long.  To mitigate this, you may wish to filter the layers displayed by setting the **`include_layers`** parameter, as described [above](#filtering-layers).
 * The *neuron view* only supports the custom BERT, GPT-2, and RoBERTa models included with the tool. This view needs access to the query and key vectors, 
 which required modifying the model code (see `transformers_neuron_view` directory), which has only been done for these three models.
 Also, only one neuron view may be included per notebook.
