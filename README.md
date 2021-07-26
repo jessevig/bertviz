@@ -237,6 +237,15 @@ model_view(attention, tokens, include_layers=[5, 6])
 Additionally, the model view accepts an `include_heads` parameter, which specifies which heads to include in the visualization. This may
 be set in combination with `include_layers` to display an even smaller subset of attention heads.
 
+#### Dark / light mode
+
+The model view and neuron view support dark (default) and light modes. You may turn off dark mode in these views using
+the `display_mode` parameter:
+
+```
+model_view(attention, tokens, display_mode="light")
+```
+
 #### Setting default layer/head(s)
 
 For the head view, you may choose a specific `layer` and collection of `heads` as the default selection when the
@@ -250,14 +259,6 @@ head_view(attention, tokens, layer=2, heads=[3,5])
 
 You may also pre-select a specific `layer` and single `head` for the neuron view. 
 
-#### Dark / light mode
-
-The model view and neuron view support dark (default) and light modes. You may turn off dark mode in these views using
-the `display_mode` parameter:
-
-```
-model_view(attention, tokens, display_mode="light")
-```
 
 #### Non-huggingface models
 
