@@ -64,7 +64,7 @@ MarianMT (encoder-decoder): [[Notebook]](notebooks/model_view_encoder_decoder.ip
 The *neuron view* visualizes the individual neurons in the query and key vectors and shows how they are used to compute attention.
 
 🕹 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)
- with the neuron view pre-loaded (requires Chrome).
+ with the neuron view pre-loaded.
 
 ![neuron view](https://github.com/jessevig/bertviz/raw/master/images/neuron-view-dark.gif)
 
@@ -221,7 +221,16 @@ cd bertviz
 python setup.py develop
 ```
 
-### Advanced options
+### Additional options
+
+#### Dark / light mode
+
+The model view and neuron view support dark (default) and light modes. You may set the mode using
+the `display_mode` parameter:
+```
+model_view(attention, tokens, display_mode="light")
+```
+
 
 #### Filtering layers
 
@@ -229,7 +238,7 @@ To improve the responsiveness of the tool when visualizing larger models or inpu
  parameter to restrict the visualization to a subset of layers (zero-indexed). This option is available in the head view and model
 view.
 
-**Example:** Render model view with only layers 5 and 6 displayed:
+**Example:** Render model view with only layers 5 and 6 displayed
 ```
 model_view(attention, tokens, include_layers=[5, 6])
 ```
@@ -237,22 +246,14 @@ model_view(attention, tokens, include_layers=[5, 6])
 For the model view, you may also restrict the visualization to a subset of attention heads (zero-indexed) by setting the 
 `include_heads` parameter. 
 
-#### Dark / light mode
-
-The model view and neuron view support dark (default) and light modes. You may turn off dark mode in these views using
-the `display_mode` parameter:
-
-```
-model_view(attention, tokens, display_mode="light")
-```
 
 #### Setting default layer/head(s)
 
 In the head view, you may choose a specific `layer` and collection of `heads` as the default selection when the
- visualization first renders. (Note that this is different from the `include_heads`/`include_layers` parameter (above), which 
- removes layers and heads from the visualization completely.)
+ visualization first renders. Note: this is different from the `include_heads`/`include_layers` parameter (above), which 
+ removes layers and heads from the visualization completely.
 
-**Example:** Render head view with layer 2 and heads 3 and 5 preselected:
+**Example:** Render head view with layer 2 and heads 3 and 5 pre-selected
 ```
 head_view(attention, tokens, layer=2, heads=[3,5])
 ```
