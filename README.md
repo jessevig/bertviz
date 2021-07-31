@@ -225,17 +225,17 @@ python setup.py develop
 
 #### Filtering layers
 
-In order to improve the responsiveness of the tool when visualizing larger models or inputs, you may wish to filter the attention to a subset of layers
-by setting the `include_layers` parameter, which specifies which layers to include in the visualization. This option is supported by the head view and model
-view currently.
+To improve the responsiveness of the tool when visualizing larger models or inputs, you may set the `include_layers`
+ parameter to restrict the visualization to a subset of layers (zero-indexed). This option is available in the head view and model
+view.
 
-**Example:** Render model view with only layers 5 and 6 (zero-indexed) displayed:
+**Example:** Render model view with only layers 5 and 6 displayed:
 ```
 model_view(attention, tokens, include_layers=[5, 6])
 ```
 
-Additionally, the model view accepts an `include_heads` parameter, which specifies which heads to include in the visualization. This may
-be set in combination with `include_layers` to display an even smaller subset of attention heads.
+For the model view, you may also restrict the visualization to a subset of attention heads (zero-indexed) by setting the 
+`include_heads` parameter. 
 
 #### Dark / light mode
 
@@ -248,8 +248,8 @@ model_view(attention, tokens, display_mode="light")
 
 #### Setting default layer/head(s)
 
-For the head view, you may choose a specific `layer` and collection of `heads` as the default selection when the
- visualization renders. (Note that this is different from the `include_heads`/`include_layers` parameter (above), which 
+In the head view, you may choose a specific `layer` and collection of `heads` as the default selection when the
+ visualization first renders. (Note that this is different from the `include_heads`/`include_layers` parameter (above), which 
  removes layers and heads from the visualization completely.)
 
 **Example:** Render head view with layer 2 and heads 3 and 5 preselected:
@@ -259,8 +259,7 @@ head_view(attention, tokens, layer=2, heads=[3,5])
 
 You may also pre-select a specific `layer` and single `head` for the neuron view. 
 
-
-#### Non-huggingface models
+#### Non-Huggingface models
 
 The `head_view` and `model_view` functions may technically be used to visualize self-attention for any Transformer model,
 as long as the attention weights are available and follow the format specified in `model_view` and `head_view` (which is the format 

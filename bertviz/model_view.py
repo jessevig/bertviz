@@ -41,10 +41,10 @@ def model_view(
             For all models:
                 prettify_tokens: indicates whether to remove special characters in wordpieces, e.g. Ġ
                 display_mode: 'light' or 'dark' display mode
-                include_layers: list of indices (zero-based) of layers to include in visualization (optional). Default
-                    is to include all layers. Filtering the layers may improve performance of the visualization.
-                include_heads: list of indices (zero-based) of heads to include in visualization (optional). Default
-                    is to include all heads. Filtering the heads may improve performance of the visualization.
+                include_layers: indices (zero-based) of layers to include in visualization. Defaults to all layers.
+                    Note: filtering layers may improve responsiveness of the visualization for long inputs.
+                include_heads: indices (zero-based) of heads to include in visualization. Defaults to all heads.
+                    Note: filtering heads may improve responsiveness of the visualization for long inputs.
     """
 
     attn_data = []

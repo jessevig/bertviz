@@ -40,10 +40,10 @@ def head_view(
                 decoder_tokens: list of tokens for decoder input
             For all models:
                 prettify_tokens: indicates whether to remove special characters in wordpieces, e.g. Ġ
-                layer: index (zero-based) of default layer to show in visualization when first loads. If non specified, defaults to layer 0.
-                heads: indices (zero-based) of default heads to show in visualization when first loads. If non specified, defaults to all.
-                include_layers: list of indices (zero-based) of layers to include in visualization (optional). Default
-                    is to include all layers. Filtering the layers may improve performance of the visualization.
+                layer: index (zero-based) of initial selected layer in visualization. Defaults to layer 0.
+                heads: Indices (zero-based) of initial selected heads in visualization. Defaults to all heads.
+                include_layers: Indices (zero-based) of layers to include in visualization. Defaults to all layers.
+                    Note: filtering layers may improve responsiveness of the visualization for long inputs.
     """
 
     attn_data = []
