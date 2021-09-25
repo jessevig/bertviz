@@ -1,7 +1,7 @@
 # BertViz
 
 BertViz is a tool for visualizing attention in the Transformer model, supporting most models from the
- [transformers](https://github.com/huggingface/transformers) library (BERT, GPT-2, XLNet, RoBERTa, XLM, CTRL, MarianMT,
+ [transformers](https://github.com/huggingface/transformers) library (BERT, GPT-2, XLNet, RoBERTa, XLM, CTRL, BART,
   etc.). It extends the
    [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization)
     by [Llion Jones](https://medium.com/@llionj) and the [transformers](https://github.com/huggingface/transformers) library from [HuggingFace](https://github.com/huggingface).
@@ -37,7 +37,7 @@ RoBERTa: [[Notebook]](notebooks/head_view_roberta.ipynb)
 XLM: [[Notebook]](notebooks/head_view_xlm.ipynb)  
 ALBERT: [[Notebook]](notebooks/head_view_albert.ipynb)  
 DistilBERT: [[Notebook]](notebooks/head_view_distilbert.ipynb)   
-MarianMT (encoder-decoder): [[Notebook]](notebooks/head_view_encoder_decoder.ipynb)
+BART (encoder-decoder): [[Notebook]](notebooks/head_view_bart.ipynb)
 
 ### Model View 
 
@@ -58,7 +58,7 @@ RoBERTa: [[Notebook]](notebooks/model_view_roberta.ipynb)
 XLM: [[Notebook]](notebooks/model_view_xlm.ipynb)  
 ALBERT: [[Notebook]](notebooks/model_view_albert.ipynb)  
 DistilBERT: [[Notebook]](notebooks/model_view_distilbert.ipynb)   
-MarianMT (encoder-decoder): [[Notebook]](notebooks/model_view_encoder_decoder.ipynb)
+BART (encoder-decoder): [[Notebook]](notebooks/model_view_bart.ipynb)
 
 ### Neuron View 
 The *neuron view* visualizes the individual neurons in the query and key vectors and shows how they are used to compute attention.
