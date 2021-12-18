@@ -6,11 +6,11 @@ BertViz is a tool for visualizing attention in the [Transformer](https://jalamma
    [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization)
     by [Llion Jones](https://medium.com/@llionj) and the [transformers](https://github.com/huggingface/transformers) library from [HuggingFace](https://github.com/huggingface).
 
-[⚡️<b>Quickstart</b>]((#---getting-started))
-| 🕹️[<b>Colab tutorial</b>](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing)
-| 📖[<b>Documentation</b>](#---documentation))
-| ✍️[<b>Blog post</b>](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) 
-| 🔬[<b>Paper</b>](#---paper)
+[⚡️ <b>Quickstart</b>](#---getting-started)
+| 🕹️ [<b>Colab tutorial</b>](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing)
+| 📖 [<b>Documentation</b>](#---documentation)
+| ✍️ [<b>Blog post</b>](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) 
+| 🔬 [<b>Paper</b>](#---paper)
 
 ## Quick Tour
 
