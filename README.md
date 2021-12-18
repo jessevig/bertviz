@@ -101,9 +101,10 @@ Click *New* to start a Jupyter notebook.
 Add the following cell:
 
 ```
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel, utils
 from bertviz import model_view
 
+utils.logging.set_verbosity_error()  # Remove line to see warnings
 tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
 model = AutoModel.from_pretrained("distilbert-base-uncased", output_attentions=True)
 inputs = tokenizer.encode("The cat sat on the mat", return_tensors='pt')
