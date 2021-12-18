@@ -132,7 +132,7 @@ jupyter notebook
 
 - [Self-Attention Models (BERT, GPT-2, etc.)](#self-attention-models-bert-gpt-2-etc)
   * [Head and Model Views](#head-and-model-views)
-  * [Neuron View](#neuron-view)
+  * [Neuron View](develop#neuron-view)
 - [Encoder-Decoder Models (BART, MarianMT, etc.)](#encoder-decoder-models-bart-marianmt-etc)
 - [Installing from source](#installing-from-source)
 - [Additional options](#additional-options)
