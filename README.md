@@ -1,21 +1,18 @@
 # BertViz
 
-BertViz is a tool for visualizing attention in the Transformer model, supporting most models from the
+BertViz is a tool for visualizing attention in the [Transformer](https://jalammar.github.io/illustrated-transformer/) model, supporting most models from the
  [transformers](https://github.com/huggingface/transformers) library (BERT, GPT-2, XLNet, RoBERTa, XLM, CTRL, BART,
   etc.). It extends the
    [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization)
     by [Llion Jones](https://medium.com/@llionj) and the [transformers](https://github.com/huggingface/transformers) library from [HuggingFace](https://github.com/huggingface).
 
-## Resources
+[⚡️<b>Quickstart</b>](⚡️-Getting-Started)
+| 🕹️[<b>Colab tutorial</b>](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing)
+| 📖[<b>Documentation</b>](📖-Documentation)
+| ✍️[<b>Blog post</b>](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) 
+| 🔬[<b>Paper</b>](🔬-Paper)
 
-🕹️ [<b>Colab tutorial</b>](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing)
-
-✍️ [<b>Blog post</b>](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) 
-
-📖 [<b>Paper</b>](https://www.aclweb.org/anthology/P19-3007.pdf)
-
-
-## Overview
+## Quick Tour
 
 ### Head View
 The *head view* visualizes the attention patterns produced by one or more attention heads in a given 
@@ -76,31 +73,34 @@ GPT-2 [[Notebook]](notebooks/neuron_view_gpt2.ipynb)
 RoBERTa
 [[Notebook]](notebooks/neuron_view_roberta.ipynb) 
 
-## Installation
-```
+## ⚡️ Getting Started
+
+### Installation
+
+```bash
 pip install bertviz
 ```
 You must also have Jupyter Notebook and ipywidgets installed in order to run BertViz in a notebook:
 
-```
+```bash
 pip install jupyterlab
 pip install ipywidgets
 ```
 For more details on installing Jupyter or ipywidgets, consult the documentation [here](https://jupyter.org/install) and [here](https://ipywidgets.readthedocs.io/en/stable/user_install.html).
 
-## Quickstart
+### Quickstart
 
-First start Jupyter Notebook:
+Start Jupyter Notebook:
 
-```
+```bash
 jupyter notebook
 ```
 
-Click *New* to start a Jupyter notebook.
+Click *New* to create a new notebook.
 
 Add the following cell:
 
-```
+```python
 from transformers import AutoTokenizer, AutoModel, utils
 from bertviz import model_view
 
@@ -118,30 +118,44 @@ And run it! The visualization may take a few seconds to load.
 
 ### Running example notebooks
 
-You may also run any of the sample notebooks included:
+You may also run any of the sample [notebooks](notebooks/):
 
-```
+```bash
 git clone --depth 1 git@github.com:jessevig/bertviz.git
 cd bertviz/notebooks
 jupyter notebook
 ```
  
-## Detailed Instructions
+## 📖 Documentation
+
+### Table of Contents
+
+- [Self-Attention Models (BERT, GPT-2, etc.)](#self-attention-models--bert--gpt-2--etc-)
+  * [Head and Model Views](#head-and-model-views)
+  * [Neuron View](#neuron-view)
+- [Encoder-Decoder Models (BART, MarianMT, etc.)](#encoder-decoder-models--bart--marianmt--etc-)
+- [Installing from source](#installing-from-source)
+- [Additional options](#additional-options)
+  * [Dark / light mode](#dark---light-mode)
+  * [Filtering layers](#filtering-layers)
+  * [Setting default layer/head(s)](#setting-default-layer-head-s-)
+  * [Non-Huggingface models](#non-huggingface-models)
 
 ### Self-Attention Models (BERT, GPT-2, etc.)
 
-#### Head / model view
+#### Head and Model Views
 First load a Huggingface model, either a pre-trained model as shown below, or your own fine-tuned model.
  Be sure to set `output_attention=True`.
-```
-from transformers import AutoTokenizer, AutoModel
+```python
+from transformers import AutoTokenizer, AutoModel, utils
+utils.logging.set_verbosity_error()  # Remove this line to see warnings
 tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 model = AutoModel.from_pretrained("bert-base-uncased", output_attentions=True)
 ```
 
 Then prepare inputs and compute attention:
 
-```
+```python
 inputs = tokenizer.encode("The cat sat on the mat", return_tensors='pt')
 outputs = model(inputs)
 attention = outputs[-1]  # Output includes attention weights when output_attentions=True
@@ -150,7 +164,7 @@ tokens = tokenizer.convert_ids_to_tokens(inputs[0])
 
 Finally, display the attention weights using the `head_view` or `model_view` function:
 
-```
+```python
 from bertviz import head_view
 head_view(attention, tokens)
 ```
@@ -158,31 +172,31 @@ head_view(attention, tokens)
 For more advanced use cases, e.g., specifying a two-sentence input to the model, please refer to the
  sample notebooks.
 
-#### Neuron view
+#### Neuron View
 
 The neuron view is invoked differently than the head view or model view, due to requiring access to the model's
 query/key vectors, which are not returned through the Huggingface API. It is currently limited to custom versions of BERT, GPT-2, and
 RoBERTa included with BertViz.
 
-```
+```python
 # Import specialized versions of models (that return query/key vectors)
 from bertviz.transformers_neuron_view import BertModel, BertTokenizer
-
 from bertviz.neuron_view import show
 
+model_type = 'bert'
+model_version = 'bert-base-uncased'
 model = BertModel.from_pretrained(model_version, output_attentions=True)
 tokenizer = BertTokenizer.from_pretrained(model_version, do_lower_case=do_lower_case)
-model_type = 'bert'
 show(model, model_type, tokenizer, sentence_a, sentence_b, layer=2, head=0)
 ```
 
-### Encoder-Decoder Models (MarianMT, etc.)
+### Encoder-Decoder Models (BART, MarianMT, etc.)
 
 The head view and model view both support encoder-decoder models.
 
 First, load an encoder-decoder model:
 
-```
+```python
 from transformers import AutoTokenizer, AutoModel
 
 tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-en-de")
@@ -190,7 +204,7 @@ model = AutoModel.from_pretrained("Helsinki-NLP/opus-mt-en-de", output_attention
 ```
 
 Then prepare the inputs and compute attention:
-```
+```python
 encoder_input_ids = tokenizer("She sees the small elephant.", return_tensors="pt", add_special_tokens=True).input_ids
 decoder_input_ids = tokenizer("Sie sieht den kleinen Elefanten.", return_tensors="pt", add_special_tokens=True).input_ids
 
@@ -201,7 +215,7 @@ decoder_text = tokenizer.convert_ids_to_tokens(decoder_input_ids[0])
 ```
 
 Finally, display the visualization using either `head_view` or `model_view`.
-```
+```python
 from bertviz import model_view
 model_view(
     encoder_attention=outputs.encoder_attentions,
@@ -216,7 +230,7 @@ You may select `Encoder`, `Decoder`, or `Cross` attention from the drop-down in 
 
 
 ### Installing from source
-```
+```bash
 git clone https://github.com/jessevig/bertviz.git
 cd bertviz
 python setup.py develop
@@ -228,7 +242,7 @@ python setup.py develop
 
 The model view and neuron view support dark (default) and light modes. You may set the mode using
 the `display_mode` parameter:
-```
+```python
 model_view(attention, tokens, display_mode="light")
 ```
 
@@ -240,7 +254,7 @@ To improve the responsiveness of the tool when visualizing larger models or inpu
 view.
 
 **Example:** Render model view with only layers 5 and 6 displayed
-```
+```python
 model_view(attention, tokens, include_layers=[5, 6])
 ```
 
@@ -255,7 +269,7 @@ In the head view, you may choose a specific `layer` and collection of `heads` as
  removes layers and heads from the visualization completely.
 
 **Example:** Render head view with layer 2 and heads 3 and 5 pre-selected
-```
+```python
 head_view(attention, tokens, layer=2, heads=[3,5])
 ```
 
@@ -269,27 +283,30 @@ returned from Huggingface models). In some case, Tensorflow checkpoints may be l
  [Huggingface docs](https://huggingface.co/transformers/). 
  
  
-## Limitations
+## ⚠️ Limitations
 
 ### Tool
-* The visualizations may run slowly if the input text is very long or the model is very large.
+* This tool is designed for shorter inputs and may run slowly if the input text is very long and/or the model is very large.
  To mitigate this, you may wish to filter the layers displayed by setting the **`include_layers`** parameter, as described [above](#filtering-layers).
 * When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long.  To mitigate this, you may wish to filter the layers displayed by setting the **`include_layers`** parameter, as described [above](#filtering-layers).
 * The *neuron view* only supports the custom BERT, GPT-2, and RoBERTa models included with the tool. This view needs access to the query and key vectors, 
 which required modifying the model code (see `transformers_neuron_view` directory), which has only been done for these three models.
 Also, only one neuron view may be included per notebook.
+
 ### Attention as "explanation"
 Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
 necessarily provide a direct *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf), [2](https://arxiv.org/abs/1902.10186), [3](https://arxiv.org/pdf/1908.04626.pdf)].
 
-## Authors
+## 👋 Authors
 
-[Jesse Vig](https://jessevig.com)
+Jesse Vig [(homepage)](https://jessevig.com)
 
-## Citation
+## 🔬 Paper
 
-When referencing BertViz, please cite [this paper](https://www.aclweb.org/anthology/P19-3007.pdf).
+[<b>A Multiscale Visualization of Attention in the Transformer Model</b>](https://www.aclweb.org/anthology/P19-3007.pdf) (ACL 2019 System Demonstrations).
 
+
+### Citation
 ```
 @inproceedings{vig-2019-multiscale,
     title = "A Multiscale Visualization of Attention in the Transformer Model",
@@ -309,7 +326,7 @@ When referencing BertViz, please cite [this paper](https://www.aclweb.org/anthol
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details
 
-## Acknowledgments
+## 🙏 Acknowledgments
 We are grateful to the authors of the following projects, which are incorporated into this repo:
 * https://github.com/tensorflow/tensor2tensor
 * https://github.com/huggingface/pytorch-pretrained-BERT
