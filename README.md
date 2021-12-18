@@ -6,11 +6,11 @@ BertViz is a tool for visualizing attention in the [Transformer](https://jalamma
    [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization)
     by [Llion Jones](https://medium.com/@llionj) and the [transformers](https://github.com/huggingface/transformers) library from [HuggingFace](https://github.com/huggingface).
 
-[⚡️ <b>Quickstart</b>](#---getting-started)
+[⚡️ <b>Quickstart</b>](#%EF%B8%8F-getting-started)
 | 🕹️ [<b>Colab tutorial</b>](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing)
-| 📖 [<b>Documentation</b>](#---documentation)
+| 📖 [<b>Documentation</b>](#-documentation)
 | ✍️ [<b>Blog post</b>](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) 
-| 🔬 [<b>Paper</b>](#---paper)
+| 🔬 [<b>Paper</b>](#-paper)
 
 ## Quick Tour
 
@@ -130,15 +130,15 @@ jupyter notebook
 
 ### Table of Contents
 
-- [Self-Attention Models (BERT, GPT-2, etc.)](#self-attention-models--bert--gpt-2--etc-)
+- [Self-Attention Models (BERT, GPT-2, etc.)](#self-attention-models-bert-gpt-2-etc)
   * [Head and Model Views](#head-and-model-views)
   * [Neuron View](#neuron-view)
-- [Encoder-Decoder Models (BART, MarianMT, etc.)](#encoder-decoder-models--bart--marianmt--etc-)
+- [Encoder-Decoder Models (BART, MarianMT, etc.)](#encoder-decoder-models-bart-marianmt-etc)
 - [Installing from source](#installing-from-source)
 - [Additional options](#additional-options)
-  * [Dark / light mode](#dark---light-mode)
+  * [Dark / light mode](#dark-light-mode)
   * [Filtering layers](#filtering-layers)
-  * [Setting default layer/head(s)](#setting-default-layer-head-s-)
+  * [Setting default layer/head(s)](#setting-default-layer-head-s)
   * [Non-Huggingface models](#non-huggingface-models)
 
 ### Self-Attention Models (BERT, GPT-2, etc.)
