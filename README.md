@@ -115,6 +115,12 @@ model_view(attention, tokens)
 ```
 
 And run it (`Shift + Enter`)! The visualization may take a few seconds to load.
+ 
+### Running in Colab
+
+If you wish to run BertViz in [Google Colab](https://colab.research.google.com/), simply add the following cell before the above cell:
+
+`!pip install bertviz`
 
 ### Running example notebooks
 
