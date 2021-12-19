@@ -96,7 +96,7 @@ Start Jupyter Notebook:
 jupyter notebook
 ```
 
-Click *New* to create a new notebook.
+Click *New* to create a new notebook, and select *Python 3 (ipykernel)* if prompted.
 
 Add the following cell:
 
@@ -114,7 +114,7 @@ tokens = tokenizer.convert_ids_to_tokens(inputs[0])
 model_view(attention, tokens)
 ```
 
-And run it! The visualization may take a few seconds to load.
+And run it (`Shift + Enter`)! The visualization may take a few seconds to load.
 
 ### Running example notebooks
 
@@ -170,7 +170,7 @@ head_view(attention, tokens)
 ```
 
 For more advanced use cases, e.g., specifying a two-sentence input to the model, please refer to the
- sample notebooks.
+ sample [notebooks](notebooks/).
 
 #### Neuron View
 
@@ -185,6 +185,9 @@ from bertviz.neuron_view import show
 
 model_type = 'bert'
 model_version = 'bert-base-uncased'
+do_lower_case = True
+sentence_a = "The cat sat on the mat"
+sentence_b = "The cat lay on the rug"
 model = BertModel.from_pretrained(model_version, output_attentions=True)
 tokenizer = BertTokenizer.from_pretrained(model_version, do_lower_case=do_lower_case)
 show(model, model_type, tokenizer, sentence_a, sentence_b, layer=2, head=0)
