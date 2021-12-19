@@ -18,60 +18,59 @@ BertViz is a tool for visualizing attention in the [Transformer](https://jalamma
 The *head view* visualizes the attention patterns produced by one or more attention heads in a given 
 transformer layer. It is based on the excellent [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj). 
 
-🕹 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)
+🕹 Try out this [<b><u>interactive Colab Notebook</u></b>](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)
  with the head view pre-loaded.
 
 ![head view](https://raw.githubusercontent.com/jessevig/bertviz/master/images/head-view.gif) 
 
-The head view supports most models from the Transformers library. Example notebooks:  
-BERT: [[Notebook]](notebooks/head_view_bert.ipynb)
-  [[Colab]](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)  
-GPT-2:
-  [[Notebook]](notebooks/head_view_gpt2.ipynb)
-[[Colab]](https://colab.research.google.com/drive/1c9kBsbvSqpKkmd62u7nfqVhvWr0W8_Lx)  
-XLNet: [[Notebook]](notebooks/head_view_xlnet.ipynb)  
-RoBERTa: [[Notebook]](notebooks/head_view_roberta.ipynb)  
-XLM: [[Notebook]](notebooks/head_view_xlm.ipynb)  
-ALBERT: [[Notebook]](notebooks/head_view_albert.ipynb)  
-DistilBERT: [[Notebook]](notebooks/head_view_distilbert.ipynb)   
-BART (encoder-decoder): [[Notebook]](notebooks/head_view_bart.ipynb)
+<b>Examples:</b> 
+BERT ([Notebook](notebooks/head_view_bert.ipynb), 
+  [Colab](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)) •
+GPT-2
+  ([Notebook](notebooks/head_view_gpt2.ipynb), 
+[Colab](https://colab.research.google.com/drive/1c9kBsbvSqpKkmd62u7nfqVhvWr0W8_Lx)) •
+XLNet ([Notebook](notebooks/head_view_xlnet.ipynb)) •
+RoBERTa ([Notebook](notebooks/head_view_roberta.ipynb)) •
+XLM ([Notebook](notebooks/head_view_xlm.ipynb)) •
+ALBERT ([Notebook](notebooks/head_view_albert.ipynb)) •
+DistilBERT ([Notebook](notebooks/head_view_distilbert.ipynb)) •
+BART ([Notebook](notebooks/head_view_bart.ipynb))
 
 ### Model View 
 
 The *model view* provides a birds-eye view of attention across all of the model’s layers  and heads.
 
-🕹 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS) with
+🕹 Try out this [<b><u>interactive Colab Notebook</u></b>](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS) with
  the model view pre-loaded.
 
 ![model view](https://github.com/jessevig/bertviz/raw/master/images/model-view-dark.gif)
 
-The model view supports most models from the Transformers library. Examples:  
-BERT: [[Notebook]](notebooks/model_view_bert.ipynb)
-[[Colab]](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS)  
-GPT2: [[Notebook]](notebooks/model_view_gpt2.ipynb)
-[[Colab]](https://colab.research.google.com/drive/1y-wfC95Z0aASawYqA34LQeV0_qC9mOto)  
-XLNet: [[Notebook]](notebooks/model_view_xlnet.ipynb)  
-RoBERTa: [[Notebook]](notebooks/model_view_roberta.ipynb)  
-XLM: [[Notebook]](notebooks/model_view_xlm.ipynb)  
-ALBERT: [[Notebook]](notebooks/model_view_albert.ipynb)  
-DistilBERT: [[Notebook]](notebooks/model_view_distilbert.ipynb)   
-BART (encoder-decoder): [[Notebook]](notebooks/model_view_bart.ipynb)
+<b>Examples:</b>  BERT ([Notebook](notebooks/model_view_bert.ipynb),
+[Colab](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS)) • 
+GPT2 ([Notebook](notebooks/model_view_gpt2.ipynb), 
+[Colab](https://colab.research.google.com/drive/1y-wfC95Z0aASawYqA34LQeV0_qC9mOto)) •
+XLNet ([Notebook](notebooks/model_view_xlnet.ipynb)) •
+RoBERTa ([Notebook](notebooks/model_view_roberta.ipynb)) • 
+XLM ([Notebook](notebooks/model_view_xlm.ipynb)) •
+ALBERT ([Notebook](notebooks/model_view_albert.ipynb)) •
+DistilBERT ([Notebook](notebooks/model_view_distilbert.ipynb)) •
+BART ([Notebook](notebooks/model_view_bart.ipynb))
 
 ### Neuron View 
 The *neuron view* visualizes the individual neurons in the query and key vectors and shows how they are used to compute attention.
 
-🕹 Try out this [interactive Colab Notebook](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)
+🕹 Try out this [<b><u>interactive Colab Notebook</u></b>](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)
  with the neuron view pre-loaded.
 
 ![neuron view](https://github.com/jessevig/bertviz/raw/master/images/neuron-view-dark.gif)
 
-The neuron view supports the following three models:  
-BERT: [[Notebook]](notebooks/neuron_view_bert.ipynb) 
-[[Colab]](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)  
-GPT-2 [[Notebook]](notebooks/neuron_view_gpt2.ipynb) 
-[[Colab]](https://colab.research.google.com/drive/1s8XCCyxsKvNRWNzjWi5Nl8ZAYZ5YkLm_)  
+The neuron view supports the following three models only: 
+BERT ([Notebook](notebooks/neuron_view_bert.ipynb),
+[Colab](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)) •
+GPT-2 ([Notebook](notebooks/neuron_view_gpt2.ipynb),
+[Colab](https://colab.research.google.com/drive/1s8XCCyxsKvNRWNzjWi5Nl8ZAYZ5YkLm_)) •
 RoBERTa
-[[Notebook]](notebooks/neuron_view_roberta.ipynb) 
+([Notebook](notebooks/neuron_view_roberta.ipynb))
 
 ## ⚡️ Getting Started
 
@@ -131,7 +130,13 @@ git clone --depth 1 git@github.com:jessevig/bertviz.git
 cd bertviz/notebooks
 jupyter notebook
 ```
- 
+## 🕹 Interactive Tutorial
+
+Check out [<b><u>this Colab notebook</u></b>](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing) 
+for an interactive tutorial on BertViz. Sample screenshots:
+
+[![Tutorial](images/tutorial-screenshots.jpg)](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing)
+
 ## 📖 Documentation
 
 ### Table of Contents
