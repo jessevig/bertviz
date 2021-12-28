@@ -90,7 +90,7 @@ model_view(attention, tokens)
 
 And run it (`Shift + Enter`)! The visualization may take a few seconds to load.
 
-See [Documentation]((#-documentation)) for additional examples and advanced features.
+See [Documentation](#-documentation) for additional examples and advanced features.
  
 ### Running in Colab
 
