@@ -1,39 +1,40 @@
-# BertViz
+<h1 align="center">
+    BertViz: Visualize Attention in Transformer Models
+</h1>
+<h3 align="center">
+    <a href="#-quick-tour">Quick Tour</a> &bull;
+    <a href="#%EF%B8%8F-getting-started">Getting Started</a> &bull;
+    <a href="https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing">Colab tutorial</a> &bull;
+    <a href="https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1">Blog</a> &bull;
+    <a href="https://www.aclweb.org/anthology/P19-3007.pdf">Paper</a> &bull;
+    <a href="#-paper">Citation</a>
+</h3>
 
-BertViz is a tool for visualizing attention in [Transformer](https://jalammar.github.io/illustrated-transformer/) models, supporting most [models from the
- HuggingFace library](https://huggingface.co/models) (BERT, GPT-2, RoBERTa, BART,
-  etc.). It extends the
+BertViz is an interactive tool for visualizing attention in [Transformer](https://jalammar.github.io/illustrated-transformer/) language models such as BERT, GPT2, or T5. It can be run inside a Jupyter or Colab
+ notebook through a simple Python API that supports most [Huggingface models](https://huggingface.co/models). BertViz extends the
    [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization)
-    by [Llion Jones](https://medium.com/@llionj) and the [transformers](https://github.com/huggingface/transformers) library from [HuggingFace](https://github.com/huggingface).
+    by [Llion Jones](https://medium.com/@llionj), adding multiple views that each offer a unique lens into the attention mechanism.
 
-[⚡️ <b>Quickstart</b>](#%EF%B8%8F-quickstart)
-| 🕹️ [<b>Colab tutorial</b>](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing)
-| 📖 [<b>Documentation</b>](#-documentation)
-| ✍️ [<b>Blog post</b>](https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1) 
-| 🔬 [<b>Paper</b>](#-paper)
+This is the official code repository for [A Multiscale Visualization of Attention in the Transformer Model](https://www.aclweb.org/anthology/P19-3007.pdf) by [Jesse Vig](https://twitter.com/jesse_vig).
 
-## Quick Tour
+
+## 🚀 Quick Tour
 
 ### Head View
 The *head view* visualizes attention for one or more attention heads in the same 
  layer. It is based on the excellent [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj). 
 
-🕹 Try out this [<b><u>interactive Colab tutorial</u></b>](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)
- for the head view.
-
+🕹 Try out the head view in an [<b><u>interactive Colab tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
 <p>
     <img src="https://raw.githubusercontent.com/jessevig/bertviz/master/images/head-view.gif" width="425"/>
 </p>
 
-<!--- 
-[![Open intro](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)
--->
 
 ### Model View 
 
-The *model view* shows a birds-eye view of attention across all layers and heads.
+The *model view* shows a bird's-eye view of attention across all layers and heads.
 
-🕹 Try out this [<b><u>interactive Colab tutorial</u></b>](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS) for the model view.
+🕹 Try out the model view in an [<b><u>interactive Colab tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
 
 <p>
     <img src="https://github.com/jessevig/bertviz/raw/master/images/model-view-noscroll.gif" width="700"/>
@@ -42,43 +43,29 @@ The *model view* shows a birds-eye view of attention across all layers and heads
 ### Neuron View 
 The *neuron view* visualizes individual neurons in the query and key vectors and shows how they are used to compute attention.
 
-🕹 Try out this [<b><u>interactive Colab tutorial</u></b>](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)
- for the neuron view.
+🕹 Try out the neuron view in an [<b><u>interactive Colab tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
+
 
 ![neuron view](https://github.com/jessevig/bertviz/raw/master/images/neuron-view-dark.gif)
 
-## ⚡️ Quickstart
+## ⚡️ Getting Started
 
-### Installation
+### Colab
 
-```bash
-pip install bertviz
+Add the following cell at the beginning of a [Colab](https://colab.research.google.com/) notebook to use BertViz:
+
 ```
-You must also have Jupyter Notebook and ipywidgets installed in order to run BertViz in a notebook:
-
-```bash
-pip install jupyterlab
-pip install ipywidgets
-```
-For more details on installing Jupyter or ipywidgets, consult the documentation [here](https://jupyter.org/install) and [here](https://ipywidgets.readthedocs.io/en/stable/user_install.html).
-
-### Basic usage
-
-Start Jupyter Notebook:
-
-```bash
-jupyter notebook
+!pip install bertviz
 ```
 
-Click `New` to create a new notebook, and select `Python 3 (ipykernel)` if prompted.
-
-Add the following cell:
+#### Sample code
+Run the following code to load the `distbert-base-uncased` model and display it in the model view: 
 
 ```python
 from transformers import AutoTokenizer, AutoModel, utils
 from bertviz import model_view
+utils.logging.set_verbosity_error()  # Suppress standard warnings
 
-utils.logging.set_verbosity_error()  # Remove line to see warnings
 tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
 model = AutoModel.from_pretrained("distilbert-base-uncased", output_attentions=True)
 inputs = tokenizer.encode("The cat sat on the mat", return_tensors='pt')
@@ -88,19 +75,43 @@ tokens = tokenizer.convert_ids_to_tokens(inputs[0])
 model_view(attention, tokens)
 ```
 
-And run it (`Shift + Enter`)! The visualization may take a few seconds to load.
+The visualization may take a few seconds to load. Feel free to experiment with different input texts and models. 
+See [Documentation](#-documentation) for additional use cases and examples.
 
-See [Documentation](#-documentation) for additional examples and advanced features.
- 
-### Running in Colab
+### Jupyter Notebook
 
-If you wish to run BertViz in [Google Colab](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing), simply add the following cell before the above cell:
+You may also run BertViz locally inside a Jupyter Notebook. 
 
-`!pip install bertviz`
+#### Installation 
+```
+pip install bertviz
+```
+You must also have Jupyter Notebook and ipywidgets installed:
 
-### Running example notebooks
+```bash
+pip install jupyterlab
+pip install ipywidgets
+```
+If you have any issues installing Jupyter or ipywidgets, consult the documentation ([jupyter](https://jupyter.org/install), [ipwidgets](https://ipywidgets.readthedocs.io/en/stable/user_install.html)).
 
-You may also run any of the sample [notebooks](notebooks/):
+#### Sample code
+
+You may use the same [sample code](#sample-code) from above.
+
+To create a new notebook, first start Jupyter Notebook:
+
+```bash
+jupyter notebook
+```
+
+Then click `New` to create a new notebook, and select `Python 3 (ipykernel)` if prompted.
+
+<!--Finally, paste the [sample code](#sample-code) from above and run it (`Shift + Enter`)! It may take a few seconds to load. Feel free to experiment with different input texts and models. 
+See [Documentation](#-documentation) for additional use cases and examples.-->
+
+#### Running included notebooks
+
+You may also run any of the sample [notebooks](notebooks/) included with BertViz:
 
 ```bash
 git clone --depth 1 git@github.com:jessevig/bertviz.git
@@ -109,71 +120,36 @@ jupyter notebook
 ```
 ## 🕹 Interactive Tutorial
 
-Check out [<b><u>this Colab notebook</u></b>](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing) 
-for an interactive tutorial on BertViz.
+Check out [<b><u>this Colab notebook</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) 
+for an interactive tutorial on BertViz. <b>Note</b>: all visualizations are pre-loaded, so there is no need to execute any cells.
 
-[![Tutorial](images/tutorial-screenshots.jpg)](https://colab.research.google.com/drive/1YoJqS9cPGu3HL2_XExw3kCsRBtySQS2v?usp=sharing)
+[![Tutorial](images/tutorial-screenshots.jpg)](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing)
 
-Example notebooks for specific use cases:
-
-<b>Head View:</b> 
-BERT ([Notebook](notebooks/head_view_bert.ipynb), 
-  [Colab](https://colab.research.google.com/drive/1PEHWRHrvxQvYr9NFRC-E_fr3xDq1htCj)) •
-GPT-2
-  ([Notebook](notebooks/head_view_gpt2.ipynb), 
-[Colab](https://colab.research.google.com/drive/1c9kBsbvSqpKkmd62u7nfqVhvWr0W8_Lx)) •
-XLNet ([Notebook](notebooks/head_view_xlnet.ipynb)) •
-RoBERTa ([Notebook](notebooks/head_view_roberta.ipynb)) •
-XLM ([Notebook](notebooks/head_view_xlm.ipynb)) •
-ALBERT ([Notebook](notebooks/head_view_albert.ipynb)) •
-DistilBERT ([Notebook](notebooks/head_view_distilbert.ipynb)) •
-BART ([Notebook](notebooks/head_view_bart.ipynb))
-  
-<b>Model View:</b>  BERT ([Notebook](notebooks/model_view_bert.ipynb),
-[Colab](https://colab.research.google.com/drive/1c73DtKNdl66B0_HF7QXuPenraDp0jHRS)) • 
-GPT2 ([Notebook](notebooks/model_view_gpt2.ipynb), 
-[Colab](https://colab.research.google.com/drive/1y-wfC95Z0aASawYqA34LQeV0_qC9mOto)) •
-XLNet ([Notebook](notebooks/model_view_xlnet.ipynb)) •
-RoBERTa ([Notebook](notebooks/model_view_roberta.ipynb)) • 
-XLM ([Notebook](notebooks/model_view_xlm.ipynb)) •
-ALBERT ([Notebook](notebooks/model_view_albert.ipynb)) •
-DistilBERT ([Notebook](notebooks/model_view_distilbert.ipynb)) •
-BART ([Notebook](notebooks/model_view_bart.ipynb))
-  
-<b>Neuron View*:</b> 
-BERT ([Notebook](notebooks/neuron_view_bert.ipynb),
-[Colab](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)) •
-GPT-2 ([Notebook](notebooks/neuron_view_gpt2.ipynb),
-[Colab](https://colab.research.google.com/drive/1s8XCCyxsKvNRWNzjWi5Nl8ZAYZ5YkLm_)) •
-RoBERTa
-([Notebook](notebooks/neuron_view_roberta.ipynb))  
-
-\*The neuron view only supports the 3 models listed (see [neuron view documentation](#neuron-view-1)) while the head view
- and model view support most Huggingface models.
 
 ## 📖 Documentation
 
-### Table of Contents
+### Table of contents
 
-- [Self-Attention Models (BERT, GPT-2, etc.)](#self-attention-models-bert-gpt-2-etc)
+- [Self-attention models (BERT, GPT-2, etc.)](#self-attention-models-bert-gpt-2-etc)
   * [Head and Model Views](#head-and-model-views)
   * [Neuron View](#neuron-view-1)
-- [Encoder-Decoder Models (BART, MarianMT, etc.)](#encoder-decoder-models-bart-marianmt-etc)
+- [Encoder-decoder models (BART, MarianMT, etc.)](#encoder-decoder-models-bart-marianmt-etc)
 - [Installing from source](#installing-from-source)
 - [Additional options](#additional-options)
-  * [Dark / light mode](#dark-light-mode)
+  * [Dark / light mode](#dark--light-mode)
   * [Filtering layers](#filtering-layers)
   * [Setting default layer/head(s)](#setting-default-layer-head-s)
+  * [Visualizing sentence pairs](#visualizing-sentence-pairs)
   * [Non-Huggingface models](#non-huggingface-models)
 
-### Self-Attention Models (BERT, GPT-2, etc.)
+### Self-attention models (BERT, GPT-2, etc.)
 
 #### Head and Model Views
 First load a Huggingface model, either a pre-trained model as shown below, or your own fine-tuned model.
  Be sure to set `output_attention=True`.
 ```python
 from transformers import AutoTokenizer, AutoModel, utils
-utils.logging.set_verbosity_error()  # Remove this line to see warnings
+utils.logging.set_verbosity_error()  # Suppress standard warnings
 tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 model = AutoModel.from_pretrained("bert-base-uncased", output_attentions=True)
 ```
@@ -187,15 +163,18 @@ attention = outputs[-1]  # Output includes attention weights when output_attenti
 tokens = tokenizer.convert_ids_to_tokens(inputs[0]) 
 ```
 
-Finally, display the attention weights using the `head_view` or `model_view` function:
+Finally, display the attention weights using the [`head_view`](bertviz/head_view.py) or [`model_view`](bertviz/model_view.py)
+ functions:
 
 ```python
 from bertviz import head_view
 head_view(attention, tokens)
 ```
 
-For more advanced use cases, e.g., specifying a two-sentence input to the model, please refer to the
- sample [notebooks](notebooks/).
+<b>Examples</b>: DistilBERT ([Model View Notebook](notebooks/model_view_distilbert.ipynb), [Head View Notebook](notebooks/head_view_distilbert.ipynb))
+
+For full API, please refer to the source code for the [head view](bertviz/head_view.py) or [model view](bertviz/model_view.py).
+
 
 #### Neuron View
 
@@ -218,7 +197,17 @@ tokenizer = BertTokenizer.from_pretrained(model_version, do_lower_case=do_lower_
 show(model, model_type, tokenizer, sentence_a, sentence_b, layer=2, head=0)
 ```
 
-### Encoder-Decoder Models (BART, MarianMT, etc.)
+<b>Examples</b>:
+BERT ([Notebook](notebooks/neuron_view_bert.ipynb),
+[Colab](https://colab.research.google.com/drive/1m37iotFeubMrp9qIf9yscXEL1zhxTN2b)) •
+GPT-2 ([Notebook](notebooks/neuron_view_gpt2.ipynb),
+[Colab](https://colab.research.google.com/drive/1s8XCCyxsKvNRWNzjWi5Nl8ZAYZ5YkLm_)) •
+RoBERTa
+([Notebook](notebooks/neuron_view_roberta.ipynb))  
+
+For full API, please refer to the [source](bertviz/neuron_view.py).
+
+### Encoder-decoder models (BART, MarianMT, etc.)
 
 The head view and model view both support encoder-decoder models.
 
@@ -242,7 +231,7 @@ encoder_text = tokenizer.convert_ids_to_tokens(encoder_input_ids[0])
 decoder_text = tokenizer.convert_ids_to_tokens(decoder_input_ids[0])
 ```
 
-Finally, display the visualization using either `head_view` or `model_view`.
+Finally, display the visualization using either [`head_view`](bertviz/head_view.py) or [`model_view`](bertviz/model_view.py).
 ```python
 from bertviz import model_view
 model_view(
@@ -256,6 +245,9 @@ model_view(
 
 You may select `Encoder`, `Decoder`, or `Cross` attention from the drop-down in the upper left corner of the visualization.
 
+<b>Examples</b>: MarianMT ([Notebook](notebooks/model_view_encoder_decoder.ipynb)) • BART ([Notebook](notebooks/model_view_bart.ipynb))
+
+For full API, please refer to the source code for the [head view](bertviz/head_view.py) or [model view](bertviz/model_view.py).
 
 ### Installing from source
 ```bash
@@ -303,11 +295,54 @@ head_view(attention, tokens, layer=2, heads=[3,5])
 
 You may also pre-select a specific `layer` and single `head` for the neuron view. 
 
+#### Visualizing sentence pairs
+
+Some models, e.g. BERT, accept a pair of sentences as input. BertViz optionally supports a drop-down menu that allows 
+user to filter attention based on which sentence the tokens are in, e.g. only show attention between tokens in first
+ sentence and tokens in second sentence.
+ 
+ 
+##### Head and model views
+To enable this feature when invoking the [`head_view`](bertviz/head_view.py) or [`model_view`](bertviz/model_view.py) functions, set
+ the `sentence_b_start` parameter to the start index of the second sentence. Note that the method for computing this
+ index will depend on the model.
+ 
+Example (BERT):
+
+```python
+from bertviz import head_view
+from transformers import AutoTokenizer, AutoModel, utils
+utils.logging.set_verbosity_error()  # Suppress standard warnings
+
+# NOTE: This code is model-specific
+model_version = 'bert-base-uncased'
+model = AutoModel.from_pretrained(model_version, output_attentions=True)
+tokenizer = AutoTokenizer.from_pretrained(model_version)
+sentence_a = "the rabbit quickly hopped"
+sentence_b = "The turtle slowly crawled"
+inputs = tokenizer.encode_plus(sentence_a, sentence_b, return_tensors='pt')
+input_ids = inputs['input_ids']
+token_type_ids = inputs['token_type_ids'] # token type id is 0 for Sentence A and 1 for Sentence B
+attention = model(input_ids, token_type_ids=token_type_ids)[-1]
+sentence_b_start = token_type_ids[0].tolist().index(1) # Sentence B starts at first index of token type id 1
+token_ids = input_ids[0].tolist() # Batch index 0
+tokens = tokenizer.convert_ids_to_tokens(token_ids)    
+head_view(attention, tokens, sentence_b_start)
+``` 
+
+
+##### Neuron view
+
+To enable this option in the neuron view, simply set the `sentence_a` and `sentence_b` parameters in [`neuron_view.show()`](bertviz/neuron_view.py).
+
 #### Non-Huggingface models
 
-The `head_view` and `model_view` functions may technically be used to visualize self-attention for any Transformer model,
-as long as the attention weights are available and follow the format specified in `model_view` and `head_view` (which is the format 
-returned from Huggingface models). In some case, Tensorflow checkpoints may be loaded as Huggingface models as described in the
+The head view and model view may be used to
+ visualize self-attention for any standard Transformer model,
+as long as the attention weights are available and follow the format specified in [`head_view`](bertviz/head_view.py) and
+ [`model_view`](bertviz/model_view.py) (which is the format 
+returned from Huggingface models). In some case, Tensorflow checkpoints may be loaded as Huggingface models as described
+ in the
  [Huggingface docs](https://huggingface.co/transformers/). 
  
  
@@ -325,9 +360,7 @@ Also, only one neuron view may be included per notebook.
 Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
 necessarily provide a direct *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf), [2](https://arxiv.org/abs/1902.10186), [3](https://arxiv.org/pdf/1908.04626.pdf)].
 
-## 👋 Authors
 
-Jesse Vig [(homepage)](https://jessevig.com)
 
 ## 🔬 Paper
 
@@ -349,12 +382,15 @@ Jesse Vig [(homepage)](https://jessevig.com)
     pages = "37--42",
 }
 ```
+## Authors
 
-## License
-
-This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details
+Jesse Vig [(homepage)](https://jessevig.com)
 
 ## 🙏 Acknowledgments
 We are grateful to the authors of the following projects, which are incorporated into this repo:
 * https://github.com/tensorflow/tensor2tensor
 * https://github.com/huggingface/pytorch-pretrained-BERT
+
+## License
+
+This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details
