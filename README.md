@@ -1,6 +1,9 @@
 <h1 align="center">
-    BertViz: Visualize Attention in Transformer Models
+    BertViz
 </h1>
+<h3 align="center">
+ Visualize Attention in Transformer Models (BERT, GPT2, T5, etc.)
+</h3>
 <h3 align="center">
     <a href="#-quick-tour">Quick Tour</a> &bull;
     <a href="#%EF%B8%8F-getting-started">Getting Started</a> &bull;
