@@ -7,7 +7,7 @@
 <h3 align="center">
     <a href="#-quick-tour">Quick Tour</a> &bull;
     <a href="#%EF%B8%8F-getting-started">Getting Started</a> &bull;
-    <a href="https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing">Colab tutorial</a> &bull;
+    <a href="https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing">Colab Tutorial</a> &bull;
     <a href="https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1">Blog</a> &bull;
     <a href="https://www.aclweb.org/anthology/P19-3007.pdf">Paper</a> &bull;
     <a href="#-paper">Citation</a>
@@ -18,7 +18,7 @@ BertViz is an interactive tool for visualizing attention in [Transformer](https:
    [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization)
     by [Llion Jones](https://medium.com/@llionj), adding multiple views that each offer a unique lens into the attention mechanism.
 
-This is the official code repository for [A Multiscale Visualization of Attention in the Transformer Model](https://www.aclweb.org/anthology/P19-3007.pdf) by [Jesse Vig](https://twitter.com/jesse_vig).
+For updates on BertViz and related projects, feel free to follow me on [Twitter](https://twitter.com/jesse_vig).
 
 
 ## 🚀 Quick Tour
@@ -27,7 +27,7 @@ This is the official code repository for [A Multiscale Visualization of Attentio
 The *head view* visualizes attention for one or more attention heads in the same 
  layer. It is based on the excellent [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj). 
 
-🕹 Try out the head view in an [<b><u>interactive Colab tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
+🕹 Try out the head view in the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
 <p>
     <img src="https://raw.githubusercontent.com/jessevig/bertviz/master/images/head-view.gif" width="425"/>
 </p>
@@ -37,7 +37,7 @@ The *head view* visualizes attention for one or more attention heads in the same
 
 The *model view* shows a bird's-eye view of attention across all layers and heads.
 
-🕹 Try out the model view in an [<b><u>interactive Colab tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
+🕹 Try out the model view in the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
 
 <p>
     <img src="https://github.com/jessevig/bertviz/raw/master/images/model-view-noscroll.gif" width="700"/>
@@ -46,7 +46,7 @@ The *model view* shows a bird's-eye view of attention across all layers and head
 ### Neuron View 
 The *neuron view* visualizes individual neurons in the query and key vectors and shows how they are used to compute attention.
 
-🕹 Try out the neuron view in an [<b><u>interactive Colab tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
+🕹 Try out the neuron view in the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
 
 
 ![neuron view](https://github.com/jessevig/bertviz/raw/master/images/neuron-view-dark.gif)
@@ -55,7 +55,7 @@ The *neuron view* visualizes individual neurons in the query and key vectors and
 
 ### Colab
 
-Add the following cell at the beginning of a [Colab](https://colab.research.google.com/) notebook to use BertViz:
+Create a [new Colab notebook](https://colab.research.google.com/#create=true) and add the following cell:
 
 ```
 !pip install bertviz
@@ -69,17 +69,20 @@ from transformers import AutoTokenizer, AutoModel, utils
 from bertviz import model_view
 utils.logging.set_verbosity_error()  # Suppress standard warnings
 
-tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
-model = AutoModel.from_pretrained("distilbert-base-uncased", output_attentions=True)
-inputs = tokenizer.encode("The cat sat on the mat", return_tensors='pt')
-outputs = model(inputs)
-attention = outputs[-1]  # Output includes attention weights when output_attentions=True
-tokens = tokenizer.convert_ids_to_tokens(inputs[0]) 
-model_view(attention, tokens)
+model_name = "distilbert-base-uncased"  # Find popular HuggingFace models here: https://huggingface.co/models
+input_text = "The cat sat on the mat"  
+model = AutoModel.from_pretrained(model_name, output_attentions=True)  # Configure model to return attention values
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+inputs = tokenizer.encode(input_text, return_tensors='pt')  # Tokenize input text
+outputs = model(inputs)  # Run model
+attention = outputs[-1]  # Retrieve attention from model outputs
+tokens = tokenizer.convert_ids_to_tokens(inputs[0])  # Convert input ids to token strings
+model_view(attention, tokens)  # Display model view
 ```
 
-The visualization may take a few seconds to load. Feel free to experiment with different input texts and models. 
-See [Documentation](#-documentation) for additional use cases and examples.
+The visualization may take a few seconds to load. Feel free to experiment with different input texts and
+ [models](https://huggingface.co/models). 
+See [Documentation](#-documentation) for additional use cases and examples, e.g., encoder-decoder models.
 
 ### Jupyter Notebook
 
@@ -123,8 +126,8 @@ jupyter notebook
 ```
 ## 🕹 Interactive Tutorial
 
-Check out [<b><u>this Colab notebook</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) 
-for an interactive tutorial on BertViz. <b>Note</b>: all visualizations are pre-loaded, so there is no need to execute any cells.
+Check out the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) 
+to interact with BertViz and learn more about the tool. <b>Note</b>: all visualizations are pre-loaded, so there is no need to execute any cells.
 
 [![Tutorial](images/tutorial-screenshots.jpg)](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing)
 
