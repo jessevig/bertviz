@@ -16,7 +16,7 @@
 BertViz is an interactive tool for visualizing attention in [Transformer](https://jalammar.github.io/illustrated-transformer/) language models such as BERT, GPT2, or T5. It can be run inside a Jupyter or Colab
  notebook through a simple Python API that supports most [Huggingface models](https://huggingface.co/models). BertViz extends the
    [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization)
-    by [Llion Jones](https://medium.com/@llionj), adding multiple views that each offer a unique lens into the attention mechanism.
+    by [Llion Jones](https://medium.com/@llionj), providing multiple views that each offer a unique lens into the attention mechanism.
 
 For updates on BertViz and related projects, feel free to follow me on [Twitter](https://twitter.com/jesse_vig).
 
@@ -53,23 +53,48 @@ The *neuron view* visualizes individual neurons in the query and key vectors and
 
 ## ⚡️ Getting Started
 
-### Colab
+### Installation
+#### Jupyter Notebook
 
-Create a [new Colab notebook](https://colab.research.google.com/#create=true) and add the following cell:
+From the command line:
+
+```bash
+pip install bertviz
+```
+You must also have Jupyter Notebook and ipywidgets installed in order to run BertViz in a notebook:
+
+```bash
+pip install jupyterlab
+pip install ipywidgets
+```
+If you run into any issues installing Jupyter or ipywidgets, consult the documentation [here](https://jupyter.org/install) and [here](https://ipywidgets.readthedocs.io/en/stable/user_install.html).
+
+To create a new Jupyter notebook, simply run:
+
+```bash
+jupyter notebook
+```
+
+Then click `New` and select `Python 3 (ipykernel)` if prompted.
+
+
+#### Colab
+
+To run in [Colab](https://colab.research.google.com/), simply add the following cell at the beginning of your Colab notebook:
 
 ```
 !pip install bertviz
 ```
 
-#### Sample code
-Run the following code to load the `distbert-base-uncased` model and display it in the model view: 
+### Sample code
+Run the following code to load the `xtremedistil-l12-h384-uncased` model and display it in the model view: 
 
 ```python
 from transformers import AutoTokenizer, AutoModel, utils
 from bertviz import model_view
 utils.logging.set_verbosity_error()  # Suppress standard warnings
 
-model_name = "distilbert-base-uncased"  # Find popular HuggingFace models here: https://huggingface.co/models
+model_name = "microsoft/xtremedistil-l12-h384-uncased"  # Find popular HuggingFace models here: https://huggingface.co/models
 input_text = "The cat sat on the mat"  
 model = AutoModel.from_pretrained(model_name, output_attentions=True)  # Configure model to return attention values
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -84,38 +109,7 @@ The visualization may take a few seconds to load. Feel free to experiment with d
  [models](https://huggingface.co/models). 
 See [Documentation](#-documentation) for additional use cases and examples, e.g., encoder-decoder models.
 
-### Jupyter Notebook
-
-You may also run BertViz locally inside a Jupyter Notebook. 
-
-#### Installation 
-```
-pip install bertviz
-```
-You must also have Jupyter Notebook and ipywidgets installed:
-
-```bash
-pip install jupyterlab
-pip install ipywidgets
-```
-If you have any issues installing Jupyter or ipywidgets, consult the documentation ([jupyter](https://jupyter.org/install), [ipwidgets](https://ipywidgets.readthedocs.io/en/stable/user_install.html)).
-
-#### Sample code
-
-You may use the same [sample code](#sample-code) from above.
-
-To create a new notebook, first start Jupyter Notebook:
-
-```bash
-jupyter notebook
-```
-
-Then click `New` to create a new notebook, and select `Python 3 (ipykernel)` if prompted.
-
-<!--Finally, paste the [sample code](#sample-code) from above and run it (`Shift + Enter`)! It may take a few seconds to load. Feel free to experiment with different input texts and models. 
-See [Documentation](#-documentation) for additional use cases and examples.-->
-
-#### Running included notebooks
+#### Running sample notebooks
 
 You may also run any of the sample [notebooks](notebooks/) included with BertViz:
 
@@ -362,10 +356,11 @@ returned from Huggingface models). In some case, Tensorflow checkpoints may be l
 which required modifying the model code (see `transformers_neuron_view` directory), which has only been done for these three models.
 Also, only one neuron view may be included per notebook.
 
-### Attention as "explanation"
-Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
+### Attention as "explanation"?
+* Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
 necessarily provide a direct *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf), [2](https://arxiv.org/abs/1902.10186), [3](https://arxiv.org/pdf/1908.04626.pdf)].
-
+* If you wish to understand how the input text influences output predictions more directly, consider [saliency methods](https://arxiv.org/pdf/2010.05607.pdf) provided 
+by excellent tools such such as the [Language Interpretability Toolkit](https://github.com/PAIR-code/lit) or [Ecco](https://github.com/jalammar/ecco).
 
 
 ## 🔬 Paper
@@ -374,7 +369,7 @@ necessarily provide a direct *explanation* for model predictions. See [[1](https
 
 
 ### Citation
-```
+```bibtex
 @inproceedings{vig-2019-multiscale,
     title = "A Multiscale Visualization of Attention in the Transformer Model",
     author = "Vig, Jesse",
