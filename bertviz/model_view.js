@@ -335,7 +335,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
         }
 
         function getLayerColor(layer) {
-          return LAYER_COLORS[layer % 10];
+          return LAYER_COLORS[config.layers[layer] % 10];
         }
 
         function getTextColor() {
