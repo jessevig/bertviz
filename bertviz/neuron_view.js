@@ -42,13 +42,13 @@ requirejs(['jquery', 'd3'],
             'attn': '#2994de',
             'neg': '#ff6318',
             'pos': '#2090dd',
-            'text': '#bbb',
+            'text': '#ccc',
             'selected_text': 'white',
             'heading_text': 'white',
             'text_highlight_left': "#1b86cd",
             'text_highlight_right': "#1b86cd",
             'vector_border': "#444",
-            'connector': "#8aa4d2",
+            'connector': "#2994de",
             'background': 'black',
             'dropdown': 'white',
             'icon': 'white'
@@ -266,13 +266,13 @@ requirejs(['jquery', 'd3'],
         .attr("y2", function (d, targetIndex) {
           return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
-        .attr("stroke-width", 1.9)
+        .attr("stroke-width", 2)
         .attr("stroke", getColor('connector'))
         .attr("stroke-opacity", function (d) {
             if (d==0) {
                 return 0;
             } else {
-                return Math.max(MIN_CONNECTOR_OPACITY, Math.tanh(Math.abs(2 * d)));
+                return Math.max(MIN_CONNECTOR_OPACITY, Math.tanh(Math.abs(1.8 * d)));
             }
         });
     }
@@ -303,10 +303,10 @@ requirejs(['jquery', 'd3'],
         .attr("height", BOXHEIGHT - 5)
         .attr("width", MATRIX_WIDTH + 3)
         .style("fill-opacity", 0)
-        .attr("stroke-width", 1.9)
+        .attr("stroke-width", 2)
         .attr("stroke", getColor('connector'))
         .attr("stroke-opacity", function (d) {
-            return Math.tanh(Math.abs(2*d) );
+            return Math.tanh(Math.abs(1.8*d) );
         });
     }
 
@@ -353,13 +353,13 @@ requirejs(['jquery', 'd3'],
           ])
         })
         .attr("fill", "none")
-        .attr("stroke-width", 1.9)
+        .attr("stroke-width", 2)
         .attr("stroke", getColor('connector'))
         .attr("stroke-opacity", function (d) {
             if (d==0) {
                 return 0;
             } else {
-                return Math.max(MIN_CONNECTOR_OPACITY, Math.tanh(Math.abs(2 * d)));
+                return Math.max(MIN_CONNECTOR_OPACITY, Math.tanh(Math.abs(1.8 * d)));
             }
         });
     }
@@ -382,7 +382,7 @@ requirejs(['jquery', 'd3'],
         .attr("y2", function (d, i) {
           return i * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
-        .attr("stroke-width", 1.9)
+        .attr("stroke-width", 2)
         .attr("stroke", getColor('connector'))
     }
 
@@ -412,7 +412,7 @@ requirejs(['jquery', 'd3'],
         .attr("y2", function (d, targetIndex) {
           return targetIndex * BOXHEIGHT + HEADING_HEIGHT + BOXHEIGHT / 2;
         })
-        .attr("stroke-width", 3)
+        .attr("stroke-width", 2)
         .attr("stroke", getColor('attn'))
         .attr("stroke-opacity", function (d) {
             return d;
@@ -742,7 +742,7 @@ requirejs(['jquery', 'd3'],
           return i == index ? getColor('connector') : getColor('vector_border');
         })
           .style("stroke-width", function (d, i) {
-          return i == index ? 1.9 : 1;
+          return i == index ? 2 : 1;
         })
       ;
       svg.select("#queries")

@@ -32,7 +32,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
         const DETAIL_ATTENTION_WIDTH = 140;
         const DETAIL_BOX_WIDTH = 80;
         const DETAIL_BOX_HEIGHT = 18;
-        const DETAIL_PADDING = 10;
+        const DETAIL_PADDING = 15;
         const ATTN_PADDING = 0;
         const DETAIL_HEADING_HEIGHT = 25;
         const HEADING_TEXT_SIZE = 15;
@@ -96,6 +96,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
             config.svg.append("text")
                 .text("Heads")
                 .attr("fill", "black")
+                .attr("font-weight", "bold")
                 .attr("font-size", HEADING_TEXT_SIZE + "px")
                 .attr("x", axisSize + tableWidth / 2)
                 .attr("text-anchor", "middle")
@@ -117,6 +118,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
             config.svg.append("text")
                 .text("Layers")
                 .attr("fill", "black")
+                .attr("font-weight", "bold")
                 .attr("transform", "rotate(270, " + x  + ", " + y + ")")
                 .attr("font-size", HEADING_TEXT_SIZE + "px")
                 .attr("x", x)
@@ -149,7 +151,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
             const axisSize = TEXT_SIZE + HEADING_PADDING + TEXT_SIZE + TEXT_PADDING;
             var xOffset = .8 * config.thumbnailWidth;
             var maxX = DIV_WIDTH;
-            var maxY = config.divHeight;
+            var maxY = config.divHeight - 3;
             var leftPos = axisSize + headIndex * config.thumbnailWidth;
             var x = leftPos + THUMBNAIL_PADDING + xOffset;
             if (x < MIN_X) {

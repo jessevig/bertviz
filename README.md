@@ -2,7 +2,7 @@
     BertViz
 </h1>
 <h3 align="center">
- Visualize Attention in Transformer Models (BERT, GPT2, T5, etc.)
+ Visualize Attention in Transformer Models (BERT, GPT2, etc.)
 </h3>
 <h3 align="center">
     <a href="#-quick-tour">Quick Tour</a> &bull;
@@ -39,9 +39,7 @@ The *model view* shows a bird's-eye view of attention across all layers and head
 
 🕹 Try out the model view in the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
 
-<p>
-    <img src="https://github.com/jessevig/bertviz/raw/master/images/model-view-noscroll.gif" width="700"/>
-</p>
+![model view](images/model-view-noscroll.gif)
 
 ### Neuron View 
 The *neuron view* visualizes individual neurons in the query and key vectors and shows how they are used to compute attention.
@@ -49,25 +47,24 @@ The *neuron view* visualizes individual neurons in the query and key vectors and
 🕹 Try out the neuron view in the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
 
 
-![neuron view](https://github.com/jessevig/bertviz/raw/master/images/neuron-view-dark.gif)
+![neuron view](images/neuron-view-dark.gif)
 
 ## ⚡️ Getting Started
 
-### Installation
-#### Jupyter Notebook
+### Running BertViz in a Jupyter Notebook
 
 From the command line:
 
 ```bash
 pip install bertviz
 ```
-You must also have Jupyter Notebook and ipywidgets installed in order to run BertViz in a notebook:
+You must also have Jupyter Notebook and ipywidgets installed:
 
 ```bash
 pip install jupyterlab
 pip install ipywidgets
 ```
-If you run into any issues installing Jupyter or ipywidgets, consult the documentation [here](https://jupyter.org/install) and [here](https://ipywidgets.readthedocs.io/en/stable/user_install.html).
+(If you run into any issues installing Jupyter or ipywidgets, consult the documentation [here](https://jupyter.org/install) and [here](https://ipywidgets.readthedocs.io/en/stable/user_install.html).)
 
 To create a new Jupyter notebook, simply run:
 
@@ -78,7 +75,7 @@ jupyter notebook
 Then click `New` and select `Python 3 (ipykernel)` if prompted.
 
 
-#### Colab
+### Running BertViz in Colab
 
 To run in [Colab](https://colab.research.google.com/), simply add the following cell at the beginning of your Colab notebook:
 
@@ -121,7 +118,7 @@ jupyter notebook
 ## 🕹 Interactive Tutorial
 
 Check out the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) 
-to interact with BertViz and learn more about the tool. <b>Note</b>: all visualizations are pre-loaded, so there is no need to execute any cells.
+to learn more about BertViz and try out the tool. <b>Note</b>: all visualizations are pre-loaded, so there is no need to execute any cells.
 
 [![Tutorial](images/tutorial-screenshots.jpg)](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing)
 
@@ -133,7 +130,7 @@ to interact with BertViz and learn more about the tool. <b>Note</b>: all visuali
 - [Self-attention models (BERT, GPT-2, etc.)](#self-attention-models-bert-gpt-2-etc)
   * [Head and Model Views](#head-and-model-views)
   * [Neuron View](#neuron-view-1)
-- [Encoder-decoder models (BART, MarianMT, etc.)](#encoder-decoder-models-bart-marianmt-etc)
+- [Encoder-decoder models (BART, T5, etc.)](#encoder-decoder-models-bart-t5-etc)
 - [Installing from source](#installing-from-source)
 - [Additional options](#additional-options)
   * [Dark / light mode](#dark--light-mode)
@@ -205,9 +202,9 @@ GPT-2 ([Notebook](notebooks/neuron_view_gpt2.ipynb),
 RoBERTa
 ([Notebook](notebooks/neuron_view_roberta.ipynb))  
 
-For full API, please refer to the [source](bertviz/neuron_view.py).
+Note that only one instance of the Neuron View may be displayed within a notebook. For full API, please refer to the [source](bertviz/neuron_view.py).
 
-### Encoder-decoder models (BART, MarianMT, etc.)
+### Encoder-decoder models (BART, T5, etc.)
 
 The head view and model view both support encoder-decoder models.
 
@@ -357,10 +354,10 @@ which required modifying the model code (see `transformers_neuron_view` director
 Also, only one neuron view may be included per notebook.
 
 ### Attention as "explanation"?
-* Visualizing attention weights illuminates a particular mechanism within the model architecture but does not
-necessarily provide a direct *explanation* for model predictions. See [[1](https://arxiv.org/pdf/1909.11218.pdf), [2](https://arxiv.org/abs/1902.10186), [3](https://arxiv.org/pdf/1908.04626.pdf)].
+* Visualizing attention weights illuminates one type of architecture within the model but does not
+necessarily provide a direct *explanation* for predictions [[1](https://arxiv.org/pdf/1909.11218.pdf), [2](https://arxiv.org/abs/1902.10186), [3](https://arxiv.org/pdf/1908.04626.pdf)].
 * If you wish to understand how the input text influences output predictions more directly, consider [saliency methods](https://arxiv.org/pdf/2010.05607.pdf) provided 
-by excellent tools such such as the [Language Interpretability Toolkit](https://github.com/PAIR-code/lit) or [Ecco](https://github.com/jalammar/ecco).
+by tools such as the [Language Interpretability Toolkit](https://github.com/PAIR-code/lit) or [Ecco](https://github.com/jalammar/ecco).
 
 
 ## 🔬 Paper
