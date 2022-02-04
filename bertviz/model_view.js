@@ -32,11 +32,13 @@ requirejs(['jquery', 'd3'], function($, d3) {
         const DETAIL_ATTENTION_WIDTH = 140;
         const DETAIL_BOX_WIDTH = 80;
         const DETAIL_BOX_HEIGHT = 18;
-        const DETAIL_PADDING = 28;
+        const DETAIL_PADDING = 10;
         const ATTN_PADDING = 0;
         const DETAIL_HEADING_HEIGHT = 25;
-        const DETAIL_HEADING_TEXT_SIZE = 15;
+        const HEADING_TEXT_SIZE = 15;
+        const HEADING_PADDING = 5;
         const TEXT_SIZE = 13;
+        const TEXT_PADDING = 5;
         const LAYER_COLORS = d3.schemeCategory10;
         const PALETTE = {
             'light': {
@@ -45,7 +47,7 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 'highlight': '#F5F5F5'
             },
             'dark': {
-                'text': '#bbb',
+                'text': '#ccc',
                 'background': 'black',
                 'highlight': '#222'
             }
@@ -62,10 +64,11 @@ requirejs(['jquery', 'd3'], function($, d3) {
             config.numLayers = config.attn.length;
             config.numHeads = config.attn[0].length;
             config.thumbnailBoxHeight = 7 * (12 / config.totalHeads);
+            const axisSize = HEADING_TEXT_SIZE + HEADING_PADDING + TEXT_SIZE + TEXT_PADDING;
             config.thumbnailHeight = Math.max(config.leftText.length, config.rightText.length) * config.thumbnailBoxHeight + 2 * THUMBNAIL_PADDING;
-            config.thumbnailWidth = DIV_WIDTH / config.totalHeads;
+            config.thumbnailWidth = (DIV_WIDTH - axisSize) / config.totalHeads;
             config.detailHeight = Math.max(config.leftText.length, config.rightText.length) * DETAIL_BOX_HEIGHT + 2 * DETAIL_PADDING + DETAIL_HEADING_HEIGHT;
-            config.divHeight = Math.max(config.numLayers * config.thumbnailHeight, config.detailHeight);
+            config.divHeight = Math.max(config.numLayers * config.thumbnailHeight + axisSize, config.detailHeight);
 
             const vis = $(`#${config.rootDivId} #vis`)
             vis.empty();
@@ -74,7 +77,9 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .append('svg')
                 .attr("width", DIV_WIDTH)
                 .attr("height", config.divHeight)
-              .attr("fill", getBackgroundColor());
+                .attr("fill", getBackgroundColor());
+
+            renderAxisLabels();
 
             var i;
             var j;
@@ -85,17 +90,67 @@ requirejs(['jquery', 'd3'], function($, d3) {
             }
         }
 
+        function renderAxisLabels() {
+            const axisSize = HEADING_TEXT_SIZE + HEADING_PADDING + TEXT_SIZE + TEXT_PADDING;
+            const tableWidth = config.thumbnailWidth * config.heads.length;
+            config.svg.append("text")
+                .text("Heads")
+                .attr("fill", "black")
+                .attr("font-size", HEADING_TEXT_SIZE + "px")
+                .attr("x", axisSize + tableWidth / 2)
+                .attr("text-anchor", "middle")
+                .attr("y", 0)
+                .attr("dy", HEADING_TEXT_SIZE);
+            for (let i = 0; i < config.numHeads; i++) {
+                config.svg.append("text")
+                    .text(config.heads[i])
+                    .attr("fill", "black")
+                    .attr("font-size", TEXT_SIZE + "px")
+                    .attr("x", axisSize + (i + .5) * config.thumbnailWidth)
+                    .attr("text-anchor", "middle")
+                    .attr("y", HEADING_TEXT_SIZE + HEADING_PADDING)
+                    .attr("dy", TEXT_SIZE);
+            }
+            let x = 0;
+            let y = axisSize + config.thumbnailHeight * config.layers.length / 2;
+            console.log("x", x, y)
+            config.svg.append("text")
+                .text("Layers")
+                .attr("fill", "black")
+                .attr("transform", "rotate(270, " + x  + ", " + y + ")")
+                .attr("font-size", HEADING_TEXT_SIZE + "px")
+                .attr("x", x)
+                .attr("text-anchor", "middle")
+                .attr("y", y)
+                .attr("dy", HEADING_TEXT_SIZE);
+            for (let i = 0; i < config.numLayers; i++) {
+                x = HEADING_TEXT_SIZE + HEADING_PADDING + TEXT_SIZE; // HACK
+                y = axisSize + (i + .5) * config.thumbnailHeight;
+                config.svg.append("text")
+                    .text(config.layers[i])
+                    .attr("fill", "black")
+                    .attr("font-size", TEXT_SIZE + "px")
+                    .attr("x", x)
+                    .attr("text-anchor", "end")
+                    .attr("y", y)
+                    .attr("dy", TEXT_SIZE / 2);
+            }
+        }
+
+
         function renderThumbnail(layerIndex, headIndex) {
-            var x = headIndex * config.thumbnailWidth;
-            var y = layerIndex * config.thumbnailHeight;
+            const axisSize = HEADING_TEXT_SIZE + HEADING_PADDING + TEXT_SIZE + TEXT_PADDING
+            const x = headIndex * config.thumbnailWidth + axisSize;
+            const y = layerIndex * config.thumbnailHeight + axisSize;
             renderThumbnailAttn(x, y, config.attn[layerIndex][headIndex], layerIndex, headIndex);
         }
 
         function renderDetail(att, layerIndex, headIndex) {
+            const axisSize = TEXT_SIZE + HEADING_PADDING + TEXT_SIZE + TEXT_PADDING;
             var xOffset = .8 * config.thumbnailWidth;
             var maxX = DIV_WIDTH;
             var maxY = config.divHeight;
-            var leftPos = (headIndex / config.totalHeads) * DIV_WIDTH
+            var leftPos = axisSize + headIndex * config.thumbnailWidth;
             var x = leftPos + THUMBNAIL_PADDING + xOffset;
             if (x < MIN_X) {
                 x = MIN_X;
@@ -114,11 +169,12 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 y = maxY - config.detailHeight;
             }
             renderDetailFrame(x, y, layerIndex);
-            renderDetailHeading(x, y + Math.max(config.leftText.length, config.rightText.length) *
-                DETAIL_BOX_HEIGHT, layerIndex, headIndex);
-            renderDetailText(config.leftText, "leftText", posLeftText, y + DETAIL_PADDING, layerIndex);
-            renderDetailAttn(posAttention, y + DETAIL_PADDING, att, layerIndex, headIndex);
-            renderDetailText(config.rightText, "rightText", posRightText, y + DETAIL_PADDING, layerIndex);
+            y = y + DETAIL_PADDING;
+            renderDetailHeading(x, y, layerIndex, headIndex);
+            y = y + DETAIL_HEADING_HEIGHT;
+            renderDetailText(config.leftText, "leftText", posLeftText, y , layerIndex);
+            renderDetailAttn(posAttention, y, att, layerIndex, headIndex);
+            renderDetailText(config.rightText, "rightText", posRightText, y, layerIndex);
         }
 
         function renderDetailHeading(x, y, layerIndex, headIndex) {
@@ -126,16 +182,17 @@ requirejs(['jquery', 'd3'], function($, d3) {
             config.svg.append("text")
                 .classed("detail", true)
                 .text('Layer ' + config.layers[layerIndex] + ", Head " + config.heads[headIndex])
-                .attr("font-size", DETAIL_HEADING_TEXT_SIZE + "px")
+                .attr("font-size", TEXT_SIZE + "px")
+                .attr("font-weight", "bold")
                 .style("cursor", "default")
                 .style("-webkit-user-select", "none")
                 .attr("fill", fillColor)
                 .attr("x", x + DETAIL_WIDTH / 2)
                 .attr("text-anchor", "middle")
-                .attr("y", y + 40)
+                .attr("y", y)
                 .attr("height", DETAIL_HEADING_HEIGHT)
                 .attr("width", DETAIL_WIDTH)
-                .attr("dy", DETAIL_HEADING_TEXT_SIZE);
+                .attr("dy", HEADING_TEXT_SIZE);
         }
 
         function renderDetailText(text, id, x, y, layerIndex) {
