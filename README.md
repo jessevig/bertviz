@@ -2,12 +2,12 @@
     BertViz
 </h1>
 <h3 align="center">
- Visualize Attention in Transformer Models (BERT, GPT2, etc.)
+ Visualize Attention in NLP Models
 </h3>
 <h3 align="center">
     <a href="#-quick-tour">Quick Tour</a> &bull;
     <a href="#%EF%B8%8F-getting-started">Getting Started</a> &bull;
-    <a href="https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing">Colab Tutorial</a> &bull;
+    <a href="https://colab.research.google.com/drive/1hXIQ77A4TYS4y3UthWF-Ci7V7vVUoxmQ?usp=sharing">Colab Tutorial</a> &bull;
     <a href="https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1">Blog</a> &bull;
     <a href="https://www.aclweb.org/anthology/P19-3007.pdf">Paper</a> &bull;
     <a href="#-paper">Citation</a>
@@ -27,7 +27,7 @@ For updates on BertViz and related projects, feel free to follow me on [Twitter]
 The *head view* visualizes attention for one or more attention heads in the same 
  layer. It is based on the excellent [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj). 
 
-🕹 Try out the head view in the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
+🕹 Try out the head view in the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1hXIQ77A4TYS4y3UthWF-Ci7V7vVUoxmQ?usp=sharing) (all visualizations pre-loaded).
 <p>
     <img src="https://raw.githubusercontent.com/jessevig/bertviz/master/images/head-view.gif" width="425"/>
 </p>
@@ -37,14 +37,14 @@ The *head view* visualizes attention for one or more attention heads in the same
 
 The *model view* shows a bird's-eye view of attention across all layers and heads.
 
-🕹 Try out the model view in the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
+🕹 Try out the model view in the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1hXIQ77A4TYS4y3UthWF-Ci7V7vVUoxmQ?usp=sharing) (all visualizations pre-loaded).
 
 ![model view](images/model-view-noscroll.gif)
 
 ### Neuron View 
 The *neuron view* visualizes individual neurons in the query and key vectors and shows how they are used to compute attention.
 
-🕹 Try out the neuron view in the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) (all visualizations pre-loaded).
+🕹 Try out the neuron view in the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1hXIQ77A4TYS4y3UthWF-Ci7V7vVUoxmQ?usp=sharing) (all visualizations pre-loaded).
 
 
 ![neuron view](images/neuron-view-dark.gif)
@@ -117,10 +117,10 @@ jupyter notebook
 ```
 ## 🕹 Interactive Tutorial
 
-Check out the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing) 
+Check out the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1hXIQ77A4TYS4y3UthWF-Ci7V7vVUoxmQ?usp=sharing) 
 to learn more about BertViz and try out the tool. <b>Note</b>: all visualizations are pre-loaded, so there is no need to execute any cells.
 
-[![Tutorial](images/tutorial-screenshots.jpg)](https://colab.research.google.com/drive/1MV7u8hdMgpwUd9nIlONQp-EBo8Fsj7CJ?usp=sharing)
+[![Tutorial](images/tutorial-screenshots.jpg)](https://colab.research.google.com/drive/1hXIQ77A4TYS4y3UthWF-Ci7V7vVUoxmQ?usp=sharing)
 
 
 ## 📖 Documentation
