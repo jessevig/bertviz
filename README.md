@@ -143,7 +143,7 @@ to learn more about BertViz and try out the tool. <b>Note</b>: all visualization
 
 #### Head and Model Views
 First load a Huggingface model, either a pre-trained model as shown below, or your own fine-tuned model.
- Be sure to set `output_attention=True`.
+ Be sure to set `output_attentions=True`.
 ```python
 from transformers import AutoTokenizer, AutoModel, utils
 utils.logging.set_verbosity_error()  # Suppress standard warnings
