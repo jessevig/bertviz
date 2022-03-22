@@ -20,7 +20,7 @@ def head_view(
         encoder_tokens=None,
         decoder_tokens=None,
         include_layers=None,
-        view_mode='notebook'
+        action='view'
 ):
     """Render head view
 
@@ -45,10 +45,9 @@ def head_view(
                 heads: Indices (zero-based) of initial selected heads in visualization. Defaults to all heads.
                 include_layers: Indices (zero-based) of layers to include in visualization. Defaults to all layers.
                     Note: filtering layers may improve responsiveness of the visualization for long inputs.
-                view_mode: Specifies the viewing action to be performed with the generated HTML object
-                    - 'notebook' (default): Designed to display the generated HTML representation as a notebook cell output
-                    - 'databricks' : Designed to display the generated HTML representation in a Databricks notebook
-                    - 'save' : TBI (ADD PATH)
+                action: Specifies the viewing action to be performed with the generated HTML object
+                    - 'view' (default): Displays the generated HTML representation as a notebook cell output
+                    - 'return' : Returns the HTML object containing the generated view for further processing
     """
 
     attn_data = []
@@ -213,7 +212,7 @@ def head_view(
     }
 
     # require.js must be imported for Colab or JupyterLab:
-    if view_mode == 'notebook':
+    if action == 'view':
         display(HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>'))
         display(HTML(vis_html))
         __location__ = os.path.realpath(
@@ -221,13 +220,14 @@ def head_view(
         vis_js = open(os.path.join(__location__, 'head_view.js')).read().replace("PYTHON_PARAMS", json.dumps(params))
         display(Javascript(vis_js))
 
-    elif view_mode == 'databricks':
-        displayHTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>')
-        displayHTML(vis_html)
+    elif action == 'return':
+        html1 = HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>')
+        html2 = HTML(vis_html)
         __location__ = os.path.realpath(
             os.path.join(os.getcwd(), os.path.dirname(__file__)))
         vis_js = open(os.path.join(__location__, 'head_view.js')).read().replace("PYTHON_PARAMS", json.dumps(params))
-        displayHTML(vis_js)
+        html3 = Javascript(vis_js)
+        return html1, html2, html3
 
-    elif view_mode == 'save':
-        assert("To be implemented")
+    else:
+        raise ValueError("'action' parameter must be 'view' or 'return")
