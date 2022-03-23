@@ -47,7 +47,7 @@ def head_view(
                     Note: filtering layers may improve responsiveness of the visualization for long inputs.
                 action: Specifies the viewing action to be performed with the generated HTML object
                     - 'view' (default): Displays the generated HTML representation as a notebook cell output
-                    - 'return' : Returns the HTML object containing the generated view for further processing
+                    - 'return' : Returns an HTML object containing the generated view for further processing
     """
 
     attn_data = []
@@ -227,7 +227,10 @@ def head_view(
             os.path.join(os.getcwd(), os.path.dirname(__file__)))
         vis_js = open(os.path.join(__location__, 'head_view.js')).read().replace("PYTHON_PARAMS", json.dumps(params))
         html3 = Javascript(vis_js)
-        return html1, html2, html3
+        # might need to reformat this JS code with appropriate tags for web browser displaying
+
+        head_html = HTML(html1.data + html2.data + html3.data)
+        return head_html
 
     else:
         raise ValueError("'action' parameter must be 'view' or 'return")
