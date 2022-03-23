@@ -222,14 +222,16 @@ def head_view(
 
     elif action == 'return':
         html1 = HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>')
+
         html2 = HTML(vis_html)
+
         __location__ = os.path.realpath(
             os.path.join(os.getcwd(), os.path.dirname(__file__)))
         vis_js = open(os.path.join(__location__, 'head_view.js')).read().replace("PYTHON_PARAMS", json.dumps(params))
         html3 = Javascript(vis_js)
-        # might need to reformat this JS code with appropriate tags for web browser displaying
+        script = '\n<script type="text/javascript">\n' + html3.data + '\n</script>\n'
 
-        head_html = HTML(html1.data + html2.data + html3.data)
+        head_html = HTML(html1.data + html2.data + script)
         return head_html
 
     else:
