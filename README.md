@@ -137,6 +137,7 @@ to learn more about BertViz and try out the tool. <b>Note</b>: all visualization
   * [Filtering layers](#filtering-layers)
   * [Setting default layer/head(s)](#setting-default-layer-head-s)
   * [Visualizing sentence pairs](#visualizing-sentence-pairs)
+  * [Obtain HTML representations](#obtain-HTML-representations)
   * [Non-Huggingface models](#non-huggingface-models)
 
 ### Self-attention models (BERT, GPT-2, etc.)
