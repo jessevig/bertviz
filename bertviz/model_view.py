@@ -248,4 +248,3 @@ def model_view(
 
     else:
         raise ValueError("'html_action' parameter must be 'view' or 'return")
-

@@ -34,7 +34,7 @@ import torch
 from IPython.core.display import display, HTML, Javascript
 
 
-def show(model, model_type, tokenizer, sentence_a, sentence_b=None, display_mode='dark', layer=None, head=None):
+def show(model, model_type, tokenizer, sentence_a, sentence_b=None, display_mode='dark', layer=None, head=None, html_action='view'):
 
     # Generate unique div id to enable multiple visualizations in one notebook
 
@@ -65,27 +65,58 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None, display_mode
               <div id='vis'></div>
             </div>
          """
+
     # require.js must be imported for Colab or JupyterLab:
-    display(HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>'))
-    display(HTML(vis_html))
-    __location__ = os.path.realpath(
-        os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    attn_data = get_attention(model, model_type, tokenizer, sentence_a, sentence_b, include_queries_and_keys=True)
-    if model_type == 'gpt2':
-        bidirectional = False
+    if html_action == 'view'
+        display(HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>'))
+        display(HTML(vis_html))
+        __location__ = os.path.realpath(
+            os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        attn_data = get_attention(model, model_type, tokenizer, sentence_a, sentence_b, include_queries_and_keys=True)
+        if model_type == 'gpt2':
+            bidirectional = False
+        else:
+            bidirectional = True
+        params = {
+            'attention': attn_data,
+            'default_filter': "all",
+            'bidirectional': bidirectional,
+            'display_mode': display_mode,
+            'layer': layer,
+            'head': head
+        }
+        vis_js = open(os.path.join(__location__, 'neuron_view.js')).read()
+        display(Javascript('window.bertviz_params = %s' % json.dumps(params)))
+        display(Javascript(vis_js))
+
+    elif html_action == 'return':
+        html1 = HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>')
+        html2 = HTML(vis_html)
+        __location__ = os.path.realpath(
+            os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        attn_data = get_attention(model, model_type, tokenizer, sentence_a, sentence_b, include_queries_and_keys=True)
+        if model_type == 'gpt2':
+            bidirectional = False
+        else:
+            bidirectional = True
+        params = {
+            'attention': attn_data,
+            'default_filter': "all",
+            'bidirectional': bidirectional,
+            'display_mode': display_mode,
+            'layer': layer,
+            'head': head
+        }
+        vis_js = open(os.path.join(__location__, 'neuron_view.js')).read()
+
+        script1 = '\n<script type="text/javascript">\n' + Javascript('window.bertviz_params = %s' % json.dumps(params)).data + '\n</script>\n'
+        script2= '\n<script type="text/javascript">\n' + Javascript(vis_js).data + '\n</script>\n'
+
+        neuron_html = HTML(html1.data + html2.data + script1 + script2)
+        return neuron_html
+
     else:
-        bidirectional = True
-    params = {
-        'attention': attn_data,
-        'default_filter': "all",
-        'bidirectional': bidirectional,
-        'display_mode': display_mode,
-        'layer': layer,
-        'head': head
-    }
-    vis_js = open(os.path.join(__location__, 'neuron_view.js')).read()
-    display(Javascript('window.bertviz_params = %s' % json.dumps(params)))
-    display(Javascript(vis_js))
+        raise ValueError("'html_action' parameter must be 'view' or 'return")
 
 
 def get_attention(model, model_type, tokenizer, sentence_a, sentence_b=None, include_queries_and_keys=False):
