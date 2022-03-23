@@ -12,7 +12,7 @@
  * 02/06/21  Jesse Vig   Move require config from separate jupyter notebook step
  * 05/03/21  Jesse Vig   Adjust height of visualization dynamically
  * 07/25/21  Jesse Vig   Support layer filtering
- * 23/03/22  Daniel SC   Update requirement URLs for d3 and jQuery (source of bug not allowing end result to be displayed on browsers)
+ * 03/23/22  Daniel SC   Update requirement URLs for d3 and jQuery (source of bug not allowing end result to be displayed on browsers)
  **/
 
 require.config({
