@@ -67,7 +67,7 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None, display_mode
          """
 
     # require.js must be imported for Colab or JupyterLab:
-    if html_action == 'view'
+    if html_action == 'view':
         display(HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>'))
         display(HTML(vis_html))
         __location__ = os.path.realpath(
