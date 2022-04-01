@@ -40,7 +40,7 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None, display_mode
 
     if sentence_b:
         vis_html = """
-        <div id="bertviz" style='padding:8px'>
+        <div id="bertviz" style="padding:8px;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">
           <span style="user-select:none">
             <span class="dropdown-label">Layer: </span><select id="layer"></select>
             <span class="dropdown-label">Head: </span><select id="att_head"></select>
@@ -57,7 +57,7 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None, display_mode
         """
     else:
         vis_html = """
-            <div id="bertviz" style='padding:8px'>
+            <div id="bertviz" style="padding:8px;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">
               <span style="user-select:none">
                 <span class="dropdown-label">Layer: </span><select id="layer"></select>
                 <span class="dropdown-label">Head: </span> <select id="att_head"></select>

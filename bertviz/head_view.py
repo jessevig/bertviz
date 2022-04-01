@@ -177,14 +177,14 @@ def head_view(
     else:
         select_html = ""
     vis_html = f"""      
-        <div id='%s'>
+        <div id="{vis_id}" style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">
             <span style="user-select:none">
                 Layer: <select id="layer"></select>
                 {select_html}
             </span>
             <div id='vis'></div>
         </div>
-    """%(vis_id)
+    """
 
     for d in attn_data:
         attn_seq_len_left = len(d['attn'][0][0])
