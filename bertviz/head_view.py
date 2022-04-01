@@ -19,7 +19,8 @@ def head_view(
         cross_attention=None,
         encoder_tokens=None,
         decoder_tokens=None,
-        include_layers = None
+        include_layers=None,
+        html_action='view'
 ):
     """Render head view
 
@@ -44,6 +45,9 @@ def head_view(
                 heads: Indices (zero-based) of initial selected heads in visualization. Defaults to all heads.
                 include_layers: Indices (zero-based) of layers to include in visualization. Defaults to all layers.
                     Note: filtering layers may improve responsiveness of the visualization for long inputs.
+                html_action: Specifies the action to be performed with the generated HTML object
+                    - 'view' (default): Displays the generated HTML representation as a notebook cell output
+                    - 'return' : Returns an HTML object containing the generated view for further processing or custom visualization
     """
 
     attn_data = []
@@ -208,9 +212,27 @@ def head_view(
     }
 
     # require.js must be imported for Colab or JupyterLab:
-    display(HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>'))
-    display(HTML(vis_html))
-    __location__ = os.path.realpath(
-        os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    vis_js = open(os.path.join(__location__, 'head_view.js')).read().replace("PYTHON_PARAMS", json.dumps(params))
-    display(Javascript(vis_js))
+    if html_action == 'view':
+        display(HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>'))
+        display(HTML(vis_html))
+        __location__ = os.path.realpath(
+            os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        vis_js = open(os.path.join(__location__, 'head_view.js')).read().replace("PYTHON_PARAMS", json.dumps(params))
+        display(Javascript(vis_js))
+
+    elif html_action == 'return':
+        html1 = HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>')
+
+        html2 = HTML(vis_html)
+
+        __location__ = os.path.realpath(
+            os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        vis_js = open(os.path.join(__location__, 'head_view.js')).read().replace("PYTHON_PARAMS", json.dumps(params))
+        html3 = Javascript(vis_js)
+        script = '\n<script type="text/javascript">\n' + html3.data + '\n</script>\n'
+
+        head_html = HTML(html1.data + html2.data + script)
+        return head_html
+
+    else:
+        raise ValueError("'html_action' parameter must be 'view' or 'return")

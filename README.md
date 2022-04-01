@@ -137,6 +137,7 @@ to learn more about BertViz and try out the tool. <b>Note</b>: all visualization
   * [Filtering layers](#filtering-layers)
   * [Setting default layer/head(s)](#setting-default-layer-head-s)
   * [Visualizing sentence pairs](#visualizing-sentence-pairs)
+  * [Obtain HTML representations](#obtain-HTML-representations)
   * [Non-Huggingface models](#non-huggingface-models)
 
 ### Self-attention models (BERT, GPT-2, etc.)
@@ -331,6 +332,60 @@ head_view(attention, tokens, sentence_b_start)
 ##### Neuron view
 
 To enable this option in the neuron view, simply set the `sentence_a` and `sentence_b` parameters in [`neuron_view.show()`](bertviz/neuron_view.py).
+
+#### Obtain HTML representations
+
+Support to retrieve the generated HTML representations has been added to head_view, model_view and neuron_view.
+
+Setting the 'html_action' parameter to 'return' will make the function call return a single HTML Python object that can be further processed. Remember you can access the HTML source using the data attribute of a Python HTML object.
+
+The default behavior for 'html_action' is 'view', which will display the visualization but won't return the HTML object.
+
+This functionality is useful if you need to:
+- Save the representation as an independent HTML file that can be accessed via web browser
+- Use custom display methods as the ones needed in Databricks to visualize HTML objects
+
+Example (head and model views):
+
+```python
+from transformers import AutoTokenizer, AutoModel, utils
+from bertviz import head_view
+
+utils.logging.set_verbosity_error()  # Suppress standard warnings
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+model = AutoModel.from_pretrained("bert-base-uncased", output_attentions=True)
+
+inputs = tokenizer.encode("The cat sat on the mat", return_tensors='pt')
+outputs = model(inputs)
+attention = outputs[-1]  # Output includes attention weights when output_attentions=True
+tokens = tokenizer.convert_ids_to_tokens(inputs[0]) 
+
+html_head_view = head_view(attention, tokens, html_action='return')
+
+with open("PATH_TO_YOUR_FILE/head_view.html", 'w') as file:
+    file.write(html_head_view.data)
+
+```
+
+Example (neuron view):
+
+```python
+# Import specialized versions of models (that return query/key vectors)
+from bertviz.transformers_neuron_view import BertModel, BertTokenizer
+from bertviz.neuron_view import show
+
+model_type = 'bert'
+model_version = 'bert-base-uncased'
+do_lower_case = True
+sentence_a = "The cat sat on the mat"
+sentence_b = "The cat lay on the rug"
+model = BertModel.from_pretrained(model_version, output_attentions=True)
+tokenizer = BertTokenizer.from_pretrained(model_version, do_lower_case=do_lower_case)
+html_neuron_view = show(model, model_type, tokenizer, sentence_a, sentence_b, layer=2, head=0, html_action='return')
+
+with open("PATH_TO_YOUR_FILE/neuron_view.html", 'w') as file:
+    file.write(html_neuron_view.data)
+```
 
 #### Non-Huggingface models
 
