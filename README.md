@@ -203,7 +203,7 @@ GPT-2 ([Notebook](notebooks/neuron_view_gpt2.ipynb),
 RoBERTa
 ([Notebook](notebooks/neuron_view_roberta.ipynb))  
 
-Note that only one instance of the Neuron View may be displayed within a notebook. For full API, please refer to the [source](bertviz/neuron_view.py).
+For full API, please refer to the [source](bertviz/neuron_view.py).
 
 ### Encoder-decoder models (BART, T5, etc.)
 
@@ -406,7 +406,7 @@ returned from Huggingface models). In some case, Tensorflow checkpoints may be l
 * When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long.  To mitigate this, you may wish to filter the layers displayed by setting the **`include_layers`** parameter, as described [above](#filtering-layers).
 * The *neuron view* only supports the custom BERT, GPT-2, and RoBERTa models included with the tool. This view needs access to the query and key vectors, 
 which required modifying the model code (see `transformers_neuron_view` directory), which has only been done for these three models.
-Also, only one neuron view may be included per notebook.
+
 
 ### Attention as "explanation"?
 * Visualizing attention weights illuminates one type of architecture within the model but does not
