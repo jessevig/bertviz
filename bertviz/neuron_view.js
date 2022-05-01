@@ -75,6 +75,34 @@ requirejs(['jquery', 'd3'],
 
         const MIN_CONNECTOR_OPACITY = 0
 
+
+        function renderGraphDownload(new_svg_data) {
+            // to filestream, add the starter
+            console.log(new_svg_data);
+            var xml = new XMLSerializer().serializeToString(new_svg_data);
+            var imgsrc = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(xml)));
+            // update src to show the image
+            var canvas = document.createElement('canvas');
+            // set canvas size according to current div width and height
+            canvas.width = '950' ;
+            canvas.height = '500';
+            var context = canvas.getContext('2d');
+            var image = new Image;
+            image.src = imgsrc;
+            image.onload = function () {
+                context.drawImage(image, 0, 0);
+                var canvasData = canvas.toDataURL("image/png");
+                var a = document.createElement("a");
+                a.download = "output.png";
+                a.href = canvasData;
+                document.getElementById("vis").appendChild(a);
+                a.click();
+            }
+            // document.getElementById("vis").appendChild(canvas)
+        }
+
+
+
         function render() {
 
             var attnData = config.attention[config.filter];
@@ -88,6 +116,9 @@ requirejs(['jquery', 'd3'],
             var height = config.initialTextLength * BOXHEIGHT + HEIGHT_PADDING;
             var svg = d3.select(`#${config.rootDivId} #vis`)
                 .append('svg')
+                .attr("id", "Fsvg")
+                .attr("style", "background-color:" + getColor("background"))
+                .attr("xmlns", "http://www.w3.org/2000/svg")
                 .attr("width", "100%")
                 .attr("height", height + "px");
 
@@ -1009,5 +1040,12 @@ requirejs(['jquery', 'd3'],
         }
 
         render();
+        // After render the chart, add a button that trigger image generation
+        var downloadButton = document.createElement("button");
+        downloadButton.id = "downloadButton";
+        downloadButton.onclick = function () { renderGraphDownload(document.getElementById("Fsvg")) };
+        downloadButton.innerText = "Click to save the graph";
+        document.getElementById("vis").appendChild(downloadButton);
+
 
     });
