@@ -78,6 +78,14 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .append('svg')
                 .attr("width", DIV_WIDTH)
                 .attr("height", config.divHeight)
+
+                // BEGIN TESTING AREA
+                // ID to get element
+                .attr("id", "Fsvg")
+                // Style to operative in separated file
+                .attr("xmlns", "http://www.w3.org/2000/svg")
+                // END TESTING AREA
+
                 .attr("fill", getBackgroundColor());
 
             renderAxisLabels();
@@ -180,6 +188,30 @@ requirejs(['jquery', 'd3'], function($, d3) {
             renderDetailText(config.rightText, "rightText", posRightText, y, layerIndex);
         }
 
+        function renderGraphDownload(new_svg_data) {
+                // to filestream, add the starter
+                var xml = new XMLSerializer().serializeToString(new_svg_data);
+                var imgsrc = 'data:image/svg+xml;base64,' + btoa(xml);
+                // update src to show the image
+                var canvas = document.createElement('canvas');
+                // set canvas size according to current div width and height
+                canvas.width = DIV_WIDTH;
+                canvas.height = config.divHeight;
+                var context = canvas.getContext('2d');
+                var image = new Image;
+                image.src = imgsrc;
+                image.onload = function () {
+                    context.drawImage(image, 0, 0);
+                    var canvasData = canvas.toDataURL("image/png");
+                    var a = document.createElement("a");
+                    a.download = "output.png";
+                    a.href = canvasData;
+                    document.getElementById("vis").appendChild(a);
+                    a.click();
+                }
+                // document.getElementById("vis").appendChild(canvas)
+        }
+        
         function renderDetailHeading(x, y, layerIndex, headIndex) {
             var fillColor = getTextColor();
             config.svg.append("text")
@@ -426,5 +458,12 @@ requirejs(['jquery', 'd3'], function($, d3) {
 
         initialize();
         render();
+        // After render the chart, add a button that trigger image generation
+        var downloadButton = document.createElement("button");
+        downloadButton.id = "downloadButton";
+        downloadButton.onclick = function () { renderGraphDownload(document.getElementById("Fsvg")) };
+        downloadButton.innerText = "Click to save the graph";
+        document.getElementById("vis").appendChild(downloadButton);
+    
 
     });
