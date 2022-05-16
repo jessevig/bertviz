@@ -12,6 +12,7 @@
  * 02/06/21  Jesse Vig   Move require config from separate jupyter notebook step
  * 03/23/22  Daniel SC   Update requirement URLs for d3 and jQuery (source of bug not allowing end result to be displayed on browsers)
  * 04/02/22  Jesse Vig   Enable multiple neuron views per notebook
+ * 05/15/22  Jesse Vig   Changes to supporting exporting images
  **/
 
 require.config({
@@ -75,31 +76,31 @@ requirejs(['jquery', 'd3'],
 
         const MIN_CONNECTOR_OPACITY = 0
 
-
-        function renderGraphDownload(new_svg_data) {
-            // to filestream, add the starter
-            console.log(new_svg_data);
-            var xml = new XMLSerializer().serializeToString(new_svg_data);
-            var imgsrc = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(xml)));
-            // update src to show the image
-            var canvas = document.createElement('canvas');
-            // set canvas size according to current div width and height
-            canvas.width = '950' ;
-            canvas.height = '500';
-            var context = canvas.getContext('2d');
-            var image = new Image;
-            image.src = imgsrc;
-            image.onload = function () {
-                context.drawImage(image, 0, 0);
-                var canvasData = canvas.toDataURL("image/png");
-                var a = document.createElement("a");
-                a.download = "output.png";
-                a.href = canvasData;
-                document.getElementById("vis").appendChild(a);
-                a.click();
-            }
-            // document.getElementById("vis").appendChild(canvas)
-        }
+        //
+        // function renderGraphDownload(new_svg_data) {
+        //     // to filestream, add the starter
+        //     console.log(new_svg_data);
+        //     var xml = new XMLSerializer().serializeToString(new_svg_data);
+        //     var imgsrc = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(xml)));
+        //     // update src to show the image
+        //     var canvas = document.createElement('canvas');
+        //     // set canvas size according to current div width and height
+        //     canvas.width = '950' ;
+        //     canvas.height = '500';
+        //     var context = canvas.getContext('2d');
+        //     var image = new Image;
+        //     image.src = imgsrc;
+        //     image.onload = function () {
+        //         context.drawImage(image, 0, 0);
+        //         var canvasData = canvas.toDataURL("image/png");
+        //         var a = document.createElement("a");
+        //         a.download = "output.png";
+        //         a.href = canvasData;
+        //         document.getElementById("vis").appendChild(a);
+        //         a.click();
+        //     }
+        //     // document.getElementById("vis").appendChild(canvas)
+        // }
 
 
 
@@ -113,19 +114,19 @@ requirejs(['jquery', 'd3'],
             var att = attnData.attn[config.layer][config.head];
 
             $(`#${config.rootDivId} #vis`).empty();
-            var height = config.initialTextLength * BOXHEIGHT + HEIGHT_PADDING;
+            config.svgHeight = config.initialTextLength * BOXHEIGHT + HEIGHT_PADDING;
             var svg = d3.select(`#${config.rootDivId} #vis`)
                 .append('svg')
-                .attr("id", "Fsvg")
                 .attr("style", "background-color:" + getColor("background"))
                 .attr("xmlns", "http://www.w3.org/2000/svg")
                 .attr("width", "100%")
-                .attr("height", height + "px");
+                .attr("height", config.svgHeight)
+                .style("font-family", "\"Helvetica Neue\", Helvetica, Arial, sans-serif");
 
-            d3.select(`#${config.rootDivId}`)
-                .style("background-color", getColor('background'));
-            d3.selectAll(`#${config.rootDivId} .dropdown-label`)
-                .style("color", getColor('dropdown'))
+            // d3.select(`#${config.rootDivId}`)
+            //     .style("background-color", getColor('background'));
+            // d3.selectAll(`#${config.rootDivId} .dropdown-label`)
+            //     .style("color", getColor('dropdown'))
 
             renderVisExpanded(svg, leftText, rightText, queries, keys);
             renderVisCollapsed(svg, leftText, rightText, att);
@@ -995,6 +996,38 @@ requirejs(['jquery', 'd3'],
             return PALETTE[config.mode][name]
         }
 
+        function savePng(svgEl) {
+                // to filestream, add the starter
+                var xml = new XMLSerializer().serializeToString(svgEl);
+                var imgsrc = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(xml)));
+                // update src to show the image
+                var canvas = document.createElement('canvas');
+                // set canvas size according to current div width and height, plus some padding
+                // canvas.width = DIV_WIDTH + 30;
+                canvas.width=svgEl.getBBox().width;
+                canvas.height = config.svgHeight + 30;
+                var context = canvas.getContext('2d');
+                var image = new Image;
+                image.src = imgsrc;
+                image.onload = function () {
+                    context.drawImage(image, 0, 0);
+                    var canvasData = canvas.toDataURL("image/png");
+                    var a = document.createElement("a");
+                    a.download = "bertviz_neuron_view.png";
+                    a.href = canvasData;
+                    document.getElementById("vis").appendChild(a);
+                    a.click();
+                }
+        }
+        function saveSvg(svgEl) {
+            const base64doc = btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
+            const a = document.createElement('a');
+            a.download = 'bertviz_neuron_view.svg';
+            a.href = 'data:image/svg+xml;base64,' + base64doc;
+            a.click();
+        }
+
+
         function initialize() {
             config.attention = params['attention'];
             config.filter = params['default_filter'];
@@ -1040,12 +1073,25 @@ requirejs(['jquery', 'd3'],
         }
 
         render();
-        // After render the chart, add a button that trigger image generation
-        var downloadButton = document.createElement("button");
-        downloadButton.id = "downloadButton";
-        downloadButton.onclick = function () { renderGraphDownload(document.getElementById("Fsvg")) };
-        downloadButton.innerText = "Click to save the graph";
-        document.getElementById("vis").appendChild(downloadButton);
-
-
+        $(`#${config.rootDivId} #downloadButton`)
+            .css("visibility", "visible")
+            .click(function () {
+                const imageFormat = $('input[name=imageFormat]:checked').val()
+                const svgEl = $(`#${config.rootDivId} svg`)[0];
+                if (imageFormat === "PNG") {
+                    savePng(svgEl)
+                } else if (imageFormat === "SVG") {
+                    saveSvg(svgEl);
+                }
+                // else {
+                //     testPdf();
+                //     // savePdf(svgEl);
+                // }
+            });
+        // // After render the chart, add a button that trigger image generation
+        // var downloadButton = document.createElement("button");
+        // downloadButton.id = "downloadButton";
+        // downloadButton.onclick = function () { renderGraphDownload(document.getElementById("Fsvg")) };
+        // downloadButton.innerText = "Click to save the graph";
+        // document.getElementById("vis").appendChild(downloadButton);
     });

@@ -11,16 +11,27 @@
  * 02/06/21  Jesse Vig   Move require config from separate jupyter notebook step
  * 05/03/21  Jesse Vig   Adjust visualization height dynamically
  * 03/23/22  Daniel SC   Update requirement URLs for d3 and jQuery (source of bug not allowing end result to be displayed on browsers)
+*  05/15/22  Jesse Vig   Changes to supporting exporting images
  **/
+
+// require.config({
+//   paths: {
+//       d3: 'https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min',
+//     jquery: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.min'
+//   }
+// });
 
 require.config({
   paths: {
       d3: 'https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min',
     jquery: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.min',
+      pdfkit: 'https://cdn.jsdelivr.net/npm/pdfkit@0.13.0/js/pdfkit.standalone.min',
+      // svgToPdfKit: 'https://cdn.jsdelivr.net/npm/svg-to-pdfkit@0.1.8/source.min',
+      blobstream: 'https://cdn.jsdelivr.net/npm/blob-stream@0.1.3/index.min'
   }
 });
 
-requirejs(['jquery', 'd3'], function($, d3) {
+requirejs(['jquery', 'd3', 'pdfkit', 'blobstream'], function($, d3, PDFDocument, blobStream) {
 
         const params = PYTHON_PARAMS; // HACK: PYTHON_PARAMS is a template marker that is replaced by actual params.
         const config = {};
@@ -78,14 +89,8 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 .append('svg')
                 .attr("width", DIV_WIDTH)
                 .attr("height", config.divHeight)
-
-                // BEGIN TESTING AREA
-                // ID to get element
-                .attr("id", "Fsvg")
-                // Style to operative in separated file
+                .style("font-family", "\"Helvetica Neue\", Helvetica, Arial, sans-serif")
                 .attr("xmlns", "http://www.w3.org/2000/svg")
-                // END TESTING AREA
-
                 .attr("fill", getBackgroundColor());
 
             renderAxisLabels();
@@ -148,7 +153,6 @@ requirejs(['jquery', 'd3'], function($, d3) {
             }
         }
 
-
         function renderThumbnail(layerIndex, headIndex) {
             const axisSize = HEADING_TEXT_SIZE + HEADING_PADDING + TEXT_SIZE + TEXT_PADDING
             const x = headIndex * config.thumbnailWidth + axisSize;
@@ -188,15 +192,15 @@ requirejs(['jquery', 'd3'], function($, d3) {
             renderDetailText(config.rightText, "rightText", posRightText, y, layerIndex);
         }
 
-        function renderGraphDownload(new_svg_data) {
+        function savePng(svgEl) {
                 // to filestream, add the starter
-                var xml = new XMLSerializer().serializeToString(new_svg_data);
+                var xml = new XMLSerializer().serializeToString(svgEl);
                 var imgsrc = 'data:image/svg+xml;base64,' + btoa(xml);
                 // update src to show the image
                 var canvas = document.createElement('canvas');
-                // set canvas size according to current div width and height
-                canvas.width = DIV_WIDTH;
-                canvas.height = config.divHeight;
+                // set canvas size according to current div width and height, plus some padding
+                canvas.width = DIV_WIDTH + 30;
+                canvas.height = config.divHeight + 30;
                 var context = canvas.getContext('2d');
                 var image = new Image;
                 image.src = imgsrc;
@@ -204,14 +208,180 @@ requirejs(['jquery', 'd3'], function($, d3) {
                     context.drawImage(image, 0, 0);
                     var canvasData = canvas.toDataURL("image/png");
                     var a = document.createElement("a");
-                    a.download = "output.png";
+                    a.download = "bertviz_model_view.png";
                     a.href = canvasData;
                     document.getElementById("vis").appendChild(a);
                     a.click();
                 }
-                // document.getElementById("vis").appendChild(canvas)
         }
-        
+
+        // const svgToPdfExample = (svg) => {
+        //     const doc = new window.PDFDocument();
+        //     const chunks = [];
+        //     const stream = doc.pipe({
+        //         // writable stream implementation
+        //         write: (chunk) => chunks.push(chunk),
+        //         end: () => {
+        //             const pdfBlob = new Blob(chunks, {
+        //                 type: 'application/octet-stream'
+        //             });
+        //             var blobUrl = URL.createObjectURL(pdfBlob);
+        //             window.open(blobUrl);
+        //         },
+        //         // readable streaaam stub iplementation
+        //         on: (event, action) => {
+        //         },
+        //         once: (...args) => {
+        //         },
+        //         emit: (...args) => {
+        //         },
+        //     });
+        //
+        //     window.SVGtoPDF(doc, svg, 0, 0);
+        //
+        //     doc.end();
+        // };
+
+        function testPdf() {
+            // const PDFDocument = require('pdfkit');
+            // const blobStream = require('blob-stream');
+  //
+  //   // create a document the same way as above
+            const doc = new PDFDocument();
+            const blobStream = require('blob-stream');
+
+  //
+    // pipe the document to a blob
+            const chunks = [];
+            const stream = doc.pipe({
+                // writable stream implementation
+                write: (chunk) => chunks.push(chunk),
+                end: () => {
+                    // const pdfBlob = new Blob(chunks, {
+                    //     type: 'application/octet-stream'
+                    // });
+                    // var blobUrl = URL.createObjectURL(pdfBlob);
+                    // const a = document.createElement('a');
+                    // a.download = 'bertviz_model_view.pdf';
+                    // a.href = blobUrl;
+                    // a.click();
+                }
+            });
+
+
+            doc.end();
+  //
+  //   // add your content to the document here, as usual
+  //           doc
+  // .font('fonts/PalatinoBold.ttf')
+  // .fontSize(25)
+  // .text('Some text with an embedded font!', 100, 100);
+  //
+  //
+  //   // get a blob when you're done
+  //           doc.end();
+  //           stream.on('finish', function () {
+  //               // get a blob you can do whatever you like with
+  //               // const blob = stream.toBlob('application/pdf');
+  //
+  //               // or get a blob URL for display in the browser
+  //               const url = stream.toBlobURL('application/pdf');
+  //               iframe.src = url;
+  //           });
+        }
+
+        // function savePdf(svgEl) {
+        //
+        //     const doc = new PDFDocument();
+        //     // window.SVGtoPDF(doc, svgEl, 0, 0);
+        //     // doc.pipe(fs.createWriteStream('bertviz_model_view.pdf'));
+        //     // doc.end();
+        //
+        //     const chunks = [];
+        //     const stream = doc.pipe({
+        //         // writable stream implementation
+        //         write: (chunk) => chunks.push(chunk),
+        //         end: () => {
+        //             const pdfBlob = new Blob(chunks, {
+        //                 type: 'application/octet-stream'
+        //             });
+        //             var blobUrl = URL.createObjectURL(pdfBlob);
+        //             const a = document.createElement('a');
+        //             a.download = 'bertviz_model_view.pdf';
+        //             a.href = blobUrl;
+        //             a.click();
+        //         }
+        //     });
+        //
+        //
+        //     doc.end();
+        //
+        // }
+        // function savePdf(svgEl) {
+        //
+        //     const doc = new PDFDocument();
+        //     window.SVGtoPDF(doc, svgEl, 0, 0);
+        //     // doc.pipe(fs.createWriteStream('bertviz_model_view.pdf'));
+        //     // doc.end();
+        //
+        //     const stream = doc.pipe(blobStream());
+        //
+        //     // add your content to the document here, as usual
+        //
+        //     // get a blob when you're done
+        //     doc.end();
+        //     stream.on('finish', function () {
+        //         // get a blob you can do whatever you like with
+        //         // const blob = stream.toBlob('application/pdf');
+        //
+        //         // or get a blob URL for display in the browser
+        //         const url = stream.toBlobURL('application/pdf');
+        //         const a = document.createElement('a');
+        //         a.download = 'bertviz_model_view.pdf';
+        //         a.href = url;
+        //         a.click();
+        //
+        //     });
+
+
+            // const base64doc = btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
+            // const a = document.createElement('a');
+            // a.download = 'bertviz_model_view.pdf';
+            // a.href = 'data:application/pdf;base64,' + base64doc;
+            // a.click();
+
+
+        // }
+
+        // function savePdf(svgEl) {
+        //         // to filestream, add the starter
+        //         var xml = new XMLSerializer().serializeToString(svgEl);
+        //         var imgsrc = 'data:image/svg+xml;base64,' + btoa(xml);
+        //         // update src to show the image
+        //         var canvas = document.createElement('canvas');
+        //         // set canvas size according to current div width and height, plus some padding
+        //         canvas.width = DIV_WIDTH + 30;
+        //         canvas.height = config.divHeight + 30;
+        //         var context = canvas.getContext('2d');
+        //         var image = new Image;
+        //         image.src = imgsrc;
+        //         image.onload = function () {
+        //             context.drawImage(image, 0, 0);
+        //             var canvasData = canvas.toDataURL("image/png");
+        //             var doc = new jspdf.jsPDF('p', 'mm');
+        //             doc.addImage(canvasData, 'PNG', 10, 10);
+        //             doc.save('bertviz_model_view.pdf');
+        //         }
+        // }
+
+        function saveSvg(svgEl) {
+            const base64doc = btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
+            const a = document.createElement('a');
+            a.download = 'bertviz_model_view.svg';
+            a.href = 'data:image/svg+xml;base64,' + base64doc;
+            a.click();
+        }
+
         function renderDetailHeading(x, y, layerIndex, headIndex) {
             var fillColor = getTextColor();
             config.svg.append("text")
@@ -454,16 +624,32 @@ requirejs(['jquery', 'd3'], function($, d3) {
                 config.filter = e.currentTarget.value;
                 render();
             });
+
         }
 
         initialize();
         render();
+        $(`#${config.rootDivId} #downloadButton`)
+            .css("visibility", "visible")
+            .click(function () {
+                const imageFormat = $('input[name=imageFormat]:checked').val()
+                const svgEl = $(`#${config.rootDivId} svg`)[0];
+                if (imageFormat === "PNG") {
+                    savePng(svgEl)
+                } else if (imageFormat === "SVG") {
+                    saveSvg(svgEl);
+                }
+                // else {
+                //     testPdf();
+                //     // savePdf(svgEl);
+                // }
+            });
         // After render the chart, add a button that trigger image generation
-        var downloadButton = document.createElement("button");
-        downloadButton.id = "downloadButton";
-        downloadButton.onclick = function () { renderGraphDownload(document.getElementById("Fsvg")) };
-        downloadButton.innerText = "Click to save the graph";
-        document.getElementById("vis").appendChild(downloadButton);
+        // var downloadButton = document.createElement("button");
+        // downloadButton.id = "downloadButton";
+        // downloadButton.innerText = "Save as image";
+        // downloadButton.style = "display: flex; justify-content: flex-end"
+        // document.getElementById("vis").appendChild(downloadButton);
     
 
     });

@@ -187,12 +187,39 @@ def model_view(
         select_html = f'Attention: <select id="filter">{options}</select>'
     else:
         select_html = ""
+    # vis_html = f"""
+    #     <div id="{vis_id}" style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">
+    #         <span style="user-select:none">
+    #             {select_html}
+    #         </span>
+    #         <div id="vis"></div>
+    #         <div style="display: flex; justify-content: flex-start; align-items:baseline;padding-left:40px; padding-right:15px">
+    #             <button id="downloadButton" style="padding-left: 3px; visibility: hidden">Save Image</button>
+    #             <span style="margin-left: 7px">Format:</span>
+    #             <input style="margin-left: 5px" type="radio" id="imageFormatPng" name="imageFormat" value="PNG" checked>
+    #             <span style="margin-left: 3px" for="imageFormat">PNG</span>
+    #             <input style="margin-left: 5px" type="radio" id="imageFormatSvg" name="imageFormat" value="SVG">
+    #             <span style="margin-left: 3px" for="imageFormat">SVG</span>
+    #             <input style="margin-left: 5px" type="radio" id="imageFormatPdf" name="imageFormat" value="PDF">
+    #             <span style="margin-left: 3px" for="imageFormat">PDF</span>
+    #         </div>
+    #     </div>
+    # """
+
     vis_html = f"""      
         <div id="{vis_id}" style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">
             <span style="user-select:none">
                 {select_html}
             </span>
-            <div id='vis'></div>
+            <div id="vis"></div>
+            <div style="display: flex; justify-content: flex-start; align-items:baseline;padding-left:40px; padding-right:15px">
+                <span style="margin-left: 7px">Export as:</span>
+                <input style="margin-left: 5px" type="radio" id="imageFormatPng" name="imageFormat" value="PNG" checked>
+                <span style="margin-left: 3px" for="imageFormat">PNG</span>
+                <input style="margin-left: 5px" type="radio" id="imageFormatSvg" name="imageFormat" value="SVG">
+                <span style="margin-left: 3px" for="imageFormat">SVG</span>
+                <button id="downloadButton" style="margin-left: 7px; visibility: hidden">Download</button>
+            </div>
         </div>
     """
 
@@ -226,6 +253,8 @@ def model_view(
     # require.js must be imported for Colab or JupyterLab:
     if html_action == 'view':
         display(HTML('<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>'))
+        # display(HTML('<script src="https://cdn.jsdelivr.net/npm/pdfkit@0.13.0/js/pdfkit.standalone.js"></script>'))
+        # display(HTML('<script src="https://cdn.jsdelivr.net/npm/svg-to-pdfkit@0.1.8/source.min.js"></script>'))
         display(HTML(vis_html))
         __location__ = os.path.realpath(
             os.path.join(os.getcwd(), os.path.dirname(__file__)))

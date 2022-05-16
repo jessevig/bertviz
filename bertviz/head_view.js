@@ -13,6 +13,7 @@
  * 05/03/21  Jesse Vig   Adjust height of visualization dynamically
  * 07/25/21  Jesse Vig   Support layer filtering
  * 03/23/22  Daniel SC   Update requirement URLs for d3 and jQuery (source of bug not allowing end result to be displayed on browsers)
+*  05/15/22  Jesse Vig   Changes to supporting exporting images
  **/
 
 require.config({
@@ -43,6 +44,21 @@ requirejs(['jquery', 'd3'], function ($, d3) {
     let config = {};
     initialize();
     renderVis();
+        $(`#${config.rootDivId} #downloadButton`)
+            .css("visibility", "visible")
+            .click(function () {
+                const imageFormat = $('input[name=imageFormat]:checked').val()
+                const svgEl = $(`#${config.rootDivId} svg`)[0];
+                if (imageFormat === "PNG") {
+                    savePng(svgEl)
+                } else if (imageFormat === "SVG") {
+                    saveSvg(svgEl);
+                }
+                // else {
+                //     testPdf();
+                //     // savePdf(svgEl);
+                // }
+            });
 
     function initialize() {
         config.attention = params['attention'];
@@ -93,12 +109,13 @@ requirejs(['jquery', 'd3'], function ($, d3) {
         $(`#${config.rootDivId} #vis`).empty();
 
         // Determine size of visualization
-        const height = Math.max(leftText.length, rightText.length) * BOXHEIGHT + TEXT_TOP;
+        config.divHeight = Math.max(leftText.length, rightText.length) * BOXHEIGHT + TEXT_TOP;
         const svg = d3.select(`#${config.rootDivId} #vis`)
             .append('svg')
             .attr("width", "100%")
-            .attr("height", height + "px");
-
+            .attr("height", config.divHeight)
+            .style("font-family", "\"Helvetica Neue\", Helvetica, Arial, sans-serif")
+            .attr("xmlns", "http://www.w3.org/2000/svg");
         // Display tokens on left and right side of visualization
         renderText(svg, leftText, true, layerAttention, 0);
         renderText(svg, rightText, false, layerAttention, MATRIX_WIDTH + BOXWIDTH);
@@ -371,4 +388,41 @@ requirejs(['jquery', 'd3'], function ($, d3) {
         });
     }
 
+    function savePng(svgEl) {
+        // to filestream, add the starter
+        var xml = new XMLSerializer().serializeToString(svgEl);
+        var imgsrc = 'data:image/svg+xml;base64,' + btoa(xml);
+        // update src to show the image
+        var canvas = document.createElement('canvas');
+        // set canvas size according to current div width and height, plus some padding
+        // console.log('svgEl width', svgEl.style.width)
+        // console.log('svgEl height', svgEl.style.height)
+        // console.log(svgEl.getAttribute(""))
+        canvas.height = config.divHeight;
+        // canvas.width = "100%";
+        // canvas.width = svgEl.style.width + 20;
+        // canvas.height = svgEl.style.height + 20;
+        var context = canvas.getContext('2d');
+        context.fillStyle = "white"
+        context.fillRect(0,0,canvas.width, canvas.height);
+        var image = new Image;
+        image.src = imgsrc;
+        image.onload = function () {
+            context.drawImage(image, 0, 0);
+            var canvasData = canvas.toDataURL("image/png");
+            var a = document.createElement("a");
+            a.download = "bertviz_head_view.png";
+            a.href = canvasData;
+            document.getElementById("vis").appendChild(a);
+            a.click();
+        }
+    }
+
+    function saveSvg(svgEl) {
+        const base64doc = btoa(unescape(encodeURIComponent(svgEl.outerHTML)));
+        const a = document.createElement('a');
+        a.download = 'bertviz_head_view.svg';
+        a.href = 'data:image/svg+xml;base64,' + base64doc;
+        a.click();
+    }
 });

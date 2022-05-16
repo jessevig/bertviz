@@ -53,14 +53,24 @@ def show(model, model_type, tokenizer, sentence_a, sentence_b=None, display_mode
     # Generate unique div id to enable multiple visualizations in one notebook
     vis_id = 'bertviz-%s' % (uuid.uuid4().hex)
     vis_html = f"""
-        <div id={vis_id} style="padding:8px;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">
-          <span style="user-select:none">
-            <span class="dropdown-label">Layer: </span><select id="layer"></select>
-            <span class="dropdown-label">Head: </span> <select id="att_head"></select>
-            {attn_dropdown}
-          </span>
-          <div id='vis'></div>
-        </div>
+<div id={vis_id} style="padding:8px;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">
+    <div class="dropdown" style="margin-bottom: 7px">
+        <span style="user-select:none">
+        <span class="dropdown-label">Layer: </span> <select id="layer"></select>
+        <span class="dropdown-label">Head: </span> <select id="att_head"></select>
+        {attn_dropdown}
+        </span>
+    </div>
+    <div id='vis'></div>
+    <div style="display: flex; justify-content: flex-start; align-items:baseline;padding-left:10px; padding-right:15px">
+        <span style="margin-left: 7px">Export as:</span>
+        <input style="margin-left: 5px" type="radio" id="imageFormatPng" name="imageFormat" value="PNG" checked>
+        <span style="margin-left: 3px" for="imageFormat">PNG</span>
+        <input style="margin-left: 5px" type="radio" id="imageFormatSvg" name="imageFormat" value="SVG">
+        <span style="margin-left: 3px" for="imageFormat">SVG</span>
+        <button id="downloadButton" style="margin-left: 7px; visibility: hidden">Download</button>
+    </div>
+</div>
      """
 
     __location__ = os.path.realpath(

@@ -183,6 +183,14 @@ def head_view(
                 {select_html}
             </span>
             <div id='vis'></div>
+            <div style="display: flex; justify-content: flex-start; align-items:baseline;padding-left:10px; padding-right:15px">
+                <span style="margin-left: 7px">Export as:</span>
+                <input style="margin-left: 5px" type="radio" id="imageFormatPng" name="imageFormat" value="PNG" checked>
+                <span style="margin-left: 3px" for="imageFormat">PNG</span>
+                <input style="margin-left: 5px" type="radio" id="imageFormatSvg" name="imageFormat" value="SVG">
+                <span style="margin-left: 3px" for="imageFormat">SVG</span>
+                <button id="downloadButton" style="margin-left: 7px; visibility: hidden">Download</button>
+            </div>
         </div>
     """
 
