@@ -221,7 +221,8 @@ model = AutoModel.from_pretrained("Helsinki-NLP/opus-mt-en-de", output_attention
 Then prepare the inputs and compute attention:
 ```python
 encoder_input_ids = tokenizer("She sees the small elephant.", return_tensors="pt", add_special_tokens=True).input_ids
-decoder_input_ids = tokenizer("Sie sieht den kleinen Elefanten.", return_tensors="pt", add_special_tokens=True).input_ids
+with tokenizer.as_target_tokenizer():
+    decoder_input_ids = tokenizer("Sie sieht den kleinen Elefanten.", return_tensors="pt", add_special_tokens=True).input_ids
 
 outputs = model(input_ids=encoder_input_ids, decoder_input_ids=decoder_input_ids)
 
