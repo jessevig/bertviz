@@ -139,6 +139,7 @@ to learn more about BertViz and try out the tool. <b>Note</b>: all visualization
   * [Visualizing sentence pairs](#visualizing-sentence-pairs)
   * [Obtain HTML representations](#obtain-HTML-representations)
   * [Non-Huggingface models](#non-huggingface-models)
+ - [Limitations](#---limitations)
 
 ### Self-attention models (BERT, GPT-2, etc.)
 
@@ -399,9 +400,9 @@ returned from Huggingface models). In some case, Tensorflow checkpoints may be l
  [Huggingface docs](https://huggingface.co/transformers/). 
  
  
-## ⚠️ Limitations
+### ⚠️ Limitations
 
-### Tool
+#### Tool
 * This tool is designed for shorter inputs and may run slowly if the input text is very long and/or the model is very large.
  To mitigate this, you may wish to filter the layers displayed by setting the **`include_layers`** parameter, as described [above](#filtering-layers).
 * When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long.  To mitigate this, you may wish to filter the layers displayed by setting the **`include_layers`** parameter, as described [above](#filtering-layers).
@@ -409,7 +410,7 @@ returned from Huggingface models). In some case, Tensorflow checkpoints may be l
 which required modifying the model code (see `transformers_neuron_view` directory), which has only been done for these three models.
 
 
-### Attention as "explanation"?
+#### Attention as "explanation"?
 * Visualizing attention weights illuminates one type of architecture within the model but does not
 necessarily provide a direct *explanation* for predictions [[1](https://arxiv.org/pdf/1909.11218.pdf), [2](https://arxiv.org/abs/1902.10186), [3](https://arxiv.org/pdf/1908.04626.pdf)].
 * If you wish to understand how the input text influences output predictions more directly, consider [saliency methods](https://arxiv.org/pdf/2010.05607.pdf) provided 
