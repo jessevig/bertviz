@@ -135,11 +135,11 @@ to learn more about BertViz and try out the tool. <b>Note</b>: all visualization
 - [Additional options](#additional-options)
   * [Dark / light mode](#dark--light-mode)
   * [Filtering layers](#filtering-layers)
-  * [Setting default layer/head(s)](#setting-default-layer-head-s)
+  * [Setting default layer/head(s)](#setting-default-layerheads)
   * [Visualizing sentence pairs](#visualizing-sentence-pairs)
   * [Obtain HTML representations](#obtain-HTML-representations)
   * [Non-Huggingface models](#non-huggingface-models)
- - [Limitations](#---limitations)
+ - [Limitations](#%EF%B8%8F-limitations)
 
 ### Self-attention models (BERT, GPT-2, etc.)
 
