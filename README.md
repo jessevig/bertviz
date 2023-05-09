@@ -8,17 +8,13 @@
     <a href="#-quick-tour">Quick Tour</a> &bull;
     <a href="#%EF%B8%8F-getting-started">Getting Started</a> &bull;
     <a href="https://colab.research.google.com/drive/1hXIQ77A4TYS4y3UthWF-Ci7V7vVUoxmQ?usp=sharing">Colab Tutorial</a> &bull;
-    <a href="https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1">Blog</a> &bull;
-    <a href="https://www.aclweb.org/anthology/P19-3007.pdf">Paper</a> &bull;
-    <a href="#-paper">Citation</a>
+    <a href="#-paper">Paper</a>
 </h3>
 
 BertViz is an interactive tool for visualizing attention in [Transformer](https://jalammar.github.io/illustrated-transformer/) language models such as BERT, GPT2, or T5. It can be run inside a Jupyter or Colab
  notebook through a simple Python API that supports most [Huggingface models](https://huggingface.co/models). BertViz extends the
    [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization)
     by [Llion Jones](https://medium.com/@llionj), providing multiple views that each offer a unique lens into the attention mechanism.
-
-For updates on BertViz and related projects, feel free to follow me on [Twitter](https://twitter.com/jesse_vig).
 
 
 ## 🚀 Quick Tour
@@ -438,8 +434,7 @@ by tools such as the [Language Interpretability Toolkit](https://github.com/PAIR
 }
 ```
 ## Authors
-
-Jesse Vig [(homepage)](https://jessevig.com)
+[Jesse Vig](https://twitter.com/jesse_vig)
 
 ## 🙏 Acknowledgments
 We are grateful to the authors of the following projects, which are incorporated into this repo:
