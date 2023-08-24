@@ -16,6 +16,8 @@ BertViz is an interactive tool for visualizing attention in [Transformer](https:
    [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization)
     by [Llion Jones](https://medium.com/@llionj), providing multiple views that each offer a unique lens into the attention mechanism.
 
+Get updates for this and related projects on [Twitter
+![Twitter logo](images/twitter.svg)](https://twitter.com/jesse_vig).
 
 ## 🚀 Quick Tour
 
