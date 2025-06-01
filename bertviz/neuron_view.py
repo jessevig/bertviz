@@ -31,7 +31,7 @@ import uuid
 from collections import defaultdict
 
 import torch
-from IPython.core.display import display, HTML, Javascript
+from IPython.display import display, HTML, Javascript
 
 
 def show(model, model_type, tokenizer, sentence_a, sentence_b=None, display_mode='dark', layer=None, head=None,

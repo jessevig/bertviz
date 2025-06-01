@@ -16,8 +16,6 @@ BertViz is an interactive tool for visualizing attention in [Transformer](https:
    [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization)
     by [Llion Jones](https://medium.com/@llionj), providing multiple views that each offer a unique lens into the attention mechanism.
 
-Get updates for this and related projects on [Twitter
-![Twitter logo](images/twitter.svg)](https://twitter.com/jesse_vig).
 
 ## 🚀 Quick Tour
 
@@ -67,7 +65,7 @@ pip install ipywidgets
 To create a new Jupyter notebook, simply run:
 
 ```bash
-jupyter notebook
+jupyter lab
 ```
 
 Then click `New` and select `Python 3 (ipykernel)` if prompted.
@@ -111,7 +109,7 @@ You may also run any of the sample [notebooks](notebooks/) included with BertViz
 ```bash
 git clone --depth 1 git@github.com:jessevig/bertviz.git
 cd bertviz/notebooks
-jupyter notebook
+jupyter lab
 ```
 ## 🕹 Interactive Tutorial
 

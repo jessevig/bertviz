@@ -2,7 +2,7 @@ import json
 import os
 import uuid
 
-from IPython.core.display import display, HTML, Javascript
+from IPython.display import display, HTML, Javascript
 
 from .util import format_special_chars, format_attention, num_layers, num_heads
 
