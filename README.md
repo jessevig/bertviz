@@ -20,8 +20,8 @@ BertViz is an interactive tool for visualizing attention in [Transformer](https:
 ## 🚀 Quick Tour
 
 ### Head View
-The *head view* visualizes attention for one or more attention heads in the same 
- layer. It is based on the excellent [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj). 
+The *head view* visualizes attention for one or more attention heads in the same
+ layer. It is based on the excellent [Tensor2Tensor visualization tool](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/visualization) by [Llion Jones](https://medium.com/@llionj).
 
 🕹 Try out the head view in the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1hXIQ77A4TYS4y3UthWF-Ci7V7vVUoxmQ?usp=sharing) (all visualizations pre-loaded).
 <p>
@@ -29,7 +29,7 @@ The *head view* visualizes attention for one or more attention heads in the same
 </p>
 
 
-### Model View 
+### Model View
 
 The *model view* shows a bird's-eye view of attention across all layers and heads.
 
@@ -37,7 +37,7 @@ The *model view* shows a bird's-eye view of attention across all layers and head
 
 ![model view](images/model-view-noscroll.gif)
 
-### Neuron View 
+### Neuron View
 The *neuron view* visualizes individual neurons in the query and key vectors and shows how they are used to compute attention.
 
 🕹 Try out the neuron view in the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1hXIQ77A4TYS4y3UthWF-Ci7V7vVUoxmQ?usp=sharing) (all visualizations pre-loaded).
@@ -80,7 +80,7 @@ To run in [Colab](https://colab.research.google.com/), simply add the following 
 ```
 
 ### Sample code
-Run the following code to load the `xtremedistil-l12-h384-uncased` model and display it in the model view: 
+Run the following code to load the `xtremedistil-l12-h384-uncased` model and display it in the model view:
 
 ```python
 from transformers import AutoTokenizer, AutoModel, utils
@@ -88,7 +88,7 @@ from bertviz import model_view
 utils.logging.set_verbosity_error()  # Suppress standard warnings
 
 model_name = "microsoft/xtremedistil-l12-h384-uncased"  # Find popular HuggingFace models here: https://huggingface.co/models
-input_text = "The cat sat on the mat"  
+input_text = "The cat sat on the mat"
 model = AutoModel.from_pretrained(model_name, output_attentions=True)  # Configure model to return attention values
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 inputs = tokenizer.encode(input_text, return_tensors='pt')  # Tokenize input text
@@ -99,7 +99,7 @@ model_view(attention, tokens)  # Display model view
 ```
 
 The visualization may take a few seconds to load. Feel free to experiment with different input texts and
- [models](https://huggingface.co/models). 
+ [models](https://huggingface.co/models).
 See [Documentation](#-documentation) for additional use cases and examples, e.g., encoder-decoder models.
 
 #### Running sample notebooks
@@ -113,7 +113,7 @@ jupyter lab
 ```
 ## 🕹 Interactive Tutorial
 
-Check out the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1hXIQ77A4TYS4y3UthWF-Ci7V7vVUoxmQ?usp=sharing) 
+Check out the [<b><u>Interactive Colab Tutorial</u></b>](https://colab.research.google.com/drive/1hXIQ77A4TYS4y3UthWF-Ci7V7vVUoxmQ?usp=sharing)
 to learn more about BertViz and try out the tool. <b>Note</b>: all visualizations are pre-loaded, so there is no need to execute any cells.
 
 [![Tutorial](images/tutorial-screenshots.jpg)](https://colab.research.google.com/drive/1hXIQ77A4TYS4y3UthWF-Ci7V7vVUoxmQ?usp=sharing)
@@ -155,7 +155,7 @@ Then prepare inputs and compute attention:
 inputs = tokenizer.encode("The cat sat on the mat", return_tensors='pt')
 outputs = model(inputs)
 attention = outputs[-1]  # Output includes attention weights when output_attentions=True
-tokens = tokenizer.convert_ids_to_tokens(inputs[0]) 
+tokens = tokenizer.convert_ids_to_tokens(inputs[0])
 ```
 
 Finally, display the attention weights using the [`head_view`](bertviz/head_view.py) or [`model_view`](bertviz/model_view.py)
@@ -198,7 +198,7 @@ BERT ([Notebook](notebooks/neuron_view_bert.ipynb),
 GPT-2 ([Notebook](notebooks/neuron_view_gpt2.ipynb),
 [Colab](https://colab.research.google.com/drive/1s8XCCyxsKvNRWNzjWi5Nl8ZAYZ5YkLm_)) •
 RoBERTa
-([Notebook](notebooks/neuron_view_roberta.ipynb))  
+([Notebook](notebooks/neuron_view_roberta.ipynb))
 
 For full API, please refer to the [source](bertviz/neuron_view.py).
 
@@ -274,14 +274,14 @@ view.
 model_view(attention, tokens, include_layers=[5, 6])
 ```
 
-For the model view, you may also restrict the visualization to a subset of attention heads (zero-indexed) by setting the 
-`include_heads` parameter. 
+For the model view, you may also restrict the visualization to a subset of attention heads (zero-indexed) by setting the
+`include_heads` parameter.
 
 
 #### Setting default layer/head(s)
 
 In the head view, you may choose a specific `layer` and collection of `heads` as the default selection when the
- visualization first renders. Note: this is different from the `include_heads`/`include_layers` parameter (above), which 
+ visualization first renders. Note: this is different from the `include_heads`/`include_layers` parameter (above), which
  removes layers and heads from the visualization completely.
 
 **Example:** Render head view with layer 2 and heads 3 and 5 pre-selected
@@ -289,20 +289,20 @@ In the head view, you may choose a specific `layer` and collection of `heads` as
 head_view(attention, tokens, layer=2, heads=[3,5])
 ```
 
-You may also pre-select a specific `layer` and single `head` for the neuron view. 
+You may also pre-select a specific `layer` and single `head` for the neuron view.
 
 #### Visualizing sentence pairs
 
-Some models, e.g. BERT, accept a pair of sentences as input. BertViz optionally supports a drop-down menu that allows 
+Some models, e.g. BERT, accept a pair of sentences as input. BertViz optionally supports a drop-down menu that allows
 user to filter attention based on which sentence the tokens are in, e.g. only show attention between tokens in first
  sentence and tokens in second sentence.
- 
- 
+
+
 ##### Head and model views
 To enable this feature when invoking the [`head_view`](bertviz/head_view.py) or [`model_view`](bertviz/model_view.py) functions, set
  the `sentence_b_start` parameter to the start index of the second sentence. Note that the method for computing this
  index will depend on the model.
- 
+
 Example (BERT):
 
 ```python
@@ -322,9 +322,9 @@ token_type_ids = inputs['token_type_ids'] # token type id is 0 for Sentence A an
 attention = model(input_ids, token_type_ids=token_type_ids)[-1]
 sentence_b_start = token_type_ids[0].tolist().index(1) # Sentence B starts at first index of token type id 1
 token_ids = input_ids[0].tolist() # Batch index 0
-tokens = tokenizer.convert_ids_to_tokens(token_ids)    
+tokens = tokenizer.convert_ids_to_tokens(token_ids)
 head_view(attention, tokens, sentence_b_start)
-``` 
+```
 
 
 ##### Neuron view
@@ -356,7 +356,7 @@ model = AutoModel.from_pretrained("bert-base-uncased", output_attentions=True)
 inputs = tokenizer.encode("The cat sat on the mat", return_tensors='pt')
 outputs = model(inputs)
 attention = outputs[-1]  # Output includes attention weights when output_attentions=True
-tokens = tokenizer.convert_ids_to_tokens(inputs[0]) 
+tokens = tokenizer.convert_ids_to_tokens(inputs[0])
 
 html_head_view = head_view(attention, tokens, html_action='return')
 
@@ -390,26 +390,26 @@ with open("PATH_TO_YOUR_FILE/neuron_view.html", 'w') as file:
 The head view and model view may be used to
  visualize self-attention for any standard Transformer model,
 as long as the attention weights are available and follow the format specified in [`head_view`](bertviz/head_view.py) and
- [`model_view`](bertviz/model_view.py) (which is the format 
+ [`model_view`](bertviz/model_view.py) (which is the format
 returned from Huggingface models). In some case, Tensorflow checkpoints may be loaded as Huggingface models as described
  in the
- [Huggingface docs](https://huggingface.co/transformers/). 
- 
- 
+ [Huggingface docs](https://huggingface.co/transformers/).
+
+
 ### ⚠️ Limitations
 
 #### Tool
 * This tool is designed for shorter inputs and may run slowly if the input text is very long and/or the model is very large.
  To mitigate this, you may wish to filter the layers displayed by setting the **`include_layers`** parameter, as described [above](#filtering-layers).
 * When running on Colab, some of the visualizations will fail (runtime disconnection) when the input text is long.  To mitigate this, you may wish to filter the layers displayed by setting the **`include_layers`** parameter, as described [above](#filtering-layers).
-* The *neuron view* only supports the custom BERT, GPT-2, and RoBERTa models included with the tool. This view needs access to the query and key vectors, 
+* The *neuron view* only supports the custom BERT, GPT-2, and RoBERTa models included with the tool. This view needs access to the query and key vectors,
 which required modifying the model code (see `transformers_neuron_view` directory), which has only been done for these three models.
 
 
 #### Attention as "explanation"?
 * Visualizing attention weights illuminates one type of architecture within the model but does not
 necessarily provide a direct *explanation* for predictions [[1](https://arxiv.org/pdf/1909.11218.pdf), [2](https://arxiv.org/abs/1902.10186), [3](https://arxiv.org/pdf/1908.04626.pdf)].
-* If you wish to understand how the input text influences output predictions more directly, consider [saliency methods](https://arxiv.org/pdf/2010.05607.pdf) provided 
+* If you wish to understand how the input text influences output predictions more directly, consider [saliency methods](https://arxiv.org/pdf/2010.05607.pdf) provided
 by tools such as the [Language Interpretability Toolkit](https://github.com/PAIR-code/lit) or [Ecco](https://github.com/jalammar/ecco).
 
 
